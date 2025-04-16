@@ -6,6 +6,7 @@
     import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
     import type { GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js';
     import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+    import RubiksModel from "../lib/RubiksModel.ts"
 
     const canvas = document.querySelector<HTMLCanvasElement>('.threejs');
     if (!canvas)
@@ -31,11 +32,25 @@
     loader.setDRACOLoader(dracoLoader);
 
     let model = null;
+    let cube: RubiksModel;
     loader.load('/rubikscube.glb', (gltf: GLTF) => {
       model = gltf.scene;
       scene.add(model);
+      cube = new RubiksModel(model);
     });
 
+    window.addEventListener("keydown", (event) => {
+        switch (event.key) {
+            case 'u':
+                cube.up();
+                break;
+            case 'f':
+                cube.front();
+                break;
+        }
+    });
+
+    
     const animate = () => {
       requestAnimationFrame(animate);
 
