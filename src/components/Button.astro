@@ -1,0 +1,18 @@
+---
+const { label = "button" } = Astro.props;
+---
+<button id={label} data-label={label}>
+    {label}
+</button>
+
+<script>
+    const button = document.querySelector('button');
+
+    const label = button?.dataset.label;
+    console.log(button, label);
+
+    button?.addEventListener('click', () => {
+        const event = new CustomEvent(label);
+        window.dispatchEvent(event);
+    });
+</script>
