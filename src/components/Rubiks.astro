@@ -19,7 +19,7 @@
     const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setClearColor(0xff0000, 1);
+    renderer.setClearColor(0xffffff, 1);
     
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
@@ -65,10 +65,23 @@
 
     window.addEventListener('front', () => {
         cube.front();
-    })
+    });
+    window.addEventListener('back', () => {
+        cube.back();
+    });
     window.addEventListener('right', () => {
         cube.right();
-    })
+    });
+    window.addEventListener('left', () => {
+        cube.left();
+    });
+    window.addEventListener('up', () => {
+        cube.up();
+    });
+    window.addEventListener('down', () => {
+        cube.down();
+    });
+    
 
     
     const animate = () => {

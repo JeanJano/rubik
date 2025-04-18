@@ -1,0 +1,35 @@
+---
+import Button from "./Button.astro"
+---
+
+<div class="top-0 left-0 bg-emerald-950 w-[25dvw] h-dvh absolute z-1 ">
+    <p>controls</p>
+    <Button label="front" />
+    <Button label="back"/>
+    <Button label="right" />
+    <Button label="left" />
+    <Button label="up" />
+    <Button label="down" />
+</div>
+
+<script>
+    const labelArray = [
+        'front',
+        'back',
+        'right',
+        'left',
+        'up',
+        'down'
+    ];
+
+    for (let i = 0; i < labelArray.length; i++) {
+        const button = document.getElementById(labelArray[i]);
+        const label = button?.dataset.label || "not found";
+
+        button?.addEventListener("click", () => {
+            const event = new CustomEvent(label);
+            window.dispatchEvent(event);
+        });
+    }
+
+</script>
