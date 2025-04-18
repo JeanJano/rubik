@@ -6,16 +6,19 @@ export default class RubiksModel {
     private _cube: THREE.Group;
     private _cubies: THREE.Object3D[];
     private _axis: THREE.Vector3;
+    private _mix: string[];
 
     constructor(model: THREE.Group) {
         this._cube = model;
         this._cubies = model.children;
         this._axis = new THREE.Vector3(0, 0, 0);
+        this._mix = [];
         console.log("hello", this._cube)
     }
 
-    public front(clockwise = true) {
+    public front(clockwise = true): void {
         console.log("front");
+        this._pushToMix("F", clockwise);
 
         const layerZ = 0.3;
         const cubies = this._cubies.filter(c => Math.abs(c.position.z - layerZ) < 0.1);
@@ -23,8 +26,9 @@ export default class RubiksModel {
         this._rotateLayer(cubies, clockwise);
     }
 
-    public back(clockwise = true) {
+    public back(clockwise = true): void {
         console.log("back");
+        this._pushToMix("B", clockwise);
 
         const layerZ = -0.3;
         const cubies = this._cubies.filter(c => Math.abs(c.position.z - layerZ) < 0.1);
@@ -32,8 +36,9 @@ export default class RubiksModel {
         this._rotateLayer(cubies, clockwise);
     }
 
-    public up(clockwise = true) {
+    public up(clockwise = true): void {
         console.log("up");
+        this._pushToMix("U", clockwise);
 
         const layerY = 0.3;
         const cubies = this._cubies.filter(c => Math.abs(c.position.y - layerY) < 0.1);
@@ -41,8 +46,9 @@ export default class RubiksModel {
         this._rotateLayer(cubies, clockwise);
     }
 
-    public down(clockwise = true) {
+    public down(clockwise = true): void {
         console.log("down");
+        this._pushToMix("D", clockwise);
 
         const layerY = -0.3;
         const cubies = this._cubies.filter(c => Math.abs(c.position.y - layerY) < 0.1);
@@ -50,8 +56,9 @@ export default class RubiksModel {
         this._rotateLayer(cubies, clockwise);
     }
 
-    public right(clockwise = true) {
+    public right(clockwise = true): void {
         console.log("right");
+        this._pushToMix("R", clockwise);
 
         const layerX = 0.3;
         const cubies = this._cubies.filter(c => Math.abs(c.position.x - layerX) < 0.1);
@@ -59,8 +66,9 @@ export default class RubiksModel {
         this._rotateLayer(cubies, clockwise);
     }
 
-    public left(clockwise = true) {
+    public left(clockwise = true): void {
         console.log("left");
+        this._pushToMix("L", clockwise);
 
         const layerX = -0.3;
         const cubies = this._cubies.filter(c => Math.abs(c.position.x - layerX) < 0.1);
@@ -68,7 +76,21 @@ export default class RubiksModel {
         this._rotateLayer(cubies, clockwise);
     }
 
-    private _rotateLayer(cubies: THREE.Object3D[], clockwise: boolean) {
+    private _pushToMix(operation: string, clockwise: boolean): void {
+        if (!clockwise) {
+            operation += "'";
+        }
+        if (operation == this._mix[this._mix.length - 1]) {
+            if (clockwise)
+                this._mix[this._mix.length - 1] += "2";
+            else
+                this._mix[this._mix.length - 1] = operation[0] + "2'";
+        }
+        else
+            this._mix.push(operation);
+    }
+
+    private _rotateLayer(cubies: THREE.Object3D[], clockwise: boolean): void {
         const group = new THREE.Group();
         this._cube.add(group);
 
@@ -90,5 +112,7 @@ export default class RubiksModel {
             }
         });
     }
+
+    public getMix(): string[] { return this._mix; }
 
 }

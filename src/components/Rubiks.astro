@@ -24,7 +24,7 @@
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
 
-    const light = new THREE.HemisphereLight(0xffffff, 0x444444, 10);
+    const light = new THREE.HemisphereLight(0xffffff, 0x444444, 5);
     scene.add(light);
   
     const loader = new GLTFLoader();
@@ -59,6 +59,9 @@
                 break;
             case 'l':
                 cube.left();
+                break;
+            case 'z':
+                console.log(cube.getMix());
                 break;
         }
     });
@@ -99,9 +102,7 @@
     window.addEventListener("down'", () => {
         cube.down(false);
     });
-    
 
-    
     const animate = () => {
       requestAnimationFrame(animate);
 
