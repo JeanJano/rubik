@@ -1,6 +1,9 @@
 ---
-const { label = "button" } = Astro.props;
+const { 
+    label = "button", 
+    name = "name"
+} = Astro.props;
 ---
-<button id={label} data-label={label} class="bg-zinc-400 p-4 m-2">
-    {label}
+<button id={label} data-label={label} class="bg-[#FAE1DF] rounded-lg p-3 m-1">
+    {name}
 </button>

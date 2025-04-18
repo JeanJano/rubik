@@ -13,7 +13,6 @@ export default class RubiksModel {
         this._cubies = model.children;
         this._axis = new THREE.Vector3(0, 0, 0);
         this._mix = [];
-        console.log("hello", this._cube)
     }
 
     public front(clockwise = true): void {
@@ -104,8 +103,6 @@ export default class RubiksModel {
             z: this._axis.z * angle,
             duration: 0.5,
             onComplete: () => {
-                console.log("complete")
-                // Réattache les cubies au cube principal après rotation
                 cubies.forEach(c => this._cube.attach(c));
                 this._cube.remove(group);
                 group.rotation.set(0, 0, 0);

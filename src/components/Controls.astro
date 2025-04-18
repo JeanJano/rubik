@@ -2,20 +2,26 @@
 import Button from "./Button.astro"
 ---
 
-<div class="top-0 left-0 bg-emerald-950 w-[25dvw] h-dvh absolute z-1 ">
+<div class="bottom-0 flex flex-wrap justify-center  mx-[5dvw] bg-[#E4C3AD] w-[90dvw] absolute z-1 rounded-t-lg">
     <p>controls</p>
-    <Button label="front" />
-    <Button label="front'" />
-    <Button label="back"/>
-    <Button label="back'"/>
-    <Button label="right" />
-    <Button label="right'" />
-    <Button label="left" />
-    <Button label="left'" />
-    <Button label="up" />
-    <Button label="up'" />
-    <Button label="down" />
-    <Button label="down'" />
+    <div>
+        <Button label="front" name="F" />
+        <Button label="front'" name="F'"/>
+        <Button label="back" name="B"/>
+        <Button label="back'" name="B'"/>
+        <Button label="right" name="R"/>
+        <Button label="right'" name="R'"/>
+        <Button label="left" name="L"/>
+        <Button label="left'" name="L'"/>
+        <Button label="up" name="U"/>
+        <Button label="up'" name="U'"/>
+        <Button label="down" name="D"/>
+        <Button label="down'" name="D'"/>
+    </div>
+    <div>
+        <Button label="resolve'" name="Resolve"/>
+
+    </div>
 </div>
 
 <script>
