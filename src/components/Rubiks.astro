@@ -63,23 +63,41 @@
         }
     });
 
-    window.addEventListener('front', () => {
+    window.addEventListener("front", () => {
         cube.front();
     });
-    window.addEventListener('back', () => {
+    window.addEventListener("front'", () => {
+        cube.front(false);
+    });
+    window.addEventListener("back", () => {
         cube.back();
     });
-    window.addEventListener('right', () => {
+    window.addEventListener("back'", () => {
+        cube.back(false);
+    });
+    window.addEventListener("right", () => {
         cube.right();
     });
-    window.addEventListener('left', () => {
+    window.addEventListener("right'", () => {
+        cube.right(false);
+    });
+    window.addEventListener("left", () => {
         cube.left();
     });
-    window.addEventListener('up', () => {
+    window.addEventListener("left'", () => {
+        cube.left(false);
+    });
+    window.addEventListener("up", () => {
         cube.up();
     });
-    window.addEventListener('down', () => {
+    window.addEventListener("up'", () => {
+        cube.up(false);
+    });
+    window.addEventListener("down", () => {
         cube.down();
+    });
+    window.addEventListener("down'", () => {
+        cube.down(false);
     });
     
 

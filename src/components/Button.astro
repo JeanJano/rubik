@@ -4,15 +4,3 @@ const { label = "button" } = Astro.props;
 <button id={label} data-label={label} class="bg-zinc-400 p-4 m-2">
     {label}
 </button>
-
-<!-- <script>
-    const button = document.querySelector('button');
-
-    const label = button?.dataset.label || "event";
-
-    button?.addEventListener('click', () => {
-        console.log(label)
-        const event = new CustomEvent(label);
-        window.dispatchEvent(event);
-    });
-</script> -->
