@@ -48,42 +48,29 @@
         }
     });
 
-    window.addEventListener("front", () => {
-        cube.front();
-    });
-    window.addEventListener("front'", () => {
-        cube.front(false);
-    });
-    window.addEventListener("back", () => {
-        cube.back();
-    });
-    window.addEventListener("back'", () => {
-        cube.back(false);
-    });
-    window.addEventListener("right", () => {
-        cube.right();
-    });
-    window.addEventListener("right'", () => {
-        cube.right(false);
-    });
-    window.addEventListener("left", () => {
-        cube.left();
-    });
-    window.addEventListener("left'", () => {
-        cube.left(false);
-    });
-    window.addEventListener("up", () => {
-        cube.up();
-    });
-    window.addEventListener("up'", () => {
-        cube.up(false);
-    });
-    window.addEventListener("down", () => {
-        cube.down();
-    });
-    window.addEventListener("down'", () => {
-        cube.down(false);
-    });
+    const labelArray = [
+        "front",
+        "front'",
+        "back",
+        "back'",
+        "right",
+        "right'",
+        "left",
+        "left'",
+        "up",
+        "up'",
+        "down",
+        "down'"
+    ];
+
+    for (let i = 0; i < labelArray.length; i++) {
+        window.addEventListener(labelArray[i], () => {
+            if (i % 2 === 0)
+                cube[labelArray[i]]();
+            else
+                cube[labelArray[i-1]](false);
+        })
+    }
 
     const animate = () => {
       requestAnimationFrame(animate);
