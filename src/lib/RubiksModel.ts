@@ -75,6 +75,20 @@ export default class RubiksModel {
         this._rotateLayer(cubies, clockwise);
     }
 
+    public async shuffle(mix: string[]) {
+        for (let i = 0; i < mix.length; i++) {
+            console.log(mix[i])
+            await this._execAction(mix[i]);
+            await this._sleep(1000);
+        }
+    }
+
+    private async _sleep(ms: number): Promise<void> {
+        return new Promise(
+            resolve => setTimeout(resolve, ms)
+        );
+    }
+
     private _pushToMix(operation: string, clockwise: boolean): void {
         if (!clockwise) {
             operation += "'";
@@ -101,13 +115,114 @@ export default class RubiksModel {
             x: this._axis.x * angle,
             y: this._axis.y * angle,
             z: this._axis.z * angle,
-            duration: 0.5,
+            duration: 0.9 ,
             onComplete: () => {
                 cubies.forEach(c => this._cube.attach(c));
                 this._cube.remove(group);
                 group.rotation.set(0, 0, 0);
             }
         });
+    }
+
+    private async _execAction(action: string) {
+        switch (action) {
+            case "F":
+                this.front();
+                break;
+            case "F2":
+                this.front();
+                await this._sleep(1000);
+                this.front();
+                break;
+            case "F'":
+                this.front(false);
+                break;
+            case "F2'":
+                this.front(false);
+                await this._sleep(1000);
+                this.front(false);
+                break;
+            case "B":
+                this.back();
+                break;
+            case "B2":
+                this.back();
+                await this._sleep(1000);
+                this.back();
+                break;
+            case "B'":
+                this.back(false);
+                break;
+            case "B2'":
+                this.back(false);
+                await this._sleep(1000);
+                this.back(false);
+                break;
+            case "R":
+                this.right();
+                break;
+            case "R2":
+                this.right();
+                await this._sleep(1000);
+                this.right();
+                break;
+            case "R'":
+                this.right(false);
+                break;
+            case "R2'":
+                this.right(false);
+                await this._sleep(1000);
+                this.right(false);
+                break;
+            case "L":
+                this.left();
+                break;
+            case "L2":
+                this.left();
+                await this._sleep(1000);
+                this.left();
+                break;
+            case "L'":
+                this.left(false);
+                break;
+            case "L2'":
+                this.left(false);
+                await this._sleep(1000);
+                this.left(false);
+                break;
+            case "U":
+                this.up();
+                break;
+            case "U2":
+                this.up();
+                await this._sleep(1000);
+                this.up();
+                break;
+            case "U'":
+                this.up(false);
+                break;
+            case "U2'":
+                this.up(false);
+                await this._sleep(1000);
+                this.up(false);
+                break;
+            case "D":
+                this.down();
+                break;
+            case "D2":
+                this.down();
+                await this._sleep(1000);
+                this.down();
+                break;
+            case "D'":
+                this.down(false);
+                break;
+            case "D2'":
+                this.down(false);
+                await this._sleep(1000);
+                this.down(false);
+                break;
+        }
     }
 
     public getMix(): string[] { return this._mix; }
