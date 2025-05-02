@@ -99,8 +99,9 @@ export default class RubiksModel {
             else
                 this._mix[this._mix.length - 1] = operation[0] + "2'";
         }
-        else
+        else {
             this._mix.push(operation);
+        }
     }
 
     private _rotateLayer(cubies: THREE.Object3D[], clockwise: boolean): void {
@@ -122,6 +123,12 @@ export default class RubiksModel {
                 group.rotation.set(0, 0, 0);
             }
         });
+        this._displayAction();
+    }
+
+    private _displayAction(): void {
+        const backgroud = document.getElementsByClassName("background");
+        backgroud[0].innerHTML = this._mix.join(" ");
     }
 
     private async _execAction(action: string) {
