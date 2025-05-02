@@ -83,6 +83,20 @@ export default class RubiksModel {
         }
     }
 
+    public async randomMix() {
+        console.log("random Mix")
+        const movesArray = ["F", "D", "L", "R", "U", "B"];
+
+        for (let i = 0; i < 30; i++) {
+            const randomIndex = Math.floor(Math.random() * movesArray.length);
+            let randomMove = movesArray[randomIndex];
+            if (Math.random() < 0.5)
+                randomMove += "'";
+            await this._execAction(randomMove);
+            await this._sleep(1000);
+        }
+    }
+
     private async _sleep(ms: number): Promise<void> {
         return new Promise(
             resolve => setTimeout(resolve, ms)
