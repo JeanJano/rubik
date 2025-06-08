@@ -7,12 +7,14 @@ export default class RubiksModel {
     private _cubies: THREE.Object3D[];
     private _axis: THREE.Vector3;
     private _mix: string[];
+    private _speed: number;
 
     constructor(model: THREE.Group) {
         this._cube = model;
         this._cubies = model.children;
         this._axis = new THREE.Vector3(0, 0, 0);
         this._mix = [];
+        this._speed = 400;
     }
 
     public front(clockwise = true): void {
@@ -32,7 +34,7 @@ export default class RubiksModel {
         const layerZ = -0.3;
         const cubies = this._cubies.filter(c => Math.abs(c.position.z - layerZ) < 0.1);
         this._axis.set(0, 0, 1);
-        this._rotateLayer(cubies, clockwise);
+        this._rotateLayer(cubies, !clockwise);
     }
 
     public up(clockwise = true): void {
@@ -52,7 +54,7 @@ export default class RubiksModel {
         const layerY = -0.3;
         const cubies = this._cubies.filter(c => Math.abs(c.position.y - layerY) < 0.1);
         this._axis.set(0, 1, 0);
-        this._rotateLayer(cubies, clockwise);
+        this._rotateLayer(cubies, !clockwise);
     }
 
     public right(clockwise = true): void {
@@ -72,14 +74,14 @@ export default class RubiksModel {
         const layerX = -0.3;
         const cubies = this._cubies.filter(c => Math.abs(c.position.x - layerX) < 0.1);
         this._axis.set(1, 0, 0);
-        this._rotateLayer(cubies, clockwise);
+        this._rotateLayer(cubies, !clockwise);
     }
 
     public async shuffle(mix: string[]) {
         for (let i = 0; i < mix.length; i++) {
             console.log(mix[i])
             await this._execAction(mix[i]);
-            await this._sleep(1000);
+            await this._sleep(this._speed);
         }
     }
 
@@ -87,14 +89,47 @@ export default class RubiksModel {
         console.log("random Mix")
         const movesArray = ["F", "D", "L", "R", "U", "B"];
 
-        for (let i = 0; i < 30; i++) {
+        for (let i = 0; i < 10; i++) {
             const randomIndex = Math.floor(Math.random() * movesArray.length);
             let randomMove = movesArray[randomIndex];
             if (Math.random() < 0.5)
                 randomMove += "'";
             await this._execAction(randomMove);
-            await this._sleep(1000);
+            await this._sleep(this._speed);
         }
+    }
+
+    public raycastMiddleCube(event: MouseEvent, camera: THREE.Camera, clockwise: boolean) : THREE.Object3D | null {
+        const raycaster = new THREE.Raycaster()
+        const mouse = new THREE.Vector2()
+
+        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+        raycaster.setFromCamera(mouse, camera)
+
+        // console.log(this._cubies)
+
+        const intersects = raycaster.intersectObjects(this._cubies, true)
+
+        if (intersects.length > 0) {
+            console.log(intersects[0].object)
+            if (intersects[0].object.name === "Cube016_2") {
+                this.front(clockwise)
+            } else if (intersects[0].object.name === "Cube023_2") {
+                this.up(clockwise)
+            } else if (intersects[0].object.name === "Cube018_2") {
+                this.left(clockwise)
+            } else if (intersects[0].object.name === "Cube004_2") {
+                this.right(clockwise)
+            } else if (intersects[0].object.name === "Cube027_2") {
+                this.down(clockwise)
+            } else if (intersects[0].object.name === "Cube025_2") {
+                this.back(clockwise)
+            }
+        }
+
+        return null
     }
 
     private async _sleep(ms: number): Promise<void> {
@@ -130,7 +165,7 @@ export default class RubiksModel {
             x: this._axis.x * angle,
             y: this._axis.y * angle,
             z: this._axis.z * angle,
-            duration: 0.9 ,
+            duration: this._speed / 1000 - 0.05 ,
             onComplete: () => {
                 cubies.forEach(c => this._cube.attach(c));
                 this._cube.remove(group);
@@ -152,7 +187,7 @@ export default class RubiksModel {
                 break;
             case "F2":
                 this.front();
-                await this._sleep(1000);
+                await this._sleep(this._speed);
                 this.front();
                 break;
             case "F'":
@@ -160,7 +195,7 @@ export default class RubiksModel {
                 break;
             case "F2'":
                 this.front(false);
-                await this._sleep(1000);
+                await this._sleep(this._speed);
                 this.front(false);
                 break;
             case "B":
@@ -168,7 +203,7 @@ export default class RubiksModel {
                 break;
             case "B2":
                 this.back();
-                await this._sleep(1000);
+                await this._sleep(this._speed);
                 this.back();
                 break;
             case "B'":
@@ -176,7 +211,7 @@ export default class RubiksModel {
                 break;
             case "B2'":
                 this.back(false);
-                await this._sleep(1000);
+                await this._sleep(this._speed);
                 this.back(false);
                 break;
             case "R":
@@ -184,7 +219,7 @@ export default class RubiksModel {
                 break;
             case "R2":
                 this.right();
-                await this._sleep(1000);
+                await this._sleep(this._speed);
                 this.right();
                 break;
             case "R'":
@@ -192,7 +227,7 @@ export default class RubiksModel {
                 break;
             case "R2'":
                 this.right(false);
-                await this._sleep(1000);
+                await this._sleep(this._speed);
                 this.right(false);
                 break;
             case "L":
@@ -200,7 +235,7 @@ export default class RubiksModel {
                 break;
             case "L2":
                 this.left();
-                await this._sleep(1000);
+                await this._sleep(this._speed);
                 this.left();
                 break;
             case "L'":
@@ -208,7 +243,7 @@ export default class RubiksModel {
                 break;
             case "L2'":
                 this.left(false);
-                await this._sleep(1000);
+                await this._sleep(this._speed);
                 this.left(false);
                 break;
             case "U":
@@ -216,7 +251,7 @@ export default class RubiksModel {
                 break;
             case "U2":
                 this.up();
-                await this._sleep(1000);
+                await this._sleep(this._speed);
                 this.up();
                 break;
             case "U'":
@@ -224,7 +259,7 @@ export default class RubiksModel {
                 break;
             case "U2'":
                 this.up(false);
-                await this._sleep(1000);
+                await this._sleep(this._speed);
                 this.up(false);
                 break;
             case "D":
@@ -232,7 +267,7 @@ export default class RubiksModel {
                 break;
             case "D2":
                 this.down();
-                await this._sleep(1000);
+                await this._sleep(this._speed);
                 this.down();
                 break;
             case "D'":
@@ -240,7 +275,7 @@ export default class RubiksModel {
                 break;
             case "D2'":
                 this.down(false);
-                await this._sleep(1000);
+                await this._sleep(this._speed);
                 this.down(false);
                 break;
         }

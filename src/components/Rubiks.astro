@@ -94,6 +94,19 @@
 
     animate();
 
+    canvas.addEventListener("mousedown", (event) => {
+        switch (event.button) {
+            case 0:
+                console.log('click gauche')
+                cube.raycastMiddleCube(event, camera, true)
+                break ;
+            case 2:
+                cube.raycastMiddleCube(event, camera, false)
+                console.log('clic droit')
+                break ;
+        }
+    })
+
     window.addEventListener('resize', () => {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
