@@ -1,6 +1,11 @@
 import * as THREE from 'three';
 import gsap from 'gsap';
 
+interface CubeAction {
+    move: string;
+    clockwise: boolean;
+}
+
 export default class RubiksModel {
 
     private _cube: THREE.Group;
@@ -8,6 +13,8 @@ export default class RubiksModel {
     private _axis: THREE.Vector3;
     private _mix: string[];
     private _speed: number;
+    private _queue: CubeAction[];
+    private _isAnimated: boolean;
 
     constructor(model: THREE.Group) {
         this._cube = model;
@@ -15,66 +22,38 @@ export default class RubiksModel {
         this._axis = new THREE.Vector3(0, 0, 0);
         this._mix = [];
         this._speed = 400;
+        this._queue = [];
+        this._isAnimated = false;
     }
 
     public front(clockwise = true): void {
-        console.log("front");
-        this._pushToMix("F", clockwise);
-
-        const layerZ = 0.3;
-        const cubies = this._cubies.filter(c => Math.abs(c.position.z - layerZ) < 0.1);
-        this._axis.set(0, 0, 1);
-        this._rotateLayer(cubies, clockwise);
+        this._queue.push({move: "F", clockwise: clockwise});
+        this._processQueue();
     }
 
     public back(clockwise = true): void {
-        console.log("back");
-        this._pushToMix("B", clockwise);
-
-        const layerZ = -0.3;
-        const cubies = this._cubies.filter(c => Math.abs(c.position.z - layerZ) < 0.1);
-        this._axis.set(0, 0, 1);
-        this._rotateLayer(cubies, !clockwise);
+        this._queue.push({move: "B", clockwise: clockwise});
+        this._processQueue();
     }
 
     public up(clockwise = true): void {
-        console.log("up");
-        this._pushToMix("U", clockwise);
-
-        const layerY = 0.3;
-        const cubies = this._cubies.filter(c => Math.abs(c.position.y - layerY) < 0.1);
-        this._axis.set(0, 1, 0);
-        this._rotateLayer(cubies, clockwise);
+        this._queue.push({move: "U", clockwise: clockwise});
+        this._processQueue();
     }
 
     public down(clockwise = true): void {
-        console.log("down");
-        this._pushToMix("D", clockwise);
-
-        const layerY = -0.3;
-        const cubies = this._cubies.filter(c => Math.abs(c.position.y - layerY) < 0.1);
-        this._axis.set(0, 1, 0);
-        this._rotateLayer(cubies, !clockwise);
+        this._queue.push({move: "D", clockwise: clockwise});
+        this._processQueue();
     }
 
     public right(clockwise = true): void {
-        console.log("right");
-        this._pushToMix("R", clockwise);
-
-        const layerX = 0.3;
-        const cubies = this._cubies.filter(c => Math.abs(c.position.x - layerX) < 0.1);
-        this._axis.set(1, 0, 0);
-        this._rotateLayer(cubies, clockwise);
+        this._queue.push({move: "R", clockwise: clockwise});
+        this._processQueue();
     }
 
     public left(clockwise = true): void {
-        console.log("left");
-        this._pushToMix("L", clockwise);
-
-        const layerX = -0.3;
-        const cubies = this._cubies.filter(c => Math.abs(c.position.x - layerX) < 0.1);
-        this._axis.set(1, 0, 0);
-        this._rotateLayer(cubies, !clockwise);
+        this._queue.push({move: "L", clockwise: clockwise});
+        this._processQueue();
     }
 
     public async shuffle(mix: string[]) {
@@ -85,18 +64,19 @@ export default class RubiksModel {
         }
     }
 
-    public async randomMix() {
-        console.log("random Mix")
+    public randomMix(): void {
         const movesArray = ["F", "D", "L", "R", "U", "B"];
 
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < 30; i++) {
             const randomIndex = Math.floor(Math.random() * movesArray.length);
-            let randomMove = movesArray[randomIndex];
-            if (Math.random() < 0.5)
-                randomMove += "'";
-            await this._execAction(randomMove);
-            await this._sleep(this._speed);
+            let move = movesArray[randomIndex];
+            const clockwise = Math.random() > 0.5;
+            if (Math.random() < 0.3) move += "2"; // ajouter 2 de temps en temps
+
+            this._queue.push({ move, clockwise });
         }
+
+        this._processQueue();
     }
 
     public raycastMiddleCube(event: MouseEvent, camera: THREE.Camera, clockwise: boolean) : THREE.Object3D | null {
@@ -108,12 +88,9 @@ export default class RubiksModel {
 
         raycaster.setFromCamera(mouse, camera)
 
-        // console.log(this._cubies)
-
         const intersects = raycaster.intersectObjects(this._cubies, true)
 
         if (intersects.length > 0) {
-            console.log(intersects[0].object)
             if (intersects[0].object.name === "Cube016_2") {
                 this.front(clockwise)
             } else if (intersects[0].object.name === "Cube023_2") {
@@ -130,6 +107,23 @@ export default class RubiksModel {
         }
 
         return null
+    }
+
+    private async _processQueue(): Promise<void> {
+        if (this._isAnimated || this._queue.length === 0)
+            return;
+        this._isAnimated = true;
+
+        while (this._queue.length > 0) {
+            const action = this._queue.shift()!;
+            this._pushToMix(action.move, action.clockwise);
+            await this._execAction(action.move, action.clockwise);
+            const adjustedSpeed = Math.max(0.001, this._speed - this._queue.length * 50);
+            console.log(adjustedSpeed)
+            await this._sleep(adjustedSpeed);
+        }
+
+        this._isAnimated = false;
     }
 
     private async _sleep(ms: number): Promise<void> {
@@ -153,25 +147,25 @@ export default class RubiksModel {
         }
     }
 
-    private _rotateLayer(cubies: THREE.Object3D[], clockwise: boolean): void {
+    private _rotateLayer(cubies: THREE.Object3D[], axis: THREE.Vector3, clockwise: boolean): void {
         const group = new THREE.Group();
         this._cube.add(group);
 
         cubies.forEach(c => group.attach(c));
-
         const angle = (clockwise ? -1 : 1) * Math.PI * 0.5;
 
         gsap.to(group.rotation, {
-            x: this._axis.x * angle,
-            y: this._axis.y * angle,
-            z: this._axis.z * angle,
-            duration: this._speed / 1000 - 0.05 ,
+            x: axis.x * angle,
+            y: axis.y * angle,
+            z: axis.z * angle,
+            duration: this._speed / 1000 - 0.05,
             onComplete: () => {
                 cubies.forEach(c => this._cube.attach(c));
                 this._cube.remove(group);
                 group.rotation.set(0, 0, 0);
             }
         });
+
         this._displayAction();
     }
 
@@ -180,105 +174,62 @@ export default class RubiksModel {
         backgroud[0].innerHTML = this._mix.join(" ");
     }
 
-    private async _execAction(action: string) {
-        switch (action) {
+    private async _execAction(action: string, clockwise = true) {
+        const count = action.includes("2") ? 2 : 1;
+        const base = action[0];
+        const isPrime = action.includes("'");
+
+        const direction = isPrime ? !clockwise : clockwise;
+
+        for (let i = 0; i < count; i++) {
+            switch (base) {
+                case "F": this._rotate("F", direction); break;
+                case "B": this._rotate("B", direction); break;
+                case "L": this._rotate("L", direction); break;
+                case "R": this._rotate("R", direction); break;
+                case "U": this._rotate("U", direction); break;
+                case "D": this._rotate("D", direction); break;
+            }
+            await this._sleep(this._speed);
+        }
+    }
+
+    private _rotate(face: string, clockwise: boolean): void {
+        const layerValue = 0.3;
+        let axis = new THREE.Vector3();
+        let cubies: THREE.Object3D[] = [];
+
+        switch (face) {
             case "F":
-                this.front();
-                break;
-            case "F2":
-                this.front();
-                await this._sleep(this._speed);
-                this.front();
-                break;
-            case "F'":
-                this.front(false);
-                break;
-            case "F2'":
-                this.front(false);
-                await this._sleep(this._speed);
-                this.front(false);
+                cubies = this._cubies.filter(c => Math.abs(c.position.z - layerValue) < 0.1);
+                axis.set(0, 0, 1);
                 break;
             case "B":
-                this.back();
-                break;
-            case "B2":
-                this.back();
-                await this._sleep(this._speed);
-                this.back();
-                break;
-            case "B'":
-                this.back(false);
-                break;
-            case "B2'":
-                this.back(false);
-                await this._sleep(this._speed);
-                this.back(false);
-                break;
-            case "R":
-                this.right();
-                break;
-            case "R2":
-                this.right();
-                await this._sleep(this._speed);
-                this.right();
-                break;
-            case "R'":
-                this.right(false);
-                break;
-            case "R2'":
-                this.right(false);
-                await this._sleep(this._speed);
-                this.right(false);
-                break;
-            case "L":
-                this.left();
-                break;
-            case "L2":
-                this.left();
-                await this._sleep(this._speed);
-                this.left();
-                break;
-            case "L'":
-                this.left(false);
-                break;
-            case "L2'":
-                this.left(false);
-                await this._sleep(this._speed);
-                this.left(false);
+                cubies = this._cubies.filter(c => Math.abs(c.position.z + layerValue) < 0.1);
+                axis.set(0, 0, 1);
+                clockwise = !clockwise;
                 break;
             case "U":
-                this.up();
-                break;
-            case "U2":
-                this.up();
-                await this._sleep(this._speed);
-                this.up();
-                break;
-            case "U'":
-                this.up(false);
-                break;
-            case "U2'":
-                this.up(false);
-                await this._sleep(this._speed);
-                this.up(false);
+                cubies = this._cubies.filter(c => Math.abs(c.position.y - layerValue) < 0.1);
+                axis.set(0, 1, 0);
                 break;
             case "D":
-                this.down();
+                cubies = this._cubies.filter(c => Math.abs(c.position.y + layerValue) < 0.1);
+                axis.set(0, 1, 0);
+                clockwise = !clockwise;
                 break;
-            case "D2":
-                this.down();
-                await this._sleep(this._speed);
-                this.down();
+            case "R":
+                cubies = this._cubies.filter(c => Math.abs(c.position.x - layerValue) < 0.1);
+                axis.set(1, 0, 0);
                 break;
-            case "D'":
-                this.down(false);
-                break;
-            case "D2'":
-                this.down(false);
-                await this._sleep(this._speed);
-                this.down(false);
+            case "L":
+                cubies = this._cubies.filter(c => Math.abs(c.position.x + layerValue) < 0.1);
+                axis.set(1, 0, 0);
+                clockwise = !clockwise;
                 break;
         }
+
+        this._rotateLayer(cubies, axis, clockwise);
     }
 
     public getMix(): string[] { return this._mix; }

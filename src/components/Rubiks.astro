@@ -97,12 +97,10 @@
     canvas.addEventListener("mousedown", (event) => {
         switch (event.button) {
             case 0:
-                console.log('click gauche')
-                cube.raycastMiddleCube(event, camera, true)
+                cube.raycastMiddleCube(event, camera, true);
                 break ;
             case 2:
-                cube.raycastMiddleCube(event, camera, false)
-                console.log('clic droit')
+                cube.raycastMiddleCube(event, camera, false);
                 break ;
         }
     })
