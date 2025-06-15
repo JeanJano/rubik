@@ -52,7 +52,8 @@
                 console.log(cube.getMix());
                 break;
             case ' ':
-                cube.shuffle(mix);
+                cube.reversemove();
+                // cube.shuffle(mix);
                 break;
         }
     });
@@ -83,6 +84,10 @@
 
     window.addEventListener("mix", () => {
         cube.randomMix();
+    })
+
+    window.addEventListener("reversemove", () => {
+        cube.reversemove();
     })
 
     const animate = () => {

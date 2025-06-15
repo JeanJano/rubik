@@ -10,8 +10,7 @@ export default class RubiksModel {
 
     private _cube: THREE.Group;
     private _cubies: THREE.Object3D[];
-    private _axis: THREE.Vector3;
-    private _mix: string[];
+    private _mix: CubeAction[];
     private _speed: number;
     private _queue: CubeAction[];
     private _isAnimated: boolean;
@@ -19,7 +18,6 @@ export default class RubiksModel {
     constructor(model: THREE.Group) {
         this._cube = model;
         this._cubies = model.children;
-        this._axis = new THREE.Vector3(0, 0, 0);
         this._mix = [];
         this._speed = 400;
         this._queue = [];
@@ -56,13 +54,13 @@ export default class RubiksModel {
         this._processQueue();
     }
 
-    public async shuffle(mix: string[]) {
-        for (let i = 0; i < mix.length; i++) {
-            console.log(mix[i])
-            await this._execAction(mix[i]);
-            await this._sleep(this._speed);
-        }
-    }
+    // public async shuffle(mix: string[]) {
+    //     for (let i = 0; i < mix.length; i++) {
+    //         console.log(mix[i])
+    //         await this._execAction(mix[i]);
+    //         await this._sleep(this._speed);
+    //     }
+    // } 
 
     public randomMix(): void {
         const movesArray = ["F", "D", "L", "R", "U", "B"];
@@ -77,6 +75,38 @@ export default class RubiksModel {
         }
 
         this._processQueue();
+    }
+
+    public reversemove(): void {
+        if (this._mix.length < 1)
+            return ;
+
+        let reverse: CubeAction = {move: '', clockwise: true};
+
+        const lastmove = this._mix[this._mix.length - 1];
+        if (lastmove.move.includes("'")) {
+            if (lastmove.move.includes('2')) {
+                reverse.move = lastmove.move[0];
+                reverse.clockwise = !lastmove.clockwise;
+                this._mix[this._mix.length - 1].move = this._mix[this._mix.length - 1].move[0] + this._mix[this._mix.length - 1].move[2];
+            } else {
+                reverse.move = lastmove.move[0];
+                reverse.clockwise = !lastmove.clockwise;
+                this._mix.pop();
+            }
+        } else {
+            if (lastmove.move.includes('2')) {
+                reverse.move = lastmove.move[0] + "'";
+                reverse.clockwise = !lastmove.clockwise;
+                this._mix[this._mix.length - 1].move = this._mix[this._mix.length - 1].move[0];
+            } else {
+                reverse.move = lastmove.move + "'";
+                reverse.clockwise = !lastmove.clockwise;
+                this._mix.pop();
+            }
+        }
+        this._queue.push(reverse);
+        this._processQueue(false);
     }
 
     public raycastMiddleCube(event: MouseEvent, camera: THREE.Camera, clockwise: boolean) : THREE.Object3D | null {
@@ -109,17 +139,17 @@ export default class RubiksModel {
         return null
     }
 
-    private async _processQueue(): Promise<void> {
+    private async _processQueue(isPushToMix: boolean = true): Promise<void> {
         if (this._isAnimated || this._queue.length === 0)
             return;
         this._isAnimated = true;
 
         while (this._queue.length > 0) {
             const action = this._queue.shift()!;
-            this._pushToMix(action.move, action.clockwise);
-            await this._execAction(action.move, action.clockwise);
+            if (isPushToMix)
+                this._pushToMix(action);
+            await this._execAction(action);
             const adjustedSpeed = Math.max(0.001, this._speed - this._queue.length * 50);
-            console.log(adjustedSpeed)
             await this._sleep(adjustedSpeed);
         }
 
@@ -132,15 +162,18 @@ export default class RubiksModel {
         );
     }
 
-    private _pushToMix(operation: string, clockwise: boolean): void {
-        if (!clockwise) {
-            operation += "'";
+    private _pushToMix(operation: CubeAction): void {
+        if (!operation.clockwise) {
+            operation.move += "'";
         }
-        if (operation == this._mix[this._mix.length - 1]) {
-            if (clockwise)
-                this._mix[this._mix.length - 1] += "2";
+        if (this._mix.length > 0
+            && operation.move === this._mix[this._mix.length - 1].move 
+            && operation.clockwise === this._mix[this._mix.length - 1].clockwise
+        ) {
+            if (operation.clockwise)
+                this._mix[this._mix.length - 1].move += "2";
             else
-                this._mix[this._mix.length - 1] = operation[0] + "2'";
+                this._mix[this._mix.length - 1].move = operation.move[0] + "2'";
         }
         else {
             this._mix.push(operation);
@@ -170,25 +203,24 @@ export default class RubiksModel {
     }
 
     private _displayAction(): void {
-        const backgroud = document.getElementsByClassName("background");
-        backgroud[0].innerHTML = this._mix.join(" ");
+        const background = document.getElementsByClassName("background");
+        const moves = this._mix.map(action => action.move).join(" ");
+        background[0].innerHTML = moves;
     }
 
-    private async _execAction(action: string, clockwise = true) {
-        const count = action.includes("2") ? 2 : 1;
-        const base = action[0];
-        const isPrime = action.includes("'");
-
-        const direction = isPrime ? !clockwise : clockwise;
+    private async _execAction(action: CubeAction) {
+        const count = action.move.includes("2") ? 2 : 1;
+        const base = action.move[0];
+        const isPrime = !action.move.includes("'");
 
         for (let i = 0; i < count; i++) {
             switch (base) {
-                case "F": this._rotate("F", direction); break;
-                case "B": this._rotate("B", direction); break;
-                case "L": this._rotate("L", direction); break;
-                case "R": this._rotate("R", direction); break;
-                case "U": this._rotate("U", direction); break;
-                case "D": this._rotate("D", direction); break;
+                case "F": this._rotate("F", isPrime); break;
+                case "B": this._rotate("B", isPrime); break;
+                case "L": this._rotate("L", isPrime); break;
+                case "R": this._rotate("R", isPrime); break;
+                case "U": this._rotate("U", isPrime); break;
+                case "D": this._rotate("D", isPrime); break;
             }
             await this._sleep(this._speed);
         }
@@ -232,6 +264,6 @@ export default class RubiksModel {
         this._rotateLayer(cubies, axis, clockwise);
     }
 
-    public getMix(): string[] { return this._mix; }
+    public getMix(): CubeAction[] { return this._mix; }
 
 }

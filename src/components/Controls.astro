@@ -19,6 +19,7 @@ import Button from "./Button.astro"
             <Button label="down'" name="D'"/>
         </div>
         <div>
+            <Button label="reversemove" name="Reverse Move"/>
             <Button label="mix" name="Mix"/>
             <Button label="resolve" name="Resolve"/>
         </div>
@@ -55,6 +56,12 @@ import Button from "./Button.astro"
     mix?.addEventListener("click", () => {
         const event = new CustomEvent("mix");
         window.dispatchEvent(event);
-    })
+    });
+
+    const backmove = document.getElementById('reversemove');
+    backmove?.addEventListener("click", () => {
+        const event = new CustomEvent("reversemove");
+        window.dispatchEvent(event);
+    });
 
 </script>
