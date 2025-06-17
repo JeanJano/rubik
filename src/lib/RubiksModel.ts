@@ -109,6 +109,18 @@ export default class RubiksModel {
         this._processQueue(false);
     }
 
+    public reversecube(): void {
+        const current = (this._cube.rotation.x % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI);
+
+        const target = current < 0.01 ? Math.PI : 0;
+
+        gsap.to(this._cube.rotation, {
+            x: target,
+            duration: 0.5,
+            overwrite: 'auto'
+        });
+    }
+
     public raycastMiddleCube(event: MouseEvent, camera: THREE.Camera, clockwise: boolean) : THREE.Object3D | null {
         const raycaster = new THREE.Raycaster()
         const mouse = new THREE.Vector2()

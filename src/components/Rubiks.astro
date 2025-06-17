@@ -84,11 +84,15 @@
 
     window.addEventListener("mix", () => {
         cube.randomMix();
-    })
+    });
 
     window.addEventListener("reversemove", () => {
         cube.reversemove();
-    })
+    });
+
+    window.addEventListener("reversecube", () => {
+        cube.reversecube();
+    });
 
     const animate = () => {
       requestAnimationFrame(animate);
