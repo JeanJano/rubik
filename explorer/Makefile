@@ -11,6 +11,7 @@ OBJ_PATH	=	objs/
 
 ### FILES ###
 SOURCES		=	main.cpp \
+				parser.cpp \
 
 ### FILE MANAGEMENT ###
 SRCS		=	$(addprefix $(SRC_PATH),$(SOURCES))
