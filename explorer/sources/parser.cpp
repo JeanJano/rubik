@@ -13,7 +13,7 @@ std::vector<std::string> parseMoves(const std::string& input){
     while (iss >> move) {
         if (!isValidMove(move)) {
             std::cerr << "Invalid move detected: " << move << std::endl;
-            throw std::invalid_argument("Invalid move in parseMoves");
+            throw std::invalid_argument(UsageMessage);
         }
         moves.push_back(move);
     }

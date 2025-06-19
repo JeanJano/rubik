@@ -1,25 +1,29 @@
 #include "rubik_explorer.hpp"
 #include "defs_explorer.hpp"
 
-int main(int ac, char** av) {
+std::vector<std::string> get_scramble(int ac, char** av) {
     if (ac != 2) {
         std::cout << UsageMessage << std::endl;
-        return 1;
+        return {};
     }
 
     try {
-        std::vector<std::string> moves = parseMoves(av[1]);
-
-        std::cout << "Moves parsed successfully:\n";
-        for (const auto& m : moves) {
-            std::cout << m << " ";
+        std::vector<std::string> scramble = parseMoves(av[1]);
+        if (scramble.empty()) {
+            std::cout << UsageMessage << std::endl;
+            return {};
         }
-        std::cout << std::endl;
-
+        return scramble;
     } catch (const std::invalid_argument& e) {
         std::cerr << "Error parsing moves: " << e.what() << std::endl;
-        return 1;
+        return {};
     }
+}
 
-    return 0;
+int main(int ac, char** av) {
+    std::vector<std::string> scramble = get_scramble(ac, av);
+    if (scramble.empty())
+        return 1;
+    Cube cube = get_scrambled_state(scramble);
+    print_cube_state(cube);
 }
