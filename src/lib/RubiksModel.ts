@@ -1,10 +1,6 @@
 import * as THREE from 'three';
 import gsap from 'gsap';
-
-interface CubeAction {
-    move: string;
-    clockwise: boolean;
-}
+import type { CubeAction } from './CubeAction';
 
 export default class RubiksModel {
 
@@ -54,13 +50,12 @@ export default class RubiksModel {
         this._processQueue();
     }
 
-    // public async shuffle(mix: string[]) {
-    //     for (let i = 0; i < mix.length; i++) {
-    //         console.log(mix[i])
-    //         await this._execAction(mix[i]);
-    //         await this._sleep(this._speed);
-    //     }
-    // } 
+    public async shuffle(mix: CubeAction[]) {
+        for (let i = 0; i < mix.length; i++) {
+            this._queue.push(mix[i]);
+        }
+        this._processQueue();
+    } 
 
     public randomMix(): void {
         const movesArray = ["F", "D", "L", "R", "U", "B"];
@@ -155,7 +150,6 @@ export default class RubiksModel {
         if (this._isAnimated || this._queue.length === 0)
             return;
         this._isAnimated = true;
-
         while (this._queue.length > 0) {
             const action = this._queue.shift()!;
             if (isPushToMix)
@@ -175,7 +169,7 @@ export default class RubiksModel {
     }
 
     private _pushToMix(operation: CubeAction): void {
-        if (!operation.clockwise) {
+        if (!operation.clockwise && !operation.move.includes("'")) {
             operation.move += "'";
         }
         if (this._mix.length > 0
@@ -186,8 +180,7 @@ export default class RubiksModel {
                 this._mix[this._mix.length - 1].move += "2";
             else
                 this._mix[this._mix.length - 1].move = operation.move[0] + "2'";
-        }
-        else {
+        } else {
             this._mix.push(operation);
         }
     }

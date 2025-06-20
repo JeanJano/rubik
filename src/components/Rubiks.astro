@@ -7,6 +7,7 @@
     import type { GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js';
     import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
     import RubiksModel from "../lib/RubiksModel.ts"
+    import type { CubeAction } from '../lib/CubeAction';
 
     const canvas = document.querySelector<HTMLCanvasElement>('.threejs');
     if (!canvas)
@@ -40,10 +41,15 @@
       cube = new RubiksModel(model);
     });
 
-    const mix = [
-        "D2",
-        "R2",
-        "R2'"
+    const mix: CubeAction[] = [
+        // {move: "D", clockwise: true},
+        // {move: "R", clockwise: true},
+        {move: "D", clockwise: false},
+        {move: "D", clockwise: false},
+        {move: "D", clockwise: false},
+        {move: "D", clockwise: false},
+        // {move: "R2", clockwise: false},
+        // {move: "R2", clockwise: false},
     ]
 
     window.addEventListener("keydown", (event) => {
@@ -53,7 +59,9 @@
                 break;
             case ' ':
                 cube.reversemove();
-                // cube.shuffle(mix);
+                break;
+            case 'm':
+                cube.shuffle(mix);
                 break;
         }
     });
