@@ -24,6 +24,6 @@ int main(int ac, char** av) {
     std::vector<std::string> scramble = get_scramble(ac, av);
     if (scramble.empty())
         return 1;
-    Cube cube = get_scrambled_state(scramble);
-    print_cube_state(cube);
+    Cube_cubie cube = get_scrambled_state(scramble);
+    (void)cube;
 }

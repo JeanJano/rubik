@@ -1,16 +1,24 @@
 #include "rubik_explorer.hpp"
 #include "defs_explorer.hpp"
 
-void print_cube_state(Cube cube) {
+void print_cubie_state(const Cube_cubie& cube) {
     std::cout << "Corners (position, orientation):\n";
-    for (int i = 0; i < 8; ++i) {
-        std::cout << "(" << cube.corners[i].pos << ", " << cube.corners[i].ori << ") ";
+    for (const auto& cornerCubie : cube.corners) {
+        std::cout << "(" << corner_to_string(static_cast<Corner>(cornerCubie.pos))
+                  << ", " << cornerCubie.ori << ") ";
+    }
+    std::cout << "\nEdges (position, orientation):\n";
+    for (const auto& edgeCubie : cube.edges) {
+        std::cout << "(" << edge_to_string(static_cast<Edge>(edgeCubie.pos))
+                  << ", " << edgeCubie.ori << ") ";
     }
     std::cout << "\n";
+}
 
-    std::cout << "Edges (position, orientation):\n";
-    for (int i = 0; i < 12; ++i) {
-        std::cout << "(" << cube.edges[i].pos << ", " << cube.edges[i].ori << ") ";
+void print_scramble(const std::vector<std::string>& scramble) {
+    std::cout << "Scramble: ";
+    for (const std::string& move : scramble) {
+        std::cout << move << " ";
     }
-    std::cout << "\n";
+    std::cout << std::endl;
 }

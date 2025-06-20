@@ -13,6 +13,7 @@ OBJ_PATH	=	objs/
 SOURCES		=	main.cpp \
 				parser.cpp \
 				scrambler.cpp \
+				cube_cubie.cpp \
 				utils.cpp \
 
 ### FILE MANAGEMENT ###

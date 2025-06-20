@@ -2,7 +2,11 @@
 # define RUBIK_DEFS_HPP
 # include <array>
 # include <string>
+# include <ostream>
 # include <unordered_set>
+# include <iostream>
+# include <vector>
+# include <sstream>
 
 // ------------------------init stuff---------------------------------
 
@@ -14,7 +18,7 @@ const std::string UsageMessage =
 // ------------------- Valid Move Strings -------------------
 
 /**
- * Set of valid string representations of moves.
+ * Set of valid string representations of moves for scrambler.
  */
 inline const std::unordered_set<std::string> validRubikMoves = {
     "U", "U'", "U2",
@@ -25,12 +29,7 @@ inline const std::unordered_set<std::string> validRubikMoves = {
     "B", "B'", "B2"
 };
 
-// ------------------- Facelets and Colors -------------------
-
-/**
- * Facelet positions of the cube, numbered from 0 to 53.
- * Follows the unfolded cube layout (U, R, F, D, L, B).
- */
+// ----------------------
 enum class Facelet {
     U1 = 0, U2, U3, U4, U5, U6, U7, U8, U9,
     R1, R2, R3, R4, R5, R6, R7, R8, R9,
@@ -57,12 +56,21 @@ enum class Corner {
     URF = 0, UFL, ULB, UBR, DFR, DLF, DBL, DRB
 };
 
+inline const char* corner_names[] = {
+    "URF", "UFL", "ULB", "UBR", "DFR", "DLF", "DBL", "DRB"
+};
+
 /**
  * Enum for the 12 edge cubies.
  * Each edge has 2 facelets: for example, UR = Up-Right.
  */
 enum class Edge {
     UR = 0, UF, UL, UB, DR, DF, DL, DB, FR, FL, BL, BR
+};
+
+
+inline const char* edge_names[] = {
+    "UR", "UF", "UL", "UB", "DR", "DF", "DL", "DB", "FR", "FL", "BL", "BR"
 };
 
 // ------------------- Moves -------------------
@@ -104,21 +112,18 @@ struct EdgeCubie {
 /**
  * A full cube state with all 8 corners and 12 edges.
  */
-struct Cube {
+
+struct Cube_cubie {
     std::array<CornerCubie, 8> corners;
     std::array<EdgeCubie, 12> edges;
-
-    /**
-     * Reset the cube to the solved state.
-     */
-    void reset() {
-        for (int i = 0; i < 8; ++i) {
-            corners[i] = {i, 0};
-        }
-        for (int i = 0; i < 12; ++i) {
-            edges[i] = {i, 0};
-        }
-    }
+    void reset();
+    Cube_cubie singleMove(const std::string& move, const Cube_cubie& inputCube) const;
+    Cube_cubie severalMoves(const std::vector<std::string>& moves, const Cube_cubie& inputCube) const;
 };
+
+//-------------------nedded to see the cubie representation--------
+std::string edge_to_string(Edge e);
+std::string corner_to_string(Corner c);
+std::ostream& operator<<(std::ostream& os, Edge e);
 
 #endif
