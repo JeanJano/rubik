@@ -25,5 +25,5 @@ int main(int ac, char** av) {
     if (scramble.empty())
         return 1;
     Cube_cubie cube = get_scrambled_state(scramble);
-    (void)cube;
+    print_cubie_state(cube);
 }

@@ -12,7 +12,6 @@ OBJ_PATH	=	objs/
 ### FILES ###
 SOURCES		=	main.cpp \
 				parser.cpp \
-				scrambler.cpp \
 				cube_cubie.cpp \
 				utils.cpp \
 

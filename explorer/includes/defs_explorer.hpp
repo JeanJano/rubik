@@ -117,13 +117,12 @@ struct Cube_cubie {
     std::array<CornerCubie, 8> corners;
     std::array<EdgeCubie, 12> edges;
     void reset();
-    Cube_cubie singleMove(const std::string& move, const Cube_cubie& inputCube) const;
+    Cube_cubie basicMove(const std::string& move, const Cube_cubie& inputCube) const;
     Cube_cubie severalMoves(const std::vector<std::string>& moves, const Cube_cubie& inputCube) const;
 };
 
 //-------------------nedded to see the cubie representation--------
 std::string edge_to_string(Edge e);
 std::string corner_to_string(Corner c);
-std::ostream& operator<<(std::ostream& os, Edge e);
 
 #endif

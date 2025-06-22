@@ -8,277 +8,348 @@ void Cube_cubie::reset() {
         edges[i] = {i, 0};
 }
 
-std::string corner_to_string(Corner c) {
-    return corner_names[static_cast<int>(c)];
-}
-
-std::string edge_to_string(Edge e) {
-    return edge_names[static_cast<int>(e)];
-}
-
-std::ostream& operator<<(std::ostream& os, Edge e) {
-    return os << edge_to_string(e);
-}
-
-Cube_cubie Cube_cubie::singleMove(const std::string& move, const Cube_cubie& inputCube) const{
-    Cube_cubie new_cube = inputCube;
+//definition of permutation and orientatiuon in basic moves 
+Cube_cubie Cube_cubie::basicMove(const std::string& move, const Cube_cubie& inputCube) const{
+    Cube_cubie newCube = inputCube;
     if (move == "U"){
-        new_cube.corners[0].pos = 3;
-        new_cube.corners[1].pos = 0;
-        new_cube.corners[2].pos = 1;
-        new_cube.corners[3].pos = 2;
-        new_cube.edges[0].pos = 3;
-        new_cube.edges[1].pos = 0;
-        new_cube.edges[2].pos = 1;
-        new_cube.edges[3].pos = 2;
+        newCube.corners[0].pos = inputCube.corners[3].pos;
+        newCube.corners[1].pos = inputCube.corners[0].pos;
+        newCube.corners[2].pos = inputCube.corners[1].pos;
+        newCube.corners[3].pos = inputCube.corners[2].pos;
+        newCube.corners[0].ori = inputCube.corners[3].ori;
+        newCube.corners[1].ori = inputCube.corners[0].ori;
+        newCube.corners[2].ori = inputCube.corners[1].ori;
+        newCube.corners[3].ori = inputCube.corners[2].ori;
+        newCube.edges[0].pos = inputCube.edges[3].pos;
+        newCube.edges[1].pos = inputCube.edges[0].pos;
+        newCube.edges[2].pos = inputCube.edges[1].pos;
+        newCube.edges[3].pos = inputCube.edges[2].pos;
+        newCube.edges[0].ori = inputCube.edges[3].ori;
+        newCube.edges[1].ori = inputCube.edges[0].ori;
+        newCube.edges[2].ori = inputCube.edges[1].ori;
+        newCube.edges[3].ori = inputCube.edges[2].ori;
     } 
     else if (move == "U2"){
-        new_cube.corners[0].pos = 2;
-        new_cube.corners[1].pos = 3;
-        new_cube.corners[2].pos = 0;
-        new_cube.corners[3].pos = 1;
-        new_cube.edges[0].pos = 2;
-        new_cube.edges[1].pos = 3;
-        new_cube.edges[2].pos = 0;
-        new_cube.edges[3].pos = 1;
+        newCube.corners[0].pos = inputCube.corners[2].pos;
+        newCube.corners[1].pos = inputCube.corners[3].pos;
+        newCube.corners[2].pos = inputCube.corners[0].pos;
+        newCube.corners[3].pos = inputCube.corners[1].pos;
+        newCube.corners[0].ori = inputCube.corners[2].ori;
+        newCube.corners[1].ori = inputCube.corners[3].ori;
+        newCube.corners[2].ori = inputCube.corners[0].ori;
+        newCube.corners[3].ori = inputCube.corners[1].ori;
+        newCube.edges[0].pos = inputCube.edges[2].pos;
+        newCube.edges[1].pos = inputCube.edges[3].pos;
+        newCube.edges[2].pos = inputCube.edges[0].pos;
+        newCube.edges[3].pos = inputCube.edges[1].pos;
+        newCube.edges[0].ori = inputCube.edges[2].ori;
+        newCube.edges[1].ori = inputCube.edges[3].ori;
+        newCube.edges[2].ori = inputCube.edges[0].ori;
+        newCube.edges[3].ori = inputCube.edges[1].ori;
     } 
     else if (move == "U\'"){
-        new_cube.corners[0].pos = 1;
-        new_cube.corners[1].pos = 2;
-        new_cube.corners[2].pos = 3;
-        new_cube.corners[3].pos = 0;
-        new_cube.edges[0].pos = 1;
-        new_cube.edges[1].pos = 2;
-        new_cube.edges[2].pos = 3;
-        new_cube.edges[3].pos = 0;
+        newCube.corners[0].pos = inputCube.corners[1].pos;
+        newCube.corners[1].pos = inputCube.corners[2].pos;
+        newCube.corners[2].pos = inputCube.corners[3].pos;
+        newCube.corners[3].pos = inputCube.corners[0].pos;
+        newCube.corners[0].ori = inputCube.corners[1].ori;
+        newCube.corners[1].ori = inputCube.corners[2].ori;
+        newCube.corners[2].ori = inputCube.corners[3].ori;
+        newCube.corners[3].ori = inputCube.corners[0].ori;
+        newCube.edges[0].pos = inputCube.edges[1].pos;
+        newCube.edges[1].pos = inputCube.edges[2].pos;
+        newCube.edges[2].pos = inputCube.edges[3].pos;
+        newCube.edges[3].pos = inputCube.edges[0].pos;
+        newCube.edges[0].ori = inputCube.edges[1].ori;
+        newCube.edges[1].ori = inputCube.edges[2].ori;
+        newCube.edges[2].ori = inputCube.edges[3].ori;
+        newCube.edges[3].ori = inputCube.edges[0].ori;
     } 
     else if (move == "D"){
-        new_cube.corners[4].pos = 5;
-        new_cube.corners[5].pos = 6;
-        new_cube.corners[6].pos = 7;
-        new_cube.corners[7].pos = 4;
-        new_cube.edges[4].pos = 5;
-        new_cube.edges[5].pos = 6;
-        new_cube.edges[6].pos = 7;
-        new_cube.edges[7].pos = 4;
+        newCube.corners[4].pos = inputCube.corners[5].pos;
+        newCube.corners[5].pos = inputCube.corners[6].pos;
+        newCube.corners[6].pos = inputCube.corners[7].pos;
+        newCube.corners[7].pos = inputCube.corners[4].pos;
+        newCube.corners[4].ori = inputCube.corners[5].ori;
+        newCube.corners[5].ori = inputCube.corners[6].ori;
+        newCube.corners[6].ori = inputCube.corners[7].ori;
+        newCube.corners[7].ori = inputCube.corners[4].ori;
+        newCube.edges[4].pos = inputCube.edges[5].pos;
+        newCube.edges[5].pos = inputCube.edges[6].pos;
+        newCube.edges[6].pos = inputCube.edges[7].pos;
+        newCube.edges[7].pos = inputCube.edges[4].pos;
+        newCube.edges[4].ori = inputCube.edges[5].ori;
+        newCube.edges[5].ori = inputCube.edges[6].ori;
+        newCube.edges[6].ori = inputCube.edges[7].ori;
+        newCube.edges[7].ori = inputCube.edges[4].ori;
     } 
     else if (move == "D2"){ 
-        new_cube.corners[4].pos = 6;
-        new_cube.corners[5].pos = 7;
-        new_cube.corners[6].pos = 4;
-        new_cube.corners[7].pos = 5;
-        new_cube.edges[4].pos = 6;
-        new_cube.edges[5].pos = 7;
-        new_cube.edges[6].pos = 4;
-        new_cube.edges[7].pos = 5;
+        newCube.corners[4].pos = inputCube.corners[6].pos;
+        newCube.corners[5].pos = inputCube.corners[7].pos;
+        newCube.corners[6].pos = inputCube.corners[4].pos;
+        newCube.corners[7].pos = inputCube.corners[5].pos;
+        newCube.corners[4].ori = inputCube.corners[6].ori;
+        newCube.corners[5].ori = inputCube.corners[7].ori;
+        newCube.corners[6].ori = inputCube.corners[4].ori;
+        newCube.corners[7].ori = inputCube.corners[5].ori;
+        newCube.edges[4].pos = inputCube.edges[6].pos;
+        newCube.edges[5].pos = inputCube.edges[7].pos;
+        newCube.edges[6].pos = inputCube.edges[4].pos;
+        newCube.edges[7].pos = inputCube.edges[5].pos;
+        newCube.edges[4].ori = inputCube.edges[6].ori;
+        newCube.edges[5].ori = inputCube.edges[7].ori;
+        newCube.edges[6].ori = inputCube.edges[4].ori;
+        newCube.edges[7].ori = inputCube.edges[5].ori;
     }
     else if (move == "D\'"){
-        new_cube.corners[4].pos = 7;
-        new_cube.corners[5].pos = 4;
-        new_cube.corners[6].pos = 5;
-        new_cube.corners[7].pos = 6;
-        new_cube.edges[4].pos = 7;
-        new_cube.edges[5].pos = 4;
-        new_cube.edges[6].pos = 5;
-        new_cube.edges[7].pos = 6;
+        newCube.corners[4].pos = inputCube.corners[7].pos;
+        newCube.corners[5].pos = inputCube.corners[4].pos;
+        newCube.corners[6].pos = inputCube.corners[5].pos;
+        newCube.corners[7].pos = inputCube.corners[6].pos;
+        newCube.corners[4].ori = inputCube.corners[7].ori;
+        newCube.corners[5].ori = inputCube.corners[4].ori;
+        newCube.corners[6].ori = inputCube.corners[5].ori;
+        newCube.corners[7].ori = inputCube.corners[6].ori;
+        newCube.edges[4].pos = inputCube.edges[7].pos;
+        newCube.edges[5].pos = inputCube.edges[4].pos;
+        newCube.edges[6].pos = inputCube.edges[5].pos;
+        newCube.edges[7].pos = inputCube.edges[6].pos;
+        newCube.edges[4].ori = inputCube.edges[7].ori;
+        newCube.edges[5].ori = inputCube.edges[4].ori;
+        newCube.edges[6].ori = inputCube.edges[5].ori;
+        newCube.edges[7].ori = inputCube.edges[6].ori;
     } 
     else if (move == "F"){
-        new_cube.corners[0].pos = 1;
-        new_cube.corners[1].pos = 5;
-        new_cube.corners[5].pos = 4;
-        new_cube.corners[4].pos = 0;
-        new_cube.corners[0].ori = 1;
-        new_cube.corners[1].ori = 2;
-        new_cube.corners[5].ori = 1;
-        new_cube.corners[4].ori = 2;
-        new_cube.edges[1].pos = 9;
-        new_cube.edges[9].pos = 5;
-        new_cube.edges[5].pos = 8;
-        new_cube.edges[8].pos = 1;
-        new_cube.edges[1].ori = 1;
-        new_cube.edges[9].ori = 1;
-        new_cube.edges[5].ori = 1;
-        new_cube.edges[8].ori = 1;
+        newCube.corners[0].pos = inputCube.corners[1].pos;
+        newCube.corners[1].pos = inputCube.corners[5].pos;
+        newCube.corners[5].pos = inputCube.corners[4].pos;
+        newCube.corners[4].pos = inputCube.corners[0].pos;
+        newCube.corners[0].ori = (inputCube.corners[1].ori + 1) % 3;
+        newCube.corners[1].ori = (inputCube.corners[5].ori + 2) % 3;
+        newCube.corners[5].ori = (inputCube.corners[4].ori + 1) % 3;
+        newCube.corners[4].ori = (inputCube.corners[0].ori + 2) % 3;
+        newCube.edges[1].pos = inputCube.edges[9].pos;
+        newCube.edges[9].pos = inputCube.edges[5].pos;
+        newCube.edges[5].pos = inputCube.edges[8].pos;
+        newCube.edges[8].pos = inputCube.edges[1].pos;
+        newCube.edges[1].ori = (inputCube.edges[9].ori + 1) % 2;
+        newCube.edges[9].ori = (inputCube.edges[5].ori + 1) % 2;
+        newCube.edges[5].ori = (inputCube.edges[8].ori + 1) % 2;
+        newCube.edges[8].ori = (inputCube.edges[1].ori + 1) % 2;
     } 
     else if (move == "F2"){
-        new_cube.corners[0].pos = 5;
-        new_cube.corners[1].pos = 4;
-        new_cube.corners[5].pos = 0;
-        new_cube.corners[4].pos = 1;
-        new_cube.edges[1].pos = 5;
-        new_cube.edges[9].pos = 8;
-        new_cube.edges[5].pos = 1;
-        new_cube.edges[8].pos = 9;
+        newCube.corners[0].pos = inputCube.corners[5].pos;
+        newCube.corners[1].pos = inputCube.corners[4].pos;
+        newCube.corners[5].pos = inputCube.corners[0].pos;
+        newCube.corners[4].pos = inputCube.corners[1].pos;
+        newCube.corners[0].ori = inputCube.corners[5].ori;
+        newCube.corners[1].ori = inputCube.corners[4].ori;
+        newCube.corners[5].ori = inputCube.corners[0].ori;
+        newCube.corners[4].ori = inputCube.corners[1].ori;
+        newCube.edges[1].pos = inputCube.edges[5].pos;
+        newCube.edges[9].pos = inputCube.edges[8].pos;
+        newCube.edges[5].pos = inputCube.edges[1].pos;
+        newCube.edges[8].pos = inputCube.edges[9].pos;
+        newCube.edges[1].ori = inputCube.edges[5].ori;
+        newCube.edges[9].ori = inputCube.edges[8].ori;
+        newCube.edges[5].ori = inputCube.edges[1].ori;
+        newCube.edges[8].ori = inputCube.edges[9].ori;
     }
     else if (move == "F\'"){
-        new_cube.corners[0].pos = 4;
-        new_cube.corners[1].pos = 0;
-        new_cube.corners[5].pos = 1;
-        new_cube.corners[4].pos = 5;
-        new_cube.corners[0].ori = 1;
-        new_cube.corners[1].ori = 2;
-        new_cube.corners[5].ori = 1;
-        new_cube.corners[4].ori = 2;
-        new_cube.edges[1].pos = 8;
-        new_cube.edges[9].pos = 1;
-        new_cube.edges[5].pos = 9;
-        new_cube.edges[8].pos = 5;
-        new_cube.edges[1].ori = 1;
-        new_cube.edges[9].ori = 1;
-        new_cube.edges[5].ori = 1;
-        new_cube.edges[8].ori = 1;
+        newCube.corners[0].pos = inputCube.corners[4].pos;
+        newCube.corners[1].pos = inputCube.corners[0].pos;
+        newCube.corners[5].pos = inputCube.corners[1].pos;
+        newCube.corners[4].pos = inputCube.corners[5].pos;
+        newCube.corners[0].ori = (inputCube.corners[4].ori + 1) % 3;
+        newCube.corners[1].ori = (inputCube.corners[0].ori + 2) % 3;
+        newCube.corners[5].ori = (inputCube.corners[1].ori + 1) % 3;
+        newCube.corners[4].ori = (inputCube.corners[5].ori + 2) % 3;
+        newCube.edges[1].pos = inputCube.edges[8].pos;
+        newCube.edges[9].pos = inputCube.edges[1].pos;
+        newCube.edges[5].pos = inputCube.edges[9].pos;
+        newCube.edges[8].pos = inputCube.edges[5].pos;
+        newCube.edges[1].ori = (inputCube.edges[8].ori + 1) % 2;
+        newCube.edges[9].ori = (inputCube.edges[1].ori + 1) % 2;
+        newCube.edges[5].ori = (inputCube.edges[9].ori + 1) % 2;
+        newCube.edges[8].ori = (inputCube.edges[5].ori + 1) % 2;
     } 
     else if (move == "B"){ 
-        new_cube.corners[2].pos = 3;
-        new_cube.corners[3].pos = 7;
-        new_cube.corners[7].pos = 6;
-        new_cube.corners[6].pos = 2;
-        new_cube.corners[2].ori = 1;
-        new_cube.corners[3].ori = 2;
-        new_cube.corners[6].ori = 2;
-        new_cube.corners[7].ori = 1;
-        new_cube.edges[3].pos = 11;
-        new_cube.edges[11].pos = 7;
-        new_cube.edges[7].pos = 10;
-        new_cube.edges[10].pos = 3;
-        new_cube.edges[1].ori = 1;
-        new_cube.edges[9].ori = 1;
-        new_cube.edges[5].ori = 1;
-        new_cube.edges[8].ori = 1;
+        newCube.corners[2].pos = inputCube.corners[3].pos;
+        newCube.corners[3].pos = inputCube.corners[7].pos;
+        newCube.corners[7].pos = inputCube.corners[6].pos;
+        newCube.corners[6].pos = inputCube.corners[2].pos;
+        newCube.corners[2].ori = (inputCube.corners[3].ori + 1) % 3;
+        newCube.corners[3].ori = (inputCube.corners[7].ori + 2) % 3;
+        newCube.corners[7].ori = (inputCube.corners[6].ori + 1) % 3;
+        newCube.corners[6].ori = (inputCube.corners[2].ori + 2) % 3;
+        newCube.edges[3].pos = inputCube.edges[11].pos;
+        newCube.edges[11].pos = inputCube.edges[7].pos;
+        newCube.edges[7].pos = inputCube.edges[10].pos;
+        newCube.edges[10].pos = inputCube.edges[3].pos;
+        newCube.edges[3].ori = (inputCube.edges[11].ori + 1) % 2;
+        newCube.edges[11].ori = (inputCube.edges[7].ori + 1) % 2;
+        newCube.edges[7].ori = (inputCube.edges[10].ori + 1) % 2;
+        newCube.edges[10].ori = (inputCube.edges[3].ori + 1) % 2;
     }
     else if (move == "B2"){
-        new_cube.corners[2].pos = 7;
-        new_cube.corners[3].pos = 6;
-        new_cube.corners[7].pos = 2;
-        new_cube.corners[6].pos = 3;
-        new_cube.edges[3].pos = 7;
-        new_cube.edges[11].pos = 10;
-        new_cube.edges[7].pos = 3;
-        new_cube.edges[10].pos = 11;
+        newCube.corners[2].pos = inputCube.corners[7].pos;
+        newCube.corners[3].pos = inputCube.corners[6].pos;
+        newCube.corners[7].pos = inputCube.corners[2].pos;
+        newCube.corners[6].pos = inputCube.corners[3].pos;
+        newCube.corners[2].ori = inputCube.corners[7].ori;
+        newCube.corners[3].ori = inputCube.corners[6].ori;
+        newCube.corners[7].ori = inputCube.corners[2].ori;
+        newCube.corners[6].ori = inputCube.corners[3].ori;
+        newCube.edges[3].pos = inputCube.edges[7].pos;
+        newCube.edges[11].pos = inputCube.edges[10].pos;
+        newCube.edges[7].pos = inputCube.edges[3].pos;
+        newCube.edges[10].pos = inputCube.edges[11].pos;
+        newCube.edges[3].ori = inputCube.edges[7].ori;
+        newCube.edges[11].ori = inputCube.edges[10].ori;
+        newCube.edges[7].ori = inputCube.edges[3].ori;
+        newCube.edges[10].ori = inputCube.edges[11].ori;
     } 
     else if (move == "B\'"){
-        new_cube.corners[2].pos = 6;
-        new_cube.corners[3].pos = 2;
-        new_cube.corners[7].pos = 3;
-        new_cube.corners[6].pos = 7;
-        new_cube.corners[2].ori = 1;
-        new_cube.corners[3].ori = 2;
-        new_cube.corners[6].ori = 2;
-        new_cube.corners[7].ori = 1;
-        new_cube.edges[3].pos = 10;
-        new_cube.edges[10].pos = 7;
-        new_cube.edges[7].pos = 11;
-        new_cube.edges[11].pos = 3;
-        new_cube.edges[1].ori = 1;
-        new_cube.edges[9].ori = 1;
-        new_cube.edges[5].ori = 1;
-        new_cube.edges[8].ori = 1;
+        newCube.corners[2].pos = inputCube.corners[6].pos;
+        newCube.corners[3].pos = inputCube.corners[2].pos;
+        newCube.corners[7].pos = inputCube.corners[3].pos;
+        newCube.corners[6].pos = inputCube.corners[7].pos;
+        newCube.corners[2].ori = (inputCube.corners[6].ori + 1) % 3;
+        newCube.corners[3].ori = (inputCube.corners[2].ori + 2) % 3;
+        newCube.corners[7].ori = (inputCube.corners[3].ori + 1) % 3;
+        newCube.corners[6].ori = (inputCube.corners[7].ori + 2) % 3;
+        newCube.edges[3].pos = inputCube.edges[10].pos;
+        newCube.edges[10].pos = inputCube.edges[7].pos;
+        newCube.edges[7].pos = inputCube.edges[11].pos;
+        newCube.edges[11].pos = inputCube.edges[3].pos;
+        newCube.edges[3].ori = (inputCube.edges[10].ori + 1) % 2;
+        newCube.edges[10].ori = (inputCube.edges[7].ori + 1) % 2;
+        newCube.edges[7].ori = (inputCube.edges[11].ori + 1) % 2;
+        newCube.edges[11].ori = (inputCube.edges[3].ori + 1) % 2;
     } 
     else if (move == "R"){
-        new_cube.corners[0].pos = 4;
-        new_cube.corners[4].pos = 7;
-        new_cube.corners[7].pos = 3;
-        new_cube.corners[3].pos = 0;
-        new_cube.corners[0].ori = 2;
-        new_cube.corners[4].ori = 1;
-        new_cube.corners[7].ori = 2;
-        new_cube.corners[3].ori = 1;
-        new_cube.edges[0].pos = 8;
-        new_cube.edges[8].pos = 4;
-        new_cube.edges[4].pos = 11;
-        new_cube.edges[11].pos = 0;
-        new_cube.edges[0].ori = 1;
-        new_cube.edges[4].ori = 1;
-        new_cube.edges[8].ori = 1;
-        new_cube.edges[11].ori = 1;
+        newCube.corners[0].pos = inputCube.corners[4].pos;
+        newCube.corners[4].pos = inputCube.corners[7].pos;
+        newCube.corners[7].pos = inputCube.corners[3].pos;
+        newCube.corners[3].pos = inputCube.corners[0].pos;
+        newCube.corners[0].ori = (inputCube.corners[4].ori + 2) % 3;
+        newCube.corners[4].ori = (inputCube.corners[7].ori + 1) % 3;
+        newCube.corners[7].ori = (inputCube.corners[3].ori + 2) % 3;
+        newCube.corners[3].ori = (inputCube.corners[0].ori + 1) % 3;
+        newCube.edges[0].pos = inputCube.edges[8].pos;
+        newCube.edges[8].pos = inputCube.edges[4].pos;
+        newCube.edges[4].pos = inputCube.edges[11].pos;
+        newCube.edges[11].pos = inputCube.edges[0].pos;
+        newCube.edges[0].ori = inputCube.edges[8].ori;
+        newCube.edges[8].ori = inputCube.edges[4].ori;
+        newCube.edges[4].ori = inputCube.edges[11].ori;
+        newCube.edges[11].ori = inputCube.edges[0].ori;
     } 
     else if (move == "R2"){
-        new_cube.corners[0].pos = 7;
-        new_cube.corners[4].pos = 3;
-        new_cube.corners[7].pos = 0;
-        new_cube.corners[3].pos = 4;
-        new_cube.edges[0].pos = 4;
-        new_cube.edges[8].pos = 11;
-        new_cube.edges[4].pos = 0;
-        new_cube.edges[11].pos = 8;
+        newCube.corners[0].pos = inputCube.corners[7].pos;
+        newCube.corners[4].pos = inputCube.corners[3].pos;
+        newCube.corners[7].pos = inputCube.corners[0].pos;
+        newCube.corners[3].pos = inputCube.corners[4].pos;
+        newCube.corners[0].ori = inputCube.corners[7].ori;
+        newCube.corners[4].ori = inputCube.corners[3].ori;
+        newCube.corners[7].ori = inputCube.corners[0].ori;
+        newCube.corners[3].ori = inputCube.corners[4].ori;
+        newCube.edges[0].pos = inputCube.edges[4].pos;
+        newCube.edges[8].pos = inputCube.edges[11].pos;
+        newCube.edges[4].pos = inputCube.edges[0].pos;
+        newCube.edges[11].pos = inputCube.edges[8].pos;
+        newCube.edges[0].ori = inputCube.edges[4].ori;
+        newCube.edges[8].ori = inputCube.edges[11].ori;
+        newCube.edges[4].ori = inputCube.edges[0].ori;
+        newCube.edges[11].ori = inputCube.edges[8].ori;
     } 
     else if (move == "R\'"){
-        new_cube.corners[0].pos = 3;
-        new_cube.corners[4].pos = 0;
-        new_cube.corners[7].pos = 4;
-        new_cube.corners[3].pos = 7;
-        new_cube.corners[0].ori = 2;
-        new_cube.corners[4].ori = 1;
-        new_cube.corners[7].ori = 2;
-        new_cube.corners[3].ori = 1;
-        new_cube.edges[0].pos = 11;
-        new_cube.edges[8].pos = 0;
-        new_cube.edges[4].pos = 8;
-        new_cube.edges[11].pos = 4;
-        new_cube.edges[0].ori = 1;
-        new_cube.edges[4].ori = 1;
-        new_cube.edges[8].ori = 1;
-        new_cube.edges[11].ori = 1;
+        newCube.corners[0].pos = inputCube.corners[3].pos;
+        newCube.corners[4].pos = inputCube.corners[0].pos;
+        newCube.corners[7].pos = inputCube.corners[4].pos;
+        newCube.corners[3].pos = inputCube.corners[7].pos;
+        newCube.corners[0].ori = (inputCube.corners[3].ori + 2) % 3;
+        newCube.corners[4].ori = (inputCube.corners[0].ori + 1) % 3;
+        newCube.corners[7].ori = (inputCube.corners[4].ori + 2) % 3;
+        newCube.corners[3].ori = (inputCube.corners[7].ori + 1) % 3;
+        newCube.edges[0].pos = inputCube.edges[11].pos;
+        newCube.edges[8].pos = inputCube.edges[0].pos;
+        newCube.edges[4].pos = inputCube.edges[8].pos;
+        newCube.edges[11].pos = inputCube.edges[4].pos;
+        newCube.edges[0].ori = inputCube.edges[11].ori;
+        newCube.edges[8].ori = inputCube.edges[0].ori;
+        newCube.edges[4].ori = inputCube.edges[8].ori;
+        newCube.edges[11].ori = inputCube.edges[4].ori;
     } 
     else if (move == "L"){
-        new_cube.corners[1].pos = 2;
-        new_cube.corners[2].pos = 6;
-        new_cube.corners[6].pos = 5;
-        new_cube.corners[5].pos = 1;
-        new_cube.corners[1].ori = 1;
-        new_cube.corners[2].ori = 2;
-        new_cube.corners[6].ori = 1;
-        new_cube.corners[5].ori = 2;
-        new_cube.edges[2].pos = 10;
-        new_cube.edges[10].pos = 6;
-        new_cube.edges[6].pos = 9;
-        new_cube.edges[9].pos = 2;
-        new_cube.edges[2].ori = 1;
-        new_cube.edges[10].ori = 1;
-        new_cube.edges[6].ori = 1;
-        new_cube.edges[9].ori = 1;
+        newCube.corners[1].pos = inputCube.corners[2].pos;
+        newCube.corners[2].pos = inputCube.corners[6].pos;
+        newCube.corners[6].pos = inputCube.corners[5].pos;
+        newCube.corners[5].pos = inputCube.corners[1].pos;
+        newCube.corners[1].ori = (inputCube.corners[2].ori + 1) % 3;
+        newCube.corners[2].ori = (inputCube.corners[6].ori + 2) % 3;
+        newCube.corners[6].ori = (inputCube.corners[5].ori + 1) % 3;
+        newCube.corners[5].ori = (inputCube.corners[1].ori + 2) % 3;
+        newCube.edges[2].pos = inputCube.edges[10].pos;
+        newCube.edges[10].pos = inputCube.edges[6].pos;
+        newCube.edges[6].pos = inputCube.edges[9].pos;
+        newCube.edges[9].pos = inputCube.edges[2].pos;
+        newCube.edges[2].ori = inputCube.edges[10].ori;
+        newCube.edges[10].ori = inputCube.edges[6].ori;
+        newCube.edges[6].ori = inputCube.edges[9].ori;
+        newCube.edges[9].ori = inputCube.edges[2].ori;
     } 
     else if (move == "L2"){
-        new_cube.corners[1].pos = 6;
-        new_cube.corners[2].pos = 5;
-        new_cube.corners[6].pos = 1;
-        new_cube.corners[5].pos = 2;
-        new_cube.edges[2].pos = 6;
-        new_cube.edges[10].pos = 9;
-        new_cube.edges[6].pos = 2;
-        new_cube.edges[9].pos = 10;
+        newCube.corners[1].pos = inputCube.corners[6].pos;
+        newCube.corners[2].pos = inputCube.corners[5].pos;
+        newCube.corners[6].pos = inputCube.corners[1].pos;
+        newCube.corners[5].pos = inputCube.corners[2].pos;
+        newCube.corners[1].ori = inputCube.corners[6].ori;
+        newCube.corners[2].ori = inputCube.corners[5].ori;
+        newCube.corners[6].ori = inputCube.corners[1].ori;
+        newCube.corners[5].ori = inputCube.corners[2].ori;
+        newCube.edges[2].pos = inputCube.edges[6].pos;
+        newCube.edges[10].pos = inputCube.edges[9].pos;
+        newCube.edges[6].pos = inputCube.edges[2].pos;
+        newCube.edges[9].pos = inputCube.edges[10].pos;
+        newCube.edges[2].ori = inputCube.edges[6].ori;
+        newCube.edges[10].ori = inputCube.edges[9].ori;
+        newCube.edges[6].ori = inputCube.edges[2].ori;
+        newCube.edges[9].ori = inputCube.edges[10].ori;
     } 
     else if (move == "L\'"){
-        new_cube.corners[1].pos = 5;
-        new_cube.corners[2].pos = 1;
-        new_cube.corners[6].pos = 2;
-        new_cube.corners[5].pos = 6;
-        new_cube.corners[1].ori = 1;
-        new_cube.corners[2].ori = 2;
-        new_cube.corners[6].ori = 1;
-        new_cube.corners[5].ori = 2;
-        new_cube.edges[2].pos = 9;
-        new_cube.edges[10].pos = 2;
-        new_cube.edges[6].pos = 10;
-        new_cube.edges[9].pos = 6;
-        new_cube.edges[2].ori = 1;
-        new_cube.edges[10].ori = 1;
-        new_cube.edges[6].ori = 1;
-        new_cube.edges[9].ori = 1;
+        newCube.corners[1].pos = inputCube.corners[5].pos;
+        newCube.corners[2].pos = inputCube.corners[1].pos;
+        newCube.corners[6].pos = inputCube.corners[2].pos;
+        newCube.corners[5].pos = inputCube.corners[6].pos;
+        newCube.corners[1].ori = (inputCube.corners[5].ori + 1) % 3;
+        newCube.corners[2].ori = (inputCube.corners[1].ori + 2) % 3;
+        newCube.corners[6].ori = (inputCube.corners[2].ori + 1) % 3;
+        newCube.corners[5].ori = (inputCube.corners[6].ori + 2) % 3;
+        newCube.edges[2].pos = inputCube.edges[9].pos;
+        newCube.edges[10].pos = inputCube.edges[2].pos;
+        newCube.edges[6].pos = inputCube.edges[10].pos;
+        newCube.edges[9].pos = inputCube.edges[6].pos;
+        newCube.edges[2].ori = inputCube.edges[9].ori;
+        newCube.edges[10].ori = inputCube.edges[2].ori;
+        newCube.edges[6].ori = inputCube.edges[10].ori;
+        newCube.edges[9].ori = inputCube.edges[6].ori;
     } 
     else {std::cout<< "Fatal error in cube_cubie.cpp" << std::endl;}
-    return new_cube;
+    return newCube;
 }
 
 Cube_cubie Cube_cubie::severalMoves(const std::vector<std::string>& moves, const Cube_cubie& inputCube) const {
     Cube_cubie current = inputCube;
-    std::cout<< "before" << std::endl;
-    print_scramble(moves);
-    print_cubie_state(current);
     for (const std::string& move : moves) {
-        current = this->singleMove(move, current);
+        current = this->basicMove(move, current);
     }
-    std::cout<< "after" << std::endl;
-    print_cubie_state(current);
     return current;
+}
+
+Cube_cubie get_scrambled_state(std::vector<std::string> scramble){
+    Cube_cubie cube;
+    cube.reset();
+    cube = cube.severalMoves(scramble, cube);
+    return cube;
 }

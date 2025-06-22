@@ -1,6 +1,15 @@
 #include "rubik_explorer.hpp"
 #include "defs_explorer.hpp"
 
+
+std::string corner_to_string(Corner c) {
+    return corner_names[static_cast<int>(c)];
+}
+
+std::string edge_to_string(Edge e) {
+    return edge_names[static_cast<int>(e)];
+}
+
 void print_cubie_state(const Cube_cubie& cube) {
     std::cout << "Corners (position, orientation):\n";
     for (const auto& cornerCubie : cube.corners) {
