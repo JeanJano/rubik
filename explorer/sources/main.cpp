@@ -26,17 +26,5 @@ int main(int ac, char** av) {
         return 1;
     cubeCubie scrambledCube = get_scrambled_state(scramble);
     cornerOrientCoord coordOne = cornerOrientCoord(scrambledCube);
-    std::cout<< "avant" << std::endl;
-    coordOne.print_explicit_corn_ori_coord();
-    coordOne = coordOne.cornOriMove("D2");
-    coordOne = coordOne.cornOriMove("L'");
-    coordOne = coordOne.cornOriMove("R");
-    coordOne = coordOne.cornOriMove("U");
-    coordOne = coordOne.cornOriMove("L2");
-    coordOne = coordOne.cornOriMove("D'");
-    coordOne = coordOne.cornOriMove("B2");
-    coordOne = coordOne.cornOriMove("R'");
-    coordOne = coordOne.cornOriMove("F");
-    std::cout<< "apres" << std::endl;
     coordOne.print_explicit_corn_ori_coord();
 }
