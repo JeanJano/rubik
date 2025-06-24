@@ -95,8 +95,8 @@ enum class Move {
  * - `ori` is the orientation (0, 1, or 2).
  */
 struct CornerCubie {
-    int pos; // which corner is here
-    int ori; // orientation: 0, 1, 2
+    uint8_t pos; // which corner is here
+    uint8_t ori; // orientation: 0, 1, 2
 };
 
 /**
@@ -105,20 +105,31 @@ struct CornerCubie {
  * - `ori` is the orientation (0 or 1).
  */
 struct EdgeCubie {
-    int pos; // which edge is here
-    int ori; // orientation: 0 or 1
+    uint8_t pos; // which edge is here
+    uint8_t ori; // orientation: 0 or 1
 };
 
 /**
  * A full cube state with all 8 corners and 12 edges.
  */
 
-struct Cube_cubie {
+struct cubeCubie {
     std::array<CornerCubie, 8> corners;
     std::array<EdgeCubie, 12> edges;
+
     void reset();
-    Cube_cubie basicMove(const std::string& move, const Cube_cubie& inputCube) const;
-    Cube_cubie severalMoves(const std::vector<std::string>& moves, const Cube_cubie& inputCube) const;
+    cubeCubie basicMove(const std::string& move, const cubeCubie& inputCube) const;
+    cubeCubie severalMoves(const std::vector<std::string>& moves, const cubeCubie& inputCube) const;
+};
+
+struct cornerOrientCoord{
+    static constexpr int N = 8;
+    std::array<uint8_t, N> explicitCoor;
+
+    cornerOrientCoord();
+    cornerOrientCoord(const cubeCubie& cube);
+    void print_explicit_corn_ori_coord() const;
+    cornerOrientCoord cornOriMove(const std::string& move);
 };
 
 //-------------------nedded to see the cubie representation--------

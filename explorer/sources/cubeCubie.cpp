@@ -1,16 +1,16 @@
 #include "defs_explorer.hpp"
 #include "rubik_explorer.hpp"
 
-void Cube_cubie::reset() {
-    for (int i = 0; i < 8; ++i)
+void cubeCubie::reset() {
+    for (uint8_t i = 0; i < 8; ++i)
         corners[i] = {i, 0};
-    for (int i = 0; i < 12; ++i)
+    for (uint8_t i = 0; i < 12; ++i)
         edges[i] = {i, 0};
 }
 
 //definition of permutation and orientatiuon in basic moves 
-Cube_cubie Cube_cubie::basicMove(const std::string& move, const Cube_cubie& inputCube) const{
-    Cube_cubie newCube = inputCube;
+cubeCubie cubeCubie::basicMove(const std::string& move, const cubeCubie& inputCube) const{
+    cubeCubie newCube = inputCube;
     if (move == "U"){
         newCube.corners[0].pos = inputCube.corners[3].pos;
         newCube.corners[1].pos = inputCube.corners[0].pos;
@@ -335,20 +335,20 @@ Cube_cubie Cube_cubie::basicMove(const std::string& move, const Cube_cubie& inpu
         newCube.edges[6].ori = inputCube.edges[10].ori;
         newCube.edges[9].ori = inputCube.edges[6].ori;
     } 
-    else {std::cout<< "Fatal error in cube_cubie.cpp" << std::endl;}
+    else {std::cout<< "Fatal error in cubeCubie.cpp" << std::endl;}
     return newCube;
 }
 
-Cube_cubie Cube_cubie::severalMoves(const std::vector<std::string>& moves, const Cube_cubie& inputCube) const {
-    Cube_cubie current = inputCube;
+cubeCubie cubeCubie::severalMoves(const std::vector<std::string>& moves, const cubeCubie& inputCube) const {
+    cubeCubie current = inputCube;
     for (const std::string& move : moves) {
         current = this->basicMove(move, current);
     }
     return current;
 }
 
-Cube_cubie get_scrambled_state(std::vector<std::string> scramble){
-    Cube_cubie cube;
+cubeCubie get_scrambled_state(std::vector<std::string> scramble){
+    cubeCubie cube;
     cube.reset();
     cube = cube.severalMoves(scramble, cube);
     return cube;

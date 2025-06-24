@@ -24,6 +24,19 @@ int main(int ac, char** av) {
     std::vector<std::string> scramble = get_scramble(ac, av);
     if (scramble.empty())
         return 1;
-    Cube_cubie cube = get_scrambled_state(scramble);
-    print_cubie_state(cube);
+    cubeCubie scrambledCube = get_scrambled_state(scramble);
+    cornerOrientCoord coordOne = cornerOrientCoord(scrambledCube);
+    std::cout<< "avant" << std::endl;
+    coordOne.print_explicit_corn_ori_coord();
+    coordOne = coordOne.cornOriMove("D2");
+    coordOne = coordOne.cornOriMove("L'");
+    coordOne = coordOne.cornOriMove("R");
+    coordOne = coordOne.cornOriMove("U");
+    coordOne = coordOne.cornOriMove("L2");
+    coordOne = coordOne.cornOriMove("D'");
+    coordOne = coordOne.cornOriMove("B2");
+    coordOne = coordOne.cornOriMove("R'");
+    coordOne = coordOne.cornOriMove("F");
+    std::cout<< "apres" << std::endl;
+    coordOne.print_explicit_corn_ori_coord();
 }

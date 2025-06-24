@@ -12,7 +12,8 @@ OBJ_PATH	=	objs/
 ### FILES ###
 SOURCES		=	main.cpp \
 				parser.cpp \
-				cube_cubie.cpp \
+				cubeCubie.cpp \
+				cornerOrientation.cpp \
 				utils.cpp \
 
 ### FILE MANAGEMENT ###

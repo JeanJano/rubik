@@ -10,7 +10,7 @@ std::string edge_to_string(Edge e) {
     return edge_names[static_cast<int>(e)];
 }
 
-void print_cubie_state(const Cube_cubie& cube) {
+void print_cubie_state(const cubeCubie& cube) {
     std::cout << "Corners (position, orientation):\n";
     for (const auto& cornerCubie : cube.corners) {
         std::cout << "(" << corner_to_string(static_cast<Corner>(cornerCubie.pos))
