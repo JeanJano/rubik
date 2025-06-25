@@ -26,5 +26,6 @@ int main(int ac, char** av) {
         return 1;
     cubeCubie scrambledCube = get_scrambled_state(scramble);
     cornerOrientCoord coordOne = cornerOrientCoord(scrambledCube);
-    coordOne.print_explicit_corn_ori_coord();
+    std::cout << "caca " << coordOne.get_pure_coord() << std::endl;
+    cornerOrientCoord::create_move_table();
 }

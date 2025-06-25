@@ -12,15 +12,8 @@ cornerOrientCoord::cornerOrientCoord(const cubeCubie& cube) {
     }
 }
 
-void cornerOrientCoord::print_explicit_corn_ori_coord() const {
-    std::cout << "Corner Orientation (explicit): ";
-    for (int i = 0; i < N; ++i) {
-        std::cout << static_cast<int>(explicitCoor[i]) << " ";
-    }
-    std::cout << std::endl;
-}
 
-cornerOrientCoord cornerOrientCoord::cornOriMove(const std::string& move) {
+cornerOrientCoord cornerOrientCoord::move(const std::string& move) {
     cornerOrientCoord newCoord = *this;
     if (move == "U"){
         newCoord.explicitCoor[0] = explicitCoor[3];
@@ -132,4 +125,17 @@ cornerOrientCoord cornerOrientCoord::cornOriMove(const std::string& move) {
     }
     else {std::cout<< "Fatal error in cornerOrientation.cpp" << std::endl;}
     return newCoord;
+}
+
+uint16_t cornerOrientCoord::get_pure_coord() {
+    uint16_t coord = 0;
+    for (int i = 0; i < 7; ++i) {
+        coord = coord * 3 + static_cast<uint16_t>(this->explicitCoor[i]);
+    }
+    return coord;
+}
+
+
+void cornerOrientCoord::create_move_table(){
+    cornerOrientCoord initState;
 }

@@ -129,7 +129,9 @@ struct cornerOrientCoord{
     cornerOrientCoord();
     cornerOrientCoord(const cubeCubie& cube);
     void print_explicit_corn_ori_coord() const;
-    cornerOrientCoord cornOriMove(const std::string& move);
+    cornerOrientCoord move(const std::string& move);
+    static void create_move_table();
+    uint16_t get_pure_coord();
 };
 
 //-------------------nedded to see the cubie representation--------
