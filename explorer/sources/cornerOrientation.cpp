@@ -135,7 +135,31 @@ uint16_t cornerOrientCoord::get_pure_coord() {
     return coord;
 }
 
+cornerOrientCoord cornerOrientCoord::nextExplicitCoord(){
+    cornerOrientCoord next = *this;
+    for (int i = N - 2; i >= 0; --i) {
+        if (++next.explicitCoor[i] < 3) {
+            break;
+        } else {
+            next.explicitCoor[i] = 0;
+        }
+    }
+
+    // Calcular el octavo para que la suma sea ≡ 0 mod 3
+    int sum = 0;
+    for (int i = 0; i < N - 1; ++i) {
+        sum += next.explicitCoor[i];
+    }
+    next.explicitCoor[N - 1] = (3 - (sum % 3)) % 3;
+
+    return next;
+}
 
 void cornerOrientCoord::create_move_table(){
-    cornerOrientCoord initState;
+    cornerOrientCoord state;
+    state.print_explicit_corn_ori_coord();
+    for (int i = 0; i < 2186; ++i){
+        state = state.nextExplicitCoord();
+        state.print_explicit_corn_ori_coord();
+    }
 }

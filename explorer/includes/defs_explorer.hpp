@@ -132,6 +132,7 @@ struct cornerOrientCoord{
     cornerOrientCoord move(const std::string& move);
     static void create_move_table();
     uint16_t get_pure_coord();
+    cornerOrientCoord nextExplicitCoord();
 };
 
 //-------------------nedded to see the cubie representation--------
