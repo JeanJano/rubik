@@ -5,12 +5,14 @@
 
 //parser.cpp
 bool isValidMove(const std::string& move);
-std::vector<std::string> parseMoves(const std::string& input);
+// std::vector<std::string> parseMoves(const std::string& input);
+std::vector<Move> parseMoves(const std::string& input);
 // cubeCubie.cpp
-cubeCubie get_scrambled_state(std::vector<std::string> scramble);
+cubeCubie get_scrambled_state(const std::vector<Move>& scramble);
 // utils.cpp
 void print_cubie_state(const cubeCubie& cube);
-void print_scramble(const std::vector<std::string>& scramble);
+void print_scramble(const std::vector<Move>& scramble);
+std::string moveToString(Move move);
 //corner_orientation.cpp
 
 #endif

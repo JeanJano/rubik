@@ -1,14 +1,14 @@
 #include "rubik_explorer.hpp"
 #include "defs_explorer.hpp"
 
-std::vector<std::string> get_scramble(int ac, char** av) {
+std::vector<Move> get_scramble(int ac, char** av) {
     if (ac != 2) {
         std::cout << UsageMessage << std::endl;
         return {};
     }
 
     try {
-        std::vector<std::string> scramble = parseMoves(av[1]);
+        std::vector<Move> scramble = parseMoves(av[1]);
         if (scramble.empty()) {
             std::cout << UsageMessage << std::endl;
             return {};
@@ -21,11 +21,13 @@ std::vector<std::string> get_scramble(int ac, char** av) {
 }
 
 int main(int ac, char** av) {
-    std::vector<std::string> scramble = get_scramble(ac, av);
+    std::vector<Move> scramble = get_scramble(ac, av);
     if (scramble.empty())
         return 1;
     cubeCubie scrambledCube = get_scrambled_state(scramble);
     cornerOrientCoord coordOne = cornerOrientCoord(scrambledCube);
-    std::cout << "caca " << coordOne.get_pure_coord() << std::endl;
-    cornerOrientCoord::create_move_table();
+    std::cout << "init pure coord " << coordOne.get_pure_coord() << std::endl;
+    cornerOrientCoord::print_move_table();
+    std::cout << "despues : " << std::endl;
+    cornerOrientCoord::from_pure_coord(1).print_explicit_corn_ori_coord();
 }

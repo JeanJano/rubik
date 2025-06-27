@@ -9,9 +9,10 @@ void cubeCubie::reset() {
 }
 
 //definition of permutation and orientatiuon in basic moves 
-cubeCubie cubeCubie::basicMove(const std::string& move, const cubeCubie& inputCube) const{
+cubeCubie cubeCubie::basicMove(Move move, const cubeCubie& inputCube) const{
     cubeCubie newCube = inputCube;
-    if (move == "U"){
+    switch (move) {
+    case Move::U1:
         newCube.corners[0].pos = inputCube.corners[3].pos;
         newCube.corners[1].pos = inputCube.corners[0].pos;
         newCube.corners[2].pos = inputCube.corners[1].pos;
@@ -28,8 +29,8 @@ cubeCubie cubeCubie::basicMove(const std::string& move, const cubeCubie& inputCu
         newCube.edges[1].ori = inputCube.edges[0].ori;
         newCube.edges[2].ori = inputCube.edges[1].ori;
         newCube.edges[3].ori = inputCube.edges[2].ori;
-    } 
-    else if (move == "U2"){
+        break;
+    case Move::U2:
         newCube.corners[0].pos = inputCube.corners[2].pos;
         newCube.corners[1].pos = inputCube.corners[3].pos;
         newCube.corners[2].pos = inputCube.corners[0].pos;
@@ -46,8 +47,8 @@ cubeCubie cubeCubie::basicMove(const std::string& move, const cubeCubie& inputCu
         newCube.edges[1].ori = inputCube.edges[3].ori;
         newCube.edges[2].ori = inputCube.edges[0].ori;
         newCube.edges[3].ori = inputCube.edges[1].ori;
-    } 
-    else if (move == "U\'"){
+        break;
+    case Move::U3:
         newCube.corners[0].pos = inputCube.corners[1].pos;
         newCube.corners[1].pos = inputCube.corners[2].pos;
         newCube.corners[2].pos = inputCube.corners[3].pos;
@@ -64,8 +65,8 @@ cubeCubie cubeCubie::basicMove(const std::string& move, const cubeCubie& inputCu
         newCube.edges[1].ori = inputCube.edges[2].ori;
         newCube.edges[2].ori = inputCube.edges[3].ori;
         newCube.edges[3].ori = inputCube.edges[0].ori;
-    } 
-    else if (move == "D"){
+        break;
+    case Move::D1:
         newCube.corners[4].pos = inputCube.corners[5].pos;
         newCube.corners[5].pos = inputCube.corners[6].pos;
         newCube.corners[6].pos = inputCube.corners[7].pos;
@@ -82,8 +83,8 @@ cubeCubie cubeCubie::basicMove(const std::string& move, const cubeCubie& inputCu
         newCube.edges[5].ori = inputCube.edges[6].ori;
         newCube.edges[6].ori = inputCube.edges[7].ori;
         newCube.edges[7].ori = inputCube.edges[4].ori;
-    } 
-    else if (move == "D2"){ 
+        break;
+    case Move::D2: 
         newCube.corners[4].pos = inputCube.corners[6].pos;
         newCube.corners[5].pos = inputCube.corners[7].pos;
         newCube.corners[6].pos = inputCube.corners[4].pos;
@@ -100,8 +101,8 @@ cubeCubie cubeCubie::basicMove(const std::string& move, const cubeCubie& inputCu
         newCube.edges[5].ori = inputCube.edges[7].ori;
         newCube.edges[6].ori = inputCube.edges[4].ori;
         newCube.edges[7].ori = inputCube.edges[5].ori;
-    }
-    else if (move == "D\'"){
+        break;
+    case Move::D3:
         newCube.corners[4].pos = inputCube.corners[7].pos;
         newCube.corners[5].pos = inputCube.corners[4].pos;
         newCube.corners[6].pos = inputCube.corners[5].pos;
@@ -118,8 +119,8 @@ cubeCubie cubeCubie::basicMove(const std::string& move, const cubeCubie& inputCu
         newCube.edges[5].ori = inputCube.edges[4].ori;
         newCube.edges[6].ori = inputCube.edges[5].ori;
         newCube.edges[7].ori = inputCube.edges[6].ori;
-    } 
-    else if (move == "F"){
+        break; 
+    case Move::F1:
         newCube.corners[0].pos = inputCube.corners[1].pos;
         newCube.corners[1].pos = inputCube.corners[5].pos;
         newCube.corners[5].pos = inputCube.corners[4].pos;
@@ -136,8 +137,8 @@ cubeCubie cubeCubie::basicMove(const std::string& move, const cubeCubie& inputCu
         newCube.edges[9].ori = (inputCube.edges[5].ori + 1) % 2;
         newCube.edges[5].ori = (inputCube.edges[8].ori + 1) % 2;
         newCube.edges[8].ori = (inputCube.edges[1].ori + 1) % 2;
-    } 
-    else if (move == "F2"){
+        break;
+    case Move::F2:
         newCube.corners[0].pos = inputCube.corners[5].pos;
         newCube.corners[1].pos = inputCube.corners[4].pos;
         newCube.corners[5].pos = inputCube.corners[0].pos;
@@ -154,8 +155,8 @@ cubeCubie cubeCubie::basicMove(const std::string& move, const cubeCubie& inputCu
         newCube.edges[9].ori = inputCube.edges[8].ori;
         newCube.edges[5].ori = inputCube.edges[1].ori;
         newCube.edges[8].ori = inputCube.edges[9].ori;
-    }
-    else if (move == "F\'"){
+        break;
+    case Move::F3:
         newCube.corners[0].pos = inputCube.corners[4].pos;
         newCube.corners[1].pos = inputCube.corners[0].pos;
         newCube.corners[5].pos = inputCube.corners[1].pos;
@@ -172,8 +173,8 @@ cubeCubie cubeCubie::basicMove(const std::string& move, const cubeCubie& inputCu
         newCube.edges[9].ori = (inputCube.edges[1].ori + 1) % 2;
         newCube.edges[5].ori = (inputCube.edges[9].ori + 1) % 2;
         newCube.edges[8].ori = (inputCube.edges[5].ori + 1) % 2;
-    } 
-    else if (move == "B"){ 
+        break;
+    case Move::B1:
         newCube.corners[2].pos = inputCube.corners[3].pos;
         newCube.corners[3].pos = inputCube.corners[7].pos;
         newCube.corners[7].pos = inputCube.corners[6].pos;
@@ -190,8 +191,8 @@ cubeCubie cubeCubie::basicMove(const std::string& move, const cubeCubie& inputCu
         newCube.edges[11].ori = (inputCube.edges[7].ori + 1) % 2;
         newCube.edges[7].ori = (inputCube.edges[10].ori + 1) % 2;
         newCube.edges[10].ori = (inputCube.edges[3].ori + 1) % 2;
-    }
-    else if (move == "B2"){
+        break;
+    case Move::B2:
         newCube.corners[2].pos = inputCube.corners[7].pos;
         newCube.corners[3].pos = inputCube.corners[6].pos;
         newCube.corners[7].pos = inputCube.corners[2].pos;
@@ -208,8 +209,8 @@ cubeCubie cubeCubie::basicMove(const std::string& move, const cubeCubie& inputCu
         newCube.edges[11].ori = inputCube.edges[10].ori;
         newCube.edges[7].ori = inputCube.edges[3].ori;
         newCube.edges[10].ori = inputCube.edges[11].ori;
-    } 
-    else if (move == "B\'"){
+        break; 
+    case Move::B3:
         newCube.corners[2].pos = inputCube.corners[6].pos;
         newCube.corners[3].pos = inputCube.corners[2].pos;
         newCube.corners[7].pos = inputCube.corners[3].pos;
@@ -226,8 +227,8 @@ cubeCubie cubeCubie::basicMove(const std::string& move, const cubeCubie& inputCu
         newCube.edges[10].ori = (inputCube.edges[7].ori + 1) % 2;
         newCube.edges[7].ori = (inputCube.edges[11].ori + 1) % 2;
         newCube.edges[11].ori = (inputCube.edges[3].ori + 1) % 2;
-    } 
-    else if (move == "R"){
+        break; 
+    case Move::R1:
         newCube.corners[0].pos = inputCube.corners[4].pos;
         newCube.corners[4].pos = inputCube.corners[7].pos;
         newCube.corners[7].pos = inputCube.corners[3].pos;
@@ -244,8 +245,8 @@ cubeCubie cubeCubie::basicMove(const std::string& move, const cubeCubie& inputCu
         newCube.edges[8].ori = inputCube.edges[4].ori;
         newCube.edges[4].ori = inputCube.edges[11].ori;
         newCube.edges[11].ori = inputCube.edges[0].ori;
-    } 
-    else if (move == "R2"){
+        break;
+    case Move::R2:
         newCube.corners[0].pos = inputCube.corners[7].pos;
         newCube.corners[4].pos = inputCube.corners[3].pos;
         newCube.corners[7].pos = inputCube.corners[0].pos;
@@ -262,8 +263,8 @@ cubeCubie cubeCubie::basicMove(const std::string& move, const cubeCubie& inputCu
         newCube.edges[8].ori = inputCube.edges[11].ori;
         newCube.edges[4].ori = inputCube.edges[0].ori;
         newCube.edges[11].ori = inputCube.edges[8].ori;
-    } 
-    else if (move == "R\'"){
+        break; 
+    case Move::R3:
         newCube.corners[0].pos = inputCube.corners[3].pos;
         newCube.corners[4].pos = inputCube.corners[0].pos;
         newCube.corners[7].pos = inputCube.corners[4].pos;
@@ -280,8 +281,8 @@ cubeCubie cubeCubie::basicMove(const std::string& move, const cubeCubie& inputCu
         newCube.edges[8].ori = inputCube.edges[0].ori;
         newCube.edges[4].ori = inputCube.edges[8].ori;
         newCube.edges[11].ori = inputCube.edges[4].ori;
-    } 
-    else if (move == "L"){
+        break; 
+    case Move::L1:
         newCube.corners[1].pos = inputCube.corners[2].pos;
         newCube.corners[2].pos = inputCube.corners[6].pos;
         newCube.corners[6].pos = inputCube.corners[5].pos;
@@ -298,8 +299,8 @@ cubeCubie cubeCubie::basicMove(const std::string& move, const cubeCubie& inputCu
         newCube.edges[10].ori = inputCube.edges[6].ori;
         newCube.edges[6].ori = inputCube.edges[9].ori;
         newCube.edges[9].ori = inputCube.edges[2].ori;
-    } 
-    else if (move == "L2"){
+        break; 
+    case Move::L2:
         newCube.corners[1].pos = inputCube.corners[6].pos;
         newCube.corners[2].pos = inputCube.corners[5].pos;
         newCube.corners[6].pos = inputCube.corners[1].pos;
@@ -316,8 +317,8 @@ cubeCubie cubeCubie::basicMove(const std::string& move, const cubeCubie& inputCu
         newCube.edges[10].ori = inputCube.edges[9].ori;
         newCube.edges[6].ori = inputCube.edges[2].ori;
         newCube.edges[9].ori = inputCube.edges[10].ori;
-    } 
-    else if (move == "L\'"){
+        break; 
+    case Move::L3:
         newCube.corners[1].pos = inputCube.corners[5].pos;
         newCube.corners[2].pos = inputCube.corners[1].pos;
         newCube.corners[6].pos = inputCube.corners[2].pos;
@@ -334,20 +335,23 @@ cubeCubie cubeCubie::basicMove(const std::string& move, const cubeCubie& inputCu
         newCube.edges[10].ori = inputCube.edges[2].ori;
         newCube.edges[6].ori = inputCube.edges[10].ori;
         newCube.edges[9].ori = inputCube.edges[6].ori;
-    } 
-    else {std::cout<< "Fatal error in cubeCubie.cpp" << std::endl;}
+        break;
+    default:
+        std::cerr << "Fatal error in cubeCubie::basicMove: unsupported move." << std::endl;
+        break;
+    }
     return newCube;
 }
 
-cubeCubie cubeCubie::severalMoves(const std::vector<std::string>& moves, const cubeCubie& inputCube) const {
+cubeCubie cubeCubie::severalMoves(const std::vector<Move>& moves, const cubeCubie& inputCube) const {
     cubeCubie current = inputCube;
-    for (const std::string& move : moves) {
+    for (Move move : moves) {
         current = this->basicMove(move, current);
     }
     return current;
 }
 
-cubeCubie get_scrambled_state(std::vector<std::string> scramble){
+cubeCubie get_scrambled_state(const std::vector<Move>& scramble){
     cubeCubie cube;
     cube.reset();
     cube = cube.severalMoves(scramble, cube);

@@ -80,11 +80,11 @@ inline const char* edge_names[] = {
  */
 enum class Move {
     U1 = 0, U2, U3,  // U, U2, U'
-    R1, R2, R3,
-    F1, F2, F3,
     D1, D2, D3,
-    L1, L2, L3,
-    B1, B2, B3
+    F1, F2, F3,
+    B1, B2, B3,
+    R1, R2, R3,
+    L1, L2, L3
 };
 
 // ------------------- Cube Representation -------------------
@@ -118,8 +118,8 @@ struct cubeCubie {
     std::array<EdgeCubie, 12> edges;
 
     void reset();
-    cubeCubie basicMove(const std::string& move, const cubeCubie& inputCube) const;
-    cubeCubie severalMoves(const std::vector<std::string>& moves, const cubeCubie& inputCube) const;
+    cubeCubie basicMove(Move move, const cubeCubie& inputCube) const;
+    cubeCubie severalMoves(const std::vector<Move>& moves, const cubeCubie& inputCube) const;
 };
 
 struct cornerOrientCoord{
@@ -129,8 +129,10 @@ struct cornerOrientCoord{
     cornerOrientCoord();
     cornerOrientCoord(const cubeCubie& cube);
     void print_explicit_corn_ori_coord() const;
-    cornerOrientCoord move(const std::string& move);
-    static void create_move_table();
+    void print_explicit_corn_ori_coord2() const;
+    cornerOrientCoord move(Move move);
+    static void print_move_table();
+    static cornerOrientCoord from_pure_coord(uint16_t coord);
     uint16_t get_pure_coord();
     cornerOrientCoord nextExplicitCoord();
 };

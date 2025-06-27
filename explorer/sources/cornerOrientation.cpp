@@ -12,118 +12,122 @@ cornerOrientCoord::cornerOrientCoord(const cubeCubie& cube) {
     }
 }
 
-
-cornerOrientCoord cornerOrientCoord::move(const std::string& move) {
+cornerOrientCoord cornerOrientCoord::move(Move move) {
     cornerOrientCoord newCoord = *this;
-    if (move == "U"){
-        newCoord.explicitCoor[0] = explicitCoor[3];
-        newCoord.explicitCoor[1] = explicitCoor[0];
-        newCoord.explicitCoor[2] = explicitCoor[1];
-        newCoord.explicitCoor[3] = explicitCoor[2];
+
+    switch (move) {
+        case Move::U1:
+            newCoord.explicitCoor[0] = explicitCoor[3];
+            newCoord.explicitCoor[1] = explicitCoor[0];
+            newCoord.explicitCoor[2] = explicitCoor[1];
+            newCoord.explicitCoor[3] = explicitCoor[2];
+            break;
+        case Move::U2:
+            newCoord.explicitCoor[0] = explicitCoor[2];
+            newCoord.explicitCoor[1] = explicitCoor[3];
+            newCoord.explicitCoor[2] = explicitCoor[0];
+            newCoord.explicitCoor[3] = explicitCoor[1];
+            break;
+        case Move::U3:
+            newCoord.explicitCoor[0] = explicitCoor[1];
+            newCoord.explicitCoor[1] = explicitCoor[2];
+            newCoord.explicitCoor[2] = explicitCoor[3];
+            newCoord.explicitCoor[3] = explicitCoor[0];
+            break;
+        case Move::D1:
+            newCoord.explicitCoor[4] = explicitCoor[5];
+            newCoord.explicitCoor[5] = explicitCoor[6];
+            newCoord.explicitCoor[6] = explicitCoor[7];
+            newCoord.explicitCoor[7] = explicitCoor[4];
+            break;
+        case Move::D2:
+            newCoord.explicitCoor[4] = explicitCoor[6];
+            newCoord.explicitCoor[5] = explicitCoor[7];
+            newCoord.explicitCoor[6] = explicitCoor[4];
+            newCoord.explicitCoor[7] = explicitCoor[5];
+            break;
+        case Move::D3:
+            newCoord.explicitCoor[4] = explicitCoor[7];
+            newCoord.explicitCoor[5] = explicitCoor[4];
+            newCoord.explicitCoor[6] = explicitCoor[5];
+            newCoord.explicitCoor[7] = explicitCoor[6];
+            break;
+        case Move::F1:
+            newCoord.explicitCoor[0] = (explicitCoor[1] + 1) % 3;
+            newCoord.explicitCoor[1] = (explicitCoor[5] + 2) % 3;
+            newCoord.explicitCoor[5] = (explicitCoor[4] + 1) % 3;
+            newCoord.explicitCoor[4] = (explicitCoor[0] + 2) % 3;
+            break;
+        case Move::F2:
+            newCoord.explicitCoor[0] = explicitCoor[5];
+            newCoord.explicitCoor[1] = explicitCoor[4];
+            newCoord.explicitCoor[5] = explicitCoor[0];
+            newCoord.explicitCoor[4] = explicitCoor[1];
+            break;
+        case Move::F3:
+            newCoord.explicitCoor[0] = (explicitCoor[4] + 1) % 3;
+            newCoord.explicitCoor[1] = (explicitCoor[0] + 2) % 3;
+            newCoord.explicitCoor[5] = (explicitCoor[1] + 1) % 3;
+            newCoord.explicitCoor[4] = (explicitCoor[5] + 2) % 3;
+            break;
+        case Move::B1:
+            newCoord.explicitCoor[2] = (explicitCoor[3] + 1) % 3;
+            newCoord.explicitCoor[3] = (explicitCoor[7] + 2) % 3;
+            newCoord.explicitCoor[7] = (explicitCoor[6] + 1) % 3;
+            newCoord.explicitCoor[6] = (explicitCoor[2] + 2) % 3;
+            break;
+        case Move::B2:
+            newCoord.explicitCoor[2] = explicitCoor[7];
+            newCoord.explicitCoor[3] = explicitCoor[6];
+            newCoord.explicitCoor[7] = explicitCoor[2];
+            newCoord.explicitCoor[6] = explicitCoor[3];
+            break;
+        case Move::B3:
+            newCoord.explicitCoor[2] = (explicitCoor[6] + 1) % 3;
+            newCoord.explicitCoor[3] = (explicitCoor[2] + 2) % 3;
+            newCoord.explicitCoor[7] = (explicitCoor[3] + 1) % 3;
+            newCoord.explicitCoor[6] = (explicitCoor[7] + 2) % 3;
+            break;
+        case Move::R1:
+            newCoord.explicitCoor[0] = (explicitCoor[4] + 2) % 3;
+            newCoord.explicitCoor[3] = (explicitCoor[0] + 1) % 3;
+            newCoord.explicitCoor[7] = (explicitCoor[3] + 2) % 3;
+            newCoord.explicitCoor[4] = (explicitCoor[7] + 1) % 3;
+            break;
+        case Move::R2:
+            newCoord.explicitCoor[0] = explicitCoor[7];
+            newCoord.explicitCoor[3] = explicitCoor[4];
+            newCoord.explicitCoor[7] = explicitCoor[0];
+            newCoord.explicitCoor[4] = explicitCoor[3];
+            break;
+        case Move::R3:
+            newCoord.explicitCoor[0] = (explicitCoor[3] + 2) % 3;
+            newCoord.explicitCoor[3] = (explicitCoor[7] + 1) % 3;
+            newCoord.explicitCoor[7] = (explicitCoor[4] + 2) % 3;
+            newCoord.explicitCoor[4] = (explicitCoor[0] + 1) % 3;
+            break;
+        case Move::L1:
+            newCoord.explicitCoor[1] = (explicitCoor[2] + 1) % 3;
+            newCoord.explicitCoor[2] = (explicitCoor[6] + 2) % 3;
+            newCoord.explicitCoor[6] = (explicitCoor[5] + 1) % 3;
+            newCoord.explicitCoor[5] = (explicitCoor[1] + 2) % 3;
+            break;
+        case Move::L2:
+            newCoord.explicitCoor[1] = explicitCoor[6];
+            newCoord.explicitCoor[2] = explicitCoor[5];
+            newCoord.explicitCoor[6] = explicitCoor[1];
+            newCoord.explicitCoor[5] = explicitCoor[2];
+            break;
+        case Move::L3:
+            newCoord.explicitCoor[1] = (explicitCoor[5] + 1) % 3;
+            newCoord.explicitCoor[2] = (explicitCoor[1] + 2) % 3;
+            newCoord.explicitCoor[6] = (explicitCoor[2] + 1) % 3;
+            newCoord.explicitCoor[5] = (explicitCoor[6] + 2) % 3;
+            break;
+        default:
+            std::cerr << "Fatal error in cornerOrientCoord::move: unsupported move." << std::endl;
+            break;
     }
-    else if (move == "U2"){
-        newCoord.explicitCoor[0] = explicitCoor[2];
-        newCoord.explicitCoor[1] = explicitCoor[3];
-        newCoord.explicitCoor[2] = explicitCoor[0];
-        newCoord.explicitCoor[3] = explicitCoor[1];
-    }
-    else if (move == "U\'"){
-        newCoord.explicitCoor[0] = explicitCoor[1];
-        newCoord.explicitCoor[1] = explicitCoor[2];
-        newCoord.explicitCoor[2] = explicitCoor[3];
-        newCoord.explicitCoor[3] = explicitCoor[0];
-    }
-    else if (move == "D"){
-        newCoord.explicitCoor[4] = explicitCoor[5];
-        newCoord.explicitCoor[5] = explicitCoor[6];
-        newCoord.explicitCoor[6] = explicitCoor[7];
-        newCoord.explicitCoor[7] = explicitCoor[4];
-    }
-    else if (move == "D2"){
-        newCoord.explicitCoor[4] = explicitCoor[6];
-        newCoord.explicitCoor[5] = explicitCoor[7];
-        newCoord.explicitCoor[6] = explicitCoor[4];
-        newCoord.explicitCoor[7] = explicitCoor[5];
-    }
-    else if (move == "D\'"){
-        newCoord.explicitCoor[4] = explicitCoor[7];
-        newCoord.explicitCoor[5] = explicitCoor[4];
-        newCoord.explicitCoor[6] = explicitCoor[5];
-        newCoord.explicitCoor[7] = explicitCoor[6];
-    }
-    else if (move == "F"){
-        newCoord.explicitCoor[0] = (explicitCoor[1] + 1) % 3;
-        newCoord.explicitCoor[1] = (explicitCoor[5] + 2) % 3;
-        newCoord.explicitCoor[5] = (explicitCoor[4] + 1) % 3;
-        newCoord.explicitCoor[4] = (explicitCoor[0] + 2) % 3;
-    }
-    else if (move == "F2"){
-        newCoord.explicitCoor[0] = explicitCoor[5];
-        newCoord.explicitCoor[1] = explicitCoor[4];
-        newCoord.explicitCoor[5] = explicitCoor[0];
-        newCoord.explicitCoor[4] = explicitCoor[1];
-    }
-    else if (move == "F\'"){
-        newCoord.explicitCoor[0] = (explicitCoor[4] + 1) % 3;
-        newCoord.explicitCoor[1] = (explicitCoor[0] + 2) % 3;
-        newCoord.explicitCoor[5] = (explicitCoor[1] + 1) % 3;
-        newCoord.explicitCoor[4] = (explicitCoor[5] + 2) % 3;
-    }
-    else if (move == "B"){
-        newCoord.explicitCoor[2] = (explicitCoor[3] + 1) % 3;
-        newCoord.explicitCoor[3] = (explicitCoor[7] + 2) % 3;
-        newCoord.explicitCoor[7] = (explicitCoor[6] + 1) % 3;
-        newCoord.explicitCoor[6] = (explicitCoor[2] + 2) % 3;
-    }
-    else if (move == "B2"){
-        newCoord.explicitCoor[2] = explicitCoor[7];
-        newCoord.explicitCoor[3] = explicitCoor[6];
-        newCoord.explicitCoor[7] = explicitCoor[2];
-        newCoord.explicitCoor[6] = explicitCoor[3];
-    }
-    else if (move == "B\'"){
-        newCoord.explicitCoor[2] = (explicitCoor[6] + 1) % 3;
-        newCoord.explicitCoor[3] = (explicitCoor[2] + 2) % 3;
-        newCoord.explicitCoor[7] = (explicitCoor[3] + 1) % 3;
-        newCoord.explicitCoor[6] = (explicitCoor[7] + 2) % 3;
-    }
-    else if (move == "R"){
-        newCoord.explicitCoor[0] = (explicitCoor[4] + 2) % 3;
-        newCoord.explicitCoor[3] = (explicitCoor[0] + 1) % 3;
-        newCoord.explicitCoor[7] = (explicitCoor[3] + 2) % 3;
-        newCoord.explicitCoor[4] = (explicitCoor[7] + 1) % 3;
-    }
-    else if (move == "R2"){
-        newCoord.explicitCoor[0] = explicitCoor[7];
-        newCoord.explicitCoor[3] = explicitCoor[4];
-        newCoord.explicitCoor[7] = explicitCoor[0];
-        newCoord.explicitCoor[4] = explicitCoor[3];
-    }
-    else if (move == "R\'"){
-        newCoord.explicitCoor[0] = (explicitCoor[3] + 2) % 3;
-        newCoord.explicitCoor[3] = (explicitCoor[7] + 1) % 3;
-        newCoord.explicitCoor[7] = (explicitCoor[4] + 2) % 3;
-        newCoord.explicitCoor[4] = (explicitCoor[0] + 1) % 3;
-    }
-    else if (move == "L"){
-        newCoord.explicitCoor[1] = (explicitCoor[2] + 1) % 3;
-        newCoord.explicitCoor[2] = (explicitCoor[6] + 2) % 3;
-        newCoord.explicitCoor[6] = (explicitCoor[5] + 1) % 3;
-        newCoord.explicitCoor[5] = (explicitCoor[1] + 2) % 3;
-    }
-    else if (move == "L2"){
-        newCoord.explicitCoor[1] = explicitCoor[6];
-        newCoord.explicitCoor[2] = explicitCoor[5];
-        newCoord.explicitCoor[6] = explicitCoor[1];
-        newCoord.explicitCoor[5] = explicitCoor[2];
-    }
-    else if (move == "L\'"){
-        newCoord.explicitCoor[1] = (explicitCoor[5] + 1) % 3;
-        newCoord.explicitCoor[2] = (explicitCoor[1] + 2) % 3;
-        newCoord.explicitCoor[6] = (explicitCoor[2] + 1) % 3;
-        newCoord.explicitCoor[5] = (explicitCoor[6] + 2) % 3;
-    }
-    else {std::cout<< "Fatal error in cornerOrientation.cpp" << std::endl;}
     return newCoord;
 }
 
@@ -144,22 +148,39 @@ cornerOrientCoord cornerOrientCoord::nextExplicitCoord(){
             next.explicitCoor[i] = 0;
         }
     }
-
-    // Calcular el octavo para que la suma sea ≡ 0 mod 3
     int sum = 0;
     for (int i = 0; i < N - 1; ++i) {
         sum += next.explicitCoor[i];
     }
     next.explicitCoor[N - 1] = (3 - (sum % 3)) % 3;
-
     return next;
 }
 
-void cornerOrientCoord::create_move_table(){
+void cornerOrientCoord::print_move_table(){
     cornerOrientCoord state;
-    state.print_explicit_corn_ori_coord();
-    for (int i = 0; i < 2186; ++i){
+    for (int i = 0; i < 2187; ++i){
+        std::cout << state.get_pure_coord() << " => ";
+
+        for (int m = 0; m < 18; ++m) {
+            Move move = static_cast<Move>(m);
+            cornerOrientCoord next = state.move(move);
+            std::cout << next.get_pure_coord();
+            if (m != 17) std::cout << " | ";
+        }
+
+        std::cout << std::endl;
         state = state.nextExplicitCoord();
-        state.print_explicit_corn_ori_coord();
     }
+}
+
+cornerOrientCoord cornerOrientCoord::from_pure_coord(uint16_t coord) {
+    cornerOrientCoord result;
+    int sum = 0;
+    for (int i = N - 2; i >= 0; --i) {
+        result.explicitCoor[i] = coord % 3;
+        sum += result.explicitCoor[i];
+        coord /= 3;
+    }
+    result.explicitCoor[N - 1] = (3 - (sum % 3)) % 3;
+    return result;
 }
