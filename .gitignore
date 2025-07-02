@@ -24,3 +24,7 @@ pnpm-debug.log*
 .idea/
 
 .package-lock.json
+
+#explorer
+/objs/
+/move_tables/
