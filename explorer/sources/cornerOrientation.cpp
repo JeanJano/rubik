@@ -131,7 +131,7 @@ cornerOrientCoord cornerOrientCoord::move(Move move) {
     return newCoord;
 }
 
-uint16_t cornerOrientCoord::get_pure_coord() {
+uint16_t cornerOrientCoord::get_pure_coord() const {
     uint16_t coord = 0;
     for (int i = 0; i < 7; ++i) {
         coord = coord * 3 + static_cast<uint16_t>(this->explicitCoor[i]);
@@ -183,4 +183,37 @@ cornerOrientCoord cornerOrientCoord::from_pure_coord(uint16_t coord) {
     }
     result.explicitCoor[N - 1] = (3 - (sum % 3)) % 3;
     return result;
+}
+
+void cornerOrientCoord::move_table_to_file() {
+    const std::string folder = "move_tables";
+
+    // Crear la carpeta si no existe
+    std::error_code ec; // para no lanzar excepciones
+    if (!std::filesystem::exists(folder)) {
+        if (!std::filesystem::create_directories(folder, ec)) {
+            std::cerr << "Error: no se pudo crear la carpeta '" << folder << "': " << ec.message() << std::endl;
+            return;
+        }
+    }
+
+    std::string filepath = folder + "/cornerOriMoves.bin";
+    std::ofstream out(filepath, std::ios::binary);
+    if (!out) {
+        std::cerr << "Error: no se pudo abrir el archivo para escritura: " << filepath << std::endl;
+        return;
+    }
+
+    cornerOrientCoord state;
+    for (int i = 0; i < 2187; ++i) {
+        for (int m = 0; m < 18; ++m) {
+            Move move = static_cast<Move>(m);
+            cornerOrientCoord next = state.move(move);
+            uint16_t nextCoord = next.get_pure_coord();
+            out.write(reinterpret_cast<const char*>(&nextCoord), sizeof(uint16_t));
+        }
+        state = state.nextExplicitCoord();
+    }
+
+    out.close();
 }

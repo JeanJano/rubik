@@ -24,14 +24,6 @@ void print_cubie_state(const cubeCubie& cube) {
     std::cout << "\n";
 }
 
-// void print_scramble(const std::vector<std::string>& scramble) {
-//     std::cout << "Scramble: ";
-//     for (const std::string& move : scramble) {
-//         std::cout << move << " ";
-//     }
-//     std::cout << std::endl;
-// }
-
 void print_scramble(const std::vector<Move>& scramble) {
     std::cout << "Scramble:\n";
     for (const Move& move : scramble) {
@@ -77,4 +69,31 @@ std::string moveToString(Move move) {
         case Move::B3:  return "B'";
         default:        return "Unknown";
     }
+}
+
+uint16_t get_coord(const cornerOrientCoord& coord) {
+    return coord.get_pure_coord();
+}
+
+uint16_t get_coord(uint16_t coord) {
+    return coord;
+}
+
+Move get_move(const std::string& moveStr) {
+    auto it = string_to_move.find(moveStr);
+    if (it != string_to_move.end()) {
+        return it->second;
+    }
+    throw std::invalid_argument("Invalid move string: " + moveStr);
+}
+
+Move get_move(int moveIndex) {
+    if (moveIndex < 0 || moveIndex > 17) {
+        throw std::invalid_argument("Invalid move index: " + std::to_string(moveIndex));
+    }
+    return static_cast<Move>(moveIndex);
+}
+
+Move get_move(Move move) {
+    return move;
 }

@@ -8,6 +8,7 @@ INCLUDES	=	-I $(HEADER)
 SRC_PATH	=	sources/
 HEADER		=	includes/
 OBJ_PATH	=	objs/
+MOVE_TABLE_PATH = move_tables/
 
 ### FILES ###
 SOURCES		=	main.cpp \
@@ -47,6 +48,7 @@ clean:
 	
 fclean: clean
 		@$(RM) $(NAME)
+		@$(RM) $(MOVE_TABLE_PATH)
 		@echo "$(GREEN) Executable removed$(NOC)"
 
 re: fclean all

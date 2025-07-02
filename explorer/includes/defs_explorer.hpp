@@ -7,6 +7,13 @@
 # include <iostream>
 # include <vector>
 # include <sstream>
+# include <fstream>
+# include <map>
+# include <filesystem>
+
+
+//------------------tables names----------------------------------
+inline const std::string cornerOriMoveTableFilename = "move_tables/cornerOriMoves.bin";
 
 // ------------------------init stuff---------------------------------
 
@@ -45,9 +52,6 @@ enum class Facelet {
 enum class Color {
     U = 0, R, F, D, L, B
 };
-
-// ------------------- Cube Pieces (Corners and Edges) -------------------
-
 /**
  * Enum for the 8 corner cubies.
  * Each corner has 3 facelets: for example, URF = Up-Right-Front.
@@ -85,6 +89,16 @@ enum class Move {
     B1, B2, B3,
     R1, R2, R3,
     L1, L2, L3
+};
+
+//------------------ move string to Move enum map ------------------
+inline const std::map<std::string, Move> string_to_move = {
+    {"U", Move::U1}, {"U'", Move::U3}, {"U2", Move::U2},
+    {"D", Move::D1}, {"D'", Move::D3}, {"D2", Move::D2},
+    {"F", Move::F1}, {"F'", Move::F3}, {"F2", Move::F2},
+    {"B", Move::B1}, {"B'", Move::B3}, {"B2", Move::B2},
+    {"R", Move::R1}, {"R'", Move::R3}, {"R2", Move::R2},
+    {"L", Move::L1}, {"L'", Move::L3}, {"L2", Move::L2}
 };
 
 // ------------------- Cube Representation -------------------
@@ -133,9 +147,39 @@ struct cornerOrientCoord{
     cornerOrientCoord move(Move move);
     static void print_move_table();
     static cornerOrientCoord from_pure_coord(uint16_t coord);
-    uint16_t get_pure_coord();
+    uint16_t get_pure_coord() const;
     cornerOrientCoord nextExplicitCoord();
+    static void move_table_to_file();
 };
+
+//corner_orientation.cpp
+uint16_t get_coord(const cornerOrientCoord& coord);
+uint16_t get_coord(uint16_t coord);
+Move get_move(const std::string& moveStr);
+Move get_move(int moveIndex);
+Move get_move(Move move);
+
+template <typename CoordType, typename MoveType>
+uint16_t move_coord_from_file(CoordType coordInput, MoveType moveInput) {
+    std::ifstream in(cornerOriMoveTableFilename, std::ios::binary);
+    if (!in) {
+        std::cerr << "Error: could not open move table file for reading." << std::endl;
+        return 0;
+    }
+
+    uint16_t pureCoord = get_coord(coordInput);
+    Move move = get_move(moveInput);
+
+    std::streampos pos = static_cast<std::streampos>(pureCoord) * 18 * sizeof(uint16_t)
+                       + static_cast<int>(move) * sizeof(uint16_t);
+    in.seekg(pos);
+
+    uint16_t result;
+    in.read(reinterpret_cast<char*>(&result), sizeof(uint16_t));
+    in.close();
+
+    return result;
+}
 
 //-------------------nedded to see the cubie representation--------
 std::string edge_to_string(Edge e);

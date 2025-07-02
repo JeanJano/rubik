@@ -27,7 +27,10 @@ int main(int ac, char** av) {
     cubeCubie scrambledCube = get_scrambled_state(scramble);
     cornerOrientCoord coordOne = cornerOrientCoord(scrambledCube);
     std::cout << "init pure coord " << coordOne.get_pure_coord() << std::endl;
+    //--------------------------------------
+    cornerOrientCoord::move_table_to_file();
+    for (int i = 0; i < 18; i++){
+        std::cout << "vamos arriba: " << move_coord_from_file(coordOne, i) << std::endl;
+    }
     cornerOrientCoord::print_move_table();
-    std::cout << "despues : " << std::endl;
-    cornerOrientCoord::from_pure_coord(1).print_explicit_corn_ori_coord();
 }
