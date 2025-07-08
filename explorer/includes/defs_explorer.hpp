@@ -14,6 +14,7 @@
 
 //------------------tables names----------------------------------
 inline const std::string cornerOriMoveTableFilename = "move_tables/cornerOriMoves.bin";
+inline const std::string cornerEdgMoveTableFilename = "move_tables/edgeOriMoves.bin";
 
 // ------------------------init stuff---------------------------------
 
@@ -152,15 +153,51 @@ struct cornerOrientCoord{
     static void move_table_to_file();
 };
 
+struct edgeOrientCoord{
+    static constexpr int N = 12;
+    std::array<uint8_t, N> explicitCoor;
+
+    edgeOrientCoord();
+    edgeOrientCoord(const cubeCubie& cube);
+    void print_explicit_edge_ori_coord() const;
+    void print_explicit_edge_ori_coord2() const;
+    edgeOrientCoord move(Move move);
+    static void print_move_table();
+    static edgeOrientCoord from_pure_coord(uint16_t coord);
+    uint16_t get_pure_coord() const;
+    edgeOrientCoord nextExplicitCoord();
+    static void move_table_to_file();
+};
+
+
+struct UDSliceOrientCoord{
+    static constexpr int N = 12;
+    std::array<uint8_t, N> explicitCoor;
+
+    UDSliceOrientCoord();
+    UDSliceOrientCoord(const cubeCubie& cube);
+    void print_explicit_udslice_ori_coord() const;
+    void print_explicit_udslice_ori_coord2() const;
+    UDSliceOrientCoord move(Move move);
+    static void print_move_table();
+    static UDSliceCoord from_pure_coord(uint16_t coord);
+    uint16_t get_pure_coord() const;
+    UDSliceCoord nextExplicitCoord();
+    static void move_table_to_file();
+};
+
+
+
 //corner_orientation.cpp
 uint16_t get_coord(const cornerOrientCoord& coord);
+uint16_t get_coord(const edgeOrientCoord& coord);
 uint16_t get_coord(uint16_t coord);
 Move get_move(const std::string& moveStr);
 Move get_move(int moveIndex);
 Move get_move(Move move);
 
 template <typename CoordType, typename MoveType>
-uint16_t move_coord_from_file(CoordType coordInput, MoveType moveInput) {
+uint16_t corn_ori_coord_from_file(CoordType coordInput, MoveType moveInput) {
     std::ifstream in(cornerOriMoveTableFilename, std::ios::binary);
     if (!in) {
         std::cerr << "Error: could not open move table file for reading." << std::endl;
@@ -180,6 +217,29 @@ uint16_t move_coord_from_file(CoordType coordInput, MoveType moveInput) {
 
     return result;
 }
+
+template <typename CoordType, typename MoveType>
+uint16_t edge_ori_coord_from_file(CoordType coordInput, MoveType moveInput) {
+    std::ifstream in(cornerEdgMoveTableFilename, std::ios::binary);
+    if (!in) {
+        std::cerr << "Error: could not open move table file for reading." << std::endl;
+        return 0;
+    }
+
+    uint16_t pureCoord = get_coord(coordInput);
+    Move move = get_move(moveInput);
+
+    std::streampos pos = static_cast<std::streampos>(pureCoord) * 18 * sizeof(uint16_t)
+                       + static_cast<int>(move) * sizeof(uint16_t);
+    in.seekg(pos);
+
+    uint16_t result;
+    in.read(reinterpret_cast<char*>(&result), sizeof(uint16_t));
+    in.close();
+
+    return result;
+}
+
 
 //-------------------nedded to see the cubie representation--------
 std::string edge_to_string(Edge e);

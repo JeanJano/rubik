@@ -133,6 +133,7 @@ cornerOrientCoord cornerOrientCoord::move(Move move) {
 
 uint16_t cornerOrientCoord::get_pure_coord() const {
     uint16_t coord = 0;
+    //check the counter
     for (int i = 0; i < 7; ++i) {
         coord = coord * 3 + static_cast<uint16_t>(this->explicitCoor[i]);
     }

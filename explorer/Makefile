@@ -15,6 +15,7 @@ SOURCES		=	main.cpp \
 				parser.cpp \
 				cubeCubie.cpp \
 				cornerOrientation.cpp \
+				edgeOrientation.cpp \
 				utils.cpp \
 
 ### FILE MANAGEMENT ###

@@ -47,6 +47,42 @@ void cornerOrientCoord::print_explicit_corn_ori_coord2() const {
     std::cout << std::endl;
 }
 
+
+
+void edgeOrientCoord::print_explicit_edge_ori_coord() const {
+    std::cout << "Edge Orientation (explicit): ";
+    for (int i = 0; i < N; ++i) {
+        std::cout << static_cast<int>(explicitCoor[i]) << " ";
+    }
+    std::cout << std::endl;
+}
+
+void edgeOrientCoord::print_explicit_edge_ori_coord2() const {
+    for (int i = 0; i < N; ++i) {
+        std::cout << static_cast<int>(explicitCoor[i]) << " ";
+    }
+    std::cout << std::endl;
+}
+
+
+void UDSLiceOrientCoord::print_explicit_udslice_ori_coord() const {
+    std::cout << "Edge Orientation (explicit): ";
+    for (int i = 0; i < N; ++i) {
+        std::cout << static_cast<int>(explicitCoor[i]) << " ";
+    }
+    std::cout << std::endl;
+}
+
+void UDSliceOrientCoord::print_explicit_udslice_ori_coord2() const {
+    for (int i = 0; i < N; ++i) {
+        std::cout << static_cast<int>(explicitCoor[i]) << " ";
+    }
+    std::cout << std::endl;
+}
+
+
+
+
 std::string moveToString(Move move) {
     switch (move) {
         case Move::U1:  return "U";
@@ -72,6 +108,10 @@ std::string moveToString(Move move) {
 }
 
 uint16_t get_coord(const cornerOrientCoord& coord) {
+    return coord.get_pure_coord();
+}
+
+uint16_t get_coord(const edgeOrientCoord& coord) {
     return coord.get_pure_coord();
 }
 
