@@ -178,14 +178,13 @@ struct UDSliceCoord{
     UDSliceCoord(const cubeCubie& cube);
     void print_explicit_udslice_ori_coord() const;
     void print_explicit_udslice_ori_coord2() const;
-    UDSliceCoord move(Move move);
+    UDSliceCoord move(const Move& move);
     static void print_move_table();
-    static UDSliceCoord from_pure_coord(uint16_t coord);
+    static UDSliceCoord from_pure_coord(const uint16_t& coord);
     uint16_t get_pure_coord() const;
     UDSliceCoord nextExplicitCoord();
     UDSliceCoord nextExplicitCoord(int index, int count);
     static void move_table_to_file();
-    int find_next_index_for_one(int initIndex,const UDSliceCoord& coord);
 };
 
 

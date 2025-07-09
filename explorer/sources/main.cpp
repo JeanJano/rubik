@@ -52,8 +52,17 @@ int main(int ac, char** av) {
 
     UDSliceCoord coordThree = UDSliceCoord(scrambledCube);
     coordThree.print_explicit_udslice_ori_coord();
-    for (int i = 0; i < 500; ++i){
-        coordThree = coordThree.nextExplicitCoord();
-        coordThree.print_explicit_udslice_ori_coord();
-    }
+    // std::cout << coordThree.get_pure_coord() << std::endl;
+    // for (int i = 0; i < 500; ++i){
+    //     coordThree = coordThree.nextExplicitCoord();
+    //     coordThree.print_explicit_udslice_ori_coord();
+    //     std::cout << coordThree.get_pure_coord() << std::endl;
+    // }
+    // UDSliceCoord::print_move_table();
+    std::cout <<"-----------------------"<< std::endl;
+    try{
+        UDSliceCoord test = UDSliceCoord::from_pure_coord(493);
+        test.print_explicit_udslice_ori_coord();
+    }catch (const std::invalid_argument& e) {
+        std::cerr << "Error: " << e.what() << std::endl;}
 }

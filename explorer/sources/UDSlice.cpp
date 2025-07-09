@@ -15,7 +15,7 @@ UDSliceCoord::UDSliceCoord(const cubeCubie& cube) {
     }
 }
 
-UDSliceCoord UDSliceCoord::move(Move move) {
+UDSliceCoord UDSliceCoord::move(const Move& move) {
     UDSliceCoord newCoord = *this;
 
     switch (move) {
@@ -164,7 +164,6 @@ UDSliceCoord UDSliceCoord::nextExplicitCoord(int index, int count){
     UDSliceCoord coord = *this;
     UDSliceCoord next = coord;
 
-    // std::cout << "empezando : " << index << " " << count << std::endl;
     for (int i = index; i < N; ++i){
         if (coord.explicitCoor[i] == 0)
             ;
@@ -176,30 +175,19 @@ UDSliceCoord UDSliceCoord::nextExplicitCoord(int index, int count){
                 return next;
             else {
                 for (int j = i - 2; j >= 0; --j){
-                    // std::cout << "aqui" << std::endl;
-                    // next.print_explicit_udslice_ori_coord2();
-                    // std::cout << "aqui" << std::endl;
                     if (curr > 0){
                         next.explicitCoor[j] = 1;
-                        // std::cout << "aca" << std::endl;
-                        // next.print_explicit_udslice_ori_coord2();
-                        // std::cout << "aca" << std::endl;
                         --curr;
                     }
                     else if (curr == 0){
                         next.explicitCoor[j] = 0;
-                        // std::cout << "final :" << j << std::endl;
                     }
                 }
-                // std::cout << "return" << std::endl;
                 return next;
             }
         }
         else if (coord.explicitCoor[i] == 1 && i == index){
-            // std::cout << "entro" << std::endl;
-            next = next.nextExplicitCoord(i + 1, count + 1);
-            return next;
-
+            return (next.nextExplicitCoord(i + 1, count + 1));
         }
     }
     return next;
@@ -212,7 +200,7 @@ UDSliceCoord UDSliceCoord::nextExplicitCoord(){
 
 void UDSliceCoord::print_move_table(){
     UDSliceCoord state;
-    for (int i = 0; i < 2048; ++i){
+    for (int i = 0; i < 495; ++i){
         std::cout << state.get_pure_coord() << " => ";
 
         for (int m = 0; m < 18; ++m) {
@@ -227,15 +215,48 @@ void UDSliceCoord::print_move_table(){
     }
 }
 
-UDSliceCoord UDSliceCoord::from_pure_coord(uint16_t coord) {
-    UDSliceCoord result;
-    int sum = 0;
-    for (int i = N - 2; i >= 0; --i) {
-        result.explicitCoor[i] = coord % 2;
-        sum += result.explicitCoor[i];
-        coord /= 2;
+UDSliceCoord UDSliceCoord::from_pure_coord(const uint16_t& coord) {
+    if (coord > 494) {
+        throw std::invalid_argument("coord must be between 0 y 494. received value: ");
     }
-    result.explicitCoor[N - 1] = (2 - (sum % 2)) % 2;
+    UDSliceCoord result;
+    int curr = coord;
+    int ones = 3;
+    std::cout <<"-----------------------"<< std::endl;
+    result.print_explicit_udslice_ori_coord();
+    result.explicitCoor[N-1] = 0;
+    result.explicitCoor[N-2] = 0;
+    result.explicitCoor[N-3] = 0;
+    result.explicitCoor[N-4] = 0;
+    result.print_explicit_udslice_ori_coord();
+    std::cout <<"-----------------------"<< std::endl;
+    for (int i = N - 1; i >= 0; --i){
+        std::cout << "i: " << i << " curr : "<< curr << " binom: " << binomial(i, ones) << " ones: " << ones << std::endl;
+        if (ones < 0){
+            std::cout << "aca1" << std::endl;
+            result.explicitCoor[i] = 0;
+        }
+        else if (ones >= 0 && binomial(i, ones) > curr){
+            std::cout << "aca2" << std::endl;
+            result.explicitCoor[i] = 1;
+            --ones;
+        }
+        else if (ones >= 0 && binomial(i, ones) < curr){
+            std::cout << "aca3" << std::endl;
+            result.explicitCoor[i] = 0;
+            curr -= binomial(i, ones);
+        }
+        else if (ones >= 0 && binomial(i, ones) == curr){
+            std::cout << "aca4" << std::endl;
+            result.explicitCoor[i] = 0;
+            curr -= binomial(i, ones);
+            --i;
+            result.explicitCoor[i] = 1;
+            --ones;
+        }
+        result.print_explicit_udslice_ori_coord();
+    }
+
     return result;
 }
 
