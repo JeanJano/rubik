@@ -16,6 +16,7 @@ SOURCES		=	main.cpp \
 				cubeCubie.cpp \
 				cornerOrientation.cpp \
 				edgeOrientation.cpp \
+				UDSlice.cpp \
 				utils.cpp \
 
 ### FILE MANAGEMENT ###

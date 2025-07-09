@@ -170,20 +170,22 @@ struct edgeOrientCoord{
 };
 
 
-struct UDSliceOrientCoord{
+struct UDSliceCoord{
     static constexpr int N = 12;
     std::array<uint8_t, N> explicitCoor;
 
-    UDSliceOrientCoord();
-    UDSliceOrientCoord(const cubeCubie& cube);
+    UDSliceCoord();
+    UDSliceCoord(const cubeCubie& cube);
     void print_explicit_udslice_ori_coord() const;
     void print_explicit_udslice_ori_coord2() const;
-    UDSliceOrientCoord move(Move move);
+    UDSliceCoord move(Move move);
     static void print_move_table();
     static UDSliceCoord from_pure_coord(uint16_t coord);
     uint16_t get_pure_coord() const;
     UDSliceCoord nextExplicitCoord();
+    UDSliceCoord nextExplicitCoord(int index, int count);
     static void move_table_to_file();
+    int find_next_index_for_one(int initIndex,const UDSliceCoord& coord);
 };
 
 

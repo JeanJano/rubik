@@ -65,7 +65,7 @@ void edgeOrientCoord::print_explicit_edge_ori_coord2() const {
 }
 
 
-void UDSLiceOrientCoord::print_explicit_udslice_ori_coord() const {
+void UDSliceCoord::print_explicit_udslice_ori_coord() const {
     std::cout << "Edge Orientation (explicit): ";
     for (int i = 0; i < N; ++i) {
         std::cout << static_cast<int>(explicitCoor[i]) << " ";
@@ -73,7 +73,7 @@ void UDSLiceOrientCoord::print_explicit_udslice_ori_coord() const {
     std::cout << std::endl;
 }
 
-void UDSliceOrientCoord::print_explicit_udslice_ori_coord2() const {
+void UDSliceCoord::print_explicit_udslice_ori_coord2() const {
     for (int i = 0; i < N; ++i) {
         std::cout << static_cast<int>(explicitCoor[i]) << " ";
     }

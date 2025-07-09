@@ -1,7 +1,7 @@
 #include "rubik_explorer.hpp"
 #include "defs_explorer.hpp"
 
-UDSliceOrientCoord::UDSliceOrientCoord() {
+UDSliceCoord::UDSliceCoord() {
     explicitCoor.fill(0);
     for (int i = N - 4; i < N; ++i) {
         explicitCoor[i] = 1;  // Cambia los últimos 4 a unos
@@ -9,14 +9,14 @@ UDSliceOrientCoord::UDSliceOrientCoord() {
 }
 
 //extract orientation UDSlice coordinate from cubie representation
-UDSliceOrientCoord::UDSliceOrientCoord(const cubeCubie& cube) {
+UDSliceCoord::UDSliceCoord(const cubeCubie& cube) {
     for (int i = 0; i < N; ++i) {
-        explicitCoor[i] = (N-4 <= cube.edges[i] && cube.edges[i] < N)? 1 : 0;
+        explicitCoor[i] = (N-4 <= cube.edges[i].pos && cube.edges[i].pos < N)? 1 : 0;
     }
 }
 
-UDSliceOrientCoord UDSliceOrientCoord::move(Move move) {
-    UDSliceOrientCoord newCoord = *this;
+UDSliceCoord UDSliceCoord::move(Move move) {
+    UDSliceCoord newCoord = *this;
 
     switch (move) {
         case Move::U1:
@@ -128,7 +128,7 @@ UDSliceOrientCoord UDSliceOrientCoord::move(Move move) {
             newCoord.explicitCoor[9] = (explicitCoor[6] == 1)? 1 : 0;;
             break;
         default:
-            std::cerr << "Fatal error in UDSliceOrientCoord::move: unsupported move." << std::endl;
+            std::cerr << "Fatal error in UDSliceCoord::move: unsupported move." << std::endl;
             break;
     }
     return newCoord;
@@ -145,7 +145,7 @@ int binomial(int n, int k) {
     return res;
 }
 
-uint16_t UDSliceOrientCoord::get_pure_coord() const {
+uint16_t UDSliceCoord::get_pure_coord() const {
     int coord = 0;
     int k = -1;
 
@@ -160,31 +160,64 @@ uint16_t UDSliceOrientCoord::get_pure_coord() const {
     return coord;
 }
 
-UDSliceOrientCoord UDSliceOrientCoord::nextExplicitCoord(){
-    UDSliceOrientCoord next = *this;
-    for (int i = N - 2; i >= 0; --i) {
-        if (++next.explicitCoor[i] < 2) {
-            break;
-        } else {
+UDSliceCoord UDSliceCoord::nextExplicitCoord(int index, int count){
+    UDSliceCoord coord = *this;
+    UDSliceCoord next = coord;
+
+    // std::cout << "empezando : " << index << " " << count << std::endl;
+    for (int i = index; i < N; ++i){
+        if (coord.explicitCoor[i] == 0)
+            ;
+        else if (coord.explicitCoor[i] == 1 && i > index){
+            int curr = count;
             next.explicitCoor[i] = 0;
+            next.explicitCoor[i - 1] = 1;
+            if (i - 1 == index)
+                return next;
+            else {
+                for (int j = i - 2; j >= 0; --j){
+                    // std::cout << "aqui" << std::endl;
+                    // next.print_explicit_udslice_ori_coord2();
+                    // std::cout << "aqui" << std::endl;
+                    if (curr > 0){
+                        next.explicitCoor[j] = 1;
+                        // std::cout << "aca" << std::endl;
+                        // next.print_explicit_udslice_ori_coord2();
+                        // std::cout << "aca" << std::endl;
+                        --curr;
+                    }
+                    else if (curr == 0){
+                        next.explicitCoor[j] = 0;
+                        // std::cout << "final :" << j << std::endl;
+                    }
+                }
+                // std::cout << "return" << std::endl;
+                return next;
+            }
+        }
+        else if (coord.explicitCoor[i] == 1 && i == index){
+            // std::cout << "entro" << std::endl;
+            next = next.nextExplicitCoord(i + 1, count + 1);
+            return next;
+
         }
     }
-    int sum = 0;
-    for (int i = 0; i < N - 1; ++i) {
-        sum += next.explicitCoor[i];
-    }
-    next.explicitCoor[N - 1] = (2 - (sum % 2)) % 2;
     return next;
 }
 
-void UDSliceOrientCoord::print_move_table(){
-    UDSliceOrientCoord state;
+UDSliceCoord UDSliceCoord::nextExplicitCoord(){
+    UDSliceCoord next = *this;
+    return next.nextExplicitCoord(0,0);
+}
+
+void UDSliceCoord::print_move_table(){
+    UDSliceCoord state;
     for (int i = 0; i < 2048; ++i){
         std::cout << state.get_pure_coord() << " => ";
 
         for (int m = 0; m < 18; ++m) {
             Move move = static_cast<Move>(m);
-            UDSliceOrientCoord next = state.move(move);
+            UDSliceCoord next = state.move(move);
             std::cout << next.get_pure_coord();
             if (m != 17) std::cout << " | ";
         }
@@ -194,8 +227,8 @@ void UDSliceOrientCoord::print_move_table(){
     }
 }
 
-UDSliceOrientCoord UDSliceOrientCoord::from_pure_coord(uint16_t coord) {
-    UDSliceOrientCoord result;
+UDSliceCoord UDSliceCoord::from_pure_coord(uint16_t coord) {
+    UDSliceCoord result;
     int sum = 0;
     for (int i = N - 2; i >= 0; --i) {
         result.explicitCoor[i] = coord % 2;
@@ -206,7 +239,7 @@ UDSliceOrientCoord UDSliceOrientCoord::from_pure_coord(uint16_t coord) {
     return result;
 }
 
-void UDSliceOrientCoord::move_table_to_file() {
+void UDSliceCoord::move_table_to_file() {
     const std::string folder = "move_tables";
 
     // Crear la carpeta si no existe
@@ -225,11 +258,11 @@ void UDSliceOrientCoord::move_table_to_file() {
         return;
     }
 
-    UDSliceOrientCoord state;
+    UDSliceCoord state;
     for (int i = 0; i < 2048; ++i) {
         for (int m = 0; m < 18; ++m) {
             Move move = static_cast<Move>(m);
-            UDSliceOrientCoord next = state.move(move);
+            UDSliceCoord next = state.move(move);
             uint16_t nextCoord = next.get_pure_coord();
             out.write(reinterpret_cast<const char*>(&nextCoord), sizeof(uint16_t));
         }
