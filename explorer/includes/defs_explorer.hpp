@@ -13,8 +13,10 @@
 
 
 //------------------tables names----------------------------------
-inline const std::string cornerOriMoveTableFilename = "move_tables/cornerOriMoves.bin";
-inline const std::string cornerEdgMoveTableFilename = "move_tables/edgeOriMoves.bin";
+inline const std::string movesFoldername = "move_tables";
+inline const std::string cornerOriMoveTableFilename = "/cornerOriMoves.bin";
+inline const std::string edgeOriMoveTableFilename = "/edgeOriMoves.bin";
+inline const std::string UDSliceMoveTableFilename = "/UDSliceMoves.bin";
 
 // ------------------------init stuff---------------------------------
 
@@ -192,36 +194,15 @@ struct UDSliceCoord{
 //corner_orientation.cpp
 uint16_t get_coord(const cornerOrientCoord& coord);
 uint16_t get_coord(const edgeOrientCoord& coord);
+uint16_t get_coord(const UDSliceCoord& coord);
 uint16_t get_coord(uint16_t coord);
 Move get_move(const std::string& moveStr);
 Move get_move(int moveIndex);
 Move get_move(Move move);
 
 template <typename CoordType, typename MoveType>
-uint16_t corn_ori_coord_from_file(CoordType coordInput, MoveType moveInput) {
-    std::ifstream in(cornerOriMoveTableFilename, std::ios::binary);
-    if (!in) {
-        std::cerr << "Error: could not open move table file for reading." << std::endl;
-        return 0;
-    }
-
-    uint16_t pureCoord = get_coord(coordInput);
-    Move move = get_move(moveInput);
-
-    std::streampos pos = static_cast<std::streampos>(pureCoord) * 18 * sizeof(uint16_t)
-                       + static_cast<int>(move) * sizeof(uint16_t);
-    in.seekg(pos);
-
-    uint16_t result;
-    in.read(reinterpret_cast<char*>(&result), sizeof(uint16_t));
-    in.close();
-
-    return result;
-}
-
-template <typename CoordType, typename MoveType>
-uint16_t edge_ori_coord_from_file(CoordType coordInput, MoveType moveInput) {
-    std::ifstream in(cornerEdgMoveTableFilename, std::ios::binary);
+uint16_t fase_one_coord_from_file(CoordType coordInput, MoveType moveInput, const std::string& filename) {
+    std::ifstream in(movesFoldername + filename, std::ios::binary);
     if (!in) {
         std::cerr << "Error: could not open move table file for reading." << std::endl;
         return 0;

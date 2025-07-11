@@ -115,6 +115,10 @@ uint16_t get_coord(const edgeOrientCoord& coord) {
     return coord.get_pure_coord();
 }
 
+uint16_t get_coord(const UDSliceCoord& coord) {
+    return coord.get_pure_coord();
+}
+
 uint16_t get_coord(uint16_t coord) {
     return coord;
 }

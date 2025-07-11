@@ -222,57 +222,54 @@ UDSliceCoord UDSliceCoord::from_pure_coord(const uint16_t& coord) {
     UDSliceCoord result;
     int curr = coord;
     int ones = 3;
-    std::cout <<"-----------------------"<< std::endl;
-    result.print_explicit_udslice_ori_coord();
-    result.explicitCoor[N-1] = 0;
-    result.explicitCoor[N-2] = 0;
-    result.explicitCoor[N-3] = 0;
-    result.explicitCoor[N-4] = 0;
-    result.print_explicit_udslice_ori_coord();
-    std::cout <<"-----------------------"<< std::endl;
+    // std::cout <<"-----------------------"<< std::endl;
+    // result.print_explicit_udslice_ori_coord();
+    // result.explicitCoor[N-1] = 0;
+    // result.explicitCoor[N-2] = 0;
+    // result.explicitCoor[N-3] = 0;
+    // result.explicitCoor[N-4] = 0;
+    // result.print_explicit_udslice_ori_coord();
+    // std::cout <<"-----------------------"<< std::endl;
     for (int i = N - 1; i >= 0; --i){
-        std::cout << "i: " << i << " curr : "<< curr << " binom: " << binomial(i, ones) << " ones: " << ones << std::endl;
+        // std::cout << "i: " << i << " curr : "<< curr << " binom: " << binomial(i, ones) << " ones: " << ones << std::endl;
         if (ones < 0){
-            std::cout << "aca1" << std::endl;
+            // std::cout << "aca1" << std::endl;
             result.explicitCoor[i] = 0;
         }
         else if (ones >= 0 && binomial(i, ones) > curr){
-            std::cout << "aca2" << std::endl;
+            // std::cout << "aca2" << std::endl;
             result.explicitCoor[i] = 1;
             --ones;
         }
         else if (ones >= 0 && binomial(i, ones) < curr){
-            std::cout << "aca3" << std::endl;
+            // std::cout << "aca3" << std::endl;
             result.explicitCoor[i] = 0;
             curr -= binomial(i, ones);
         }
         else if (ones >= 0 && binomial(i, ones) == curr){
-            std::cout << "aca4" << std::endl;
+            // std::cout << "aca4" << std::endl;
             result.explicitCoor[i] = 0;
             curr -= binomial(i, ones);
             --i;
             result.explicitCoor[i] = 1;
             --ones;
         }
-        result.print_explicit_udslice_ori_coord();
+        // result.print_explicit_udslice_ori_coord();
     }
 
     return result;
 }
 
 void UDSliceCoord::move_table_to_file() {
-    const std::string folder = "move_tables";
-
-    // Crear la carpeta si no existe
-    std::error_code ec; // para no lanzar excepciones
-    if (!std::filesystem::exists(folder)) {
-        if (!std::filesystem::create_directories(folder, ec)) {
-            std::cerr << "Error: no se pudo crear la carpeta '" << folder << "': " << ec.message() << std::endl;
+    std::error_code ec;
+    if (!std::filesystem::exists(movesFoldername)) {
+        if (!std::filesystem::create_directories(movesFoldername, ec)) {
+            std::cerr << "Error: no se pudo crear la carpeta '" << movesFoldername << "': " << ec.message() << std::endl;
             return;
         }
     }
 
-    std::string filepath = folder + "/UDSliceOriMoves.bin";
+    std::string filepath = movesFoldername + UDSliceMoveTableFilename;
     std::ofstream out(filepath, std::ios::binary);
     if (!out) {
         std::cerr << "Error: no se pudo abrir el archivo para escritura: " << filepath << std::endl;
@@ -280,7 +277,7 @@ void UDSliceCoord::move_table_to_file() {
     }
 
     UDSliceCoord state;
-    for (int i = 0; i < 2048; ++i) {
+    for (int i = 0; i < 495; ++i) {
         for (int m = 0; m < 18; ++m) {
             Move move = static_cast<Move>(m);
             UDSliceCoord next = state.move(move);

@@ -187,18 +187,15 @@ cornerOrientCoord cornerOrientCoord::from_pure_coord(uint16_t coord) {
 }
 
 void cornerOrientCoord::move_table_to_file() {
-    const std::string folder = "move_tables";
-
-    // Crear la carpeta si no existe
-    std::error_code ec; // para no lanzar excepciones
-    if (!std::filesystem::exists(folder)) {
-        if (!std::filesystem::create_directories(folder, ec)) {
-            std::cerr << "Error: no se pudo crear la carpeta '" << folder << "': " << ec.message() << std::endl;
+    std::error_code ec;
+    if (!std::filesystem::exists(movesFoldername)) {
+        if (!std::filesystem::create_directories(movesFoldername, ec)) {
+            std::cerr << "Error: no se pudo crear la carpeta '" << movesFoldername << "': " << ec.message() << std::endl;
             return;
         }
     }
 
-    std::string filepath = folder + "/cornerOriMoves.bin";
+    std::string filepath = movesFoldername + cornerOriMoveTableFilename;
     std::ofstream out(filepath, std::ios::binary);
     if (!out) {
         std::cerr << "Error: no se pudo abrir el archivo para escritura: " << filepath << std::endl;

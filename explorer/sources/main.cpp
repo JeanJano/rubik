@@ -26,43 +26,42 @@ int main(int ac, char** av) {
         return 1;
     cubeCubie scrambledCube = get_scrambled_state(scramble);
 
-    // cornerOrientCoord coordOne = cornerOrientCoord(scrambledCube);
-    // std::cout << "init pure coord " << coordOne.get_pure_coord() << std::endl;
-    // //--------------------------------------
-    // cornerOrientCoord::move_table_to_file();
-    // for (int i = 0; i < 18; i++){
-    //     std::cout << "vamos arriba: " << corn_ori_coord_from_file(coordOne, i) << std::endl;
-    // }
-    // cornerOrientCoord::print_move_table();
+    //--------------------------------------
+    cornerOrientCoord coordOne = cornerOrientCoord(scrambledCube);
+    std::cout << "init pure coord corn " << coordOne.get_pure_coord() << std::endl;
+    coordOne.print_explicit_corn_ori_coord2();
+    cornerOrientCoord::move_table_to_file();
+    for (int i = 0; i < 18; i++){
+        uint16_t pure = fase_one_coord_from_file(coordOne, i, cornerOriMoveTableFilename);
+        std::cout << "vamos arriba corners: " << pure << std::endl;
+        cornerOrientCoord exp = cornerOrientCoord::from_pure_coord(pure);
+        exp.print_explicit_corn_ori_coord2();
 
-    
-    // edgeOrientCoord coordTwo = edgeOrientCoord(scrambledCube);
-    // coordTwo.print_explicit_edge_ori_coord();
-    // std::cout << "init pure coord " << coordTwo.get_pure_coord() << std::endl;
+    }
+    cornerOrientCoord::print_move_table();
     // //--------------------------------------
-    // edgeOrientCoord::move_table_to_file();
-    // for (int i = 0; i < 18; i++){
-    //     int pure = edge_ori_coord_from_file(coordTwo, i);
-    //     std::cout << "vamos arriba: "<< i << "|" << pure  << std::endl;
-    //     edgeOrientCoord result = edgeOrientCoord::from_pure_coord(pure);
-    //     std::cout << "vamos arriba 2: " << std::endl;
-    //     result.print_explicit_edge_ori_coord2();
-    // }
-    // edgeOrientCoord::print_move_table();
-
+    edgeOrientCoord coordTwo = edgeOrientCoord(scrambledCube);
+    std::cout << "init pure coord edge " << coordTwo.get_pure_coord() << std::endl;
+    coordTwo.print_explicit_edge_ori_coord2();
+    edgeOrientCoord::move_table_to_file();
+    for (int i = 0; i < 18; i++){
+        uint16_t pure = fase_one_coord_from_file(coordTwo, i, edgeOriMoveTableFilename);
+        std::cout << "vamos arriba edges: " << pure << std::endl;
+        edgeOrientCoord exp = edgeOrientCoord::from_pure_coord(pure);
+        exp.print_explicit_edge_ori_coord2();
+    }
+    edgeOrientCoord::print_move_table();
+    //-------------------------------------
     UDSliceCoord coordThree = UDSliceCoord(scrambledCube);
-    coordThree.print_explicit_udslice_ori_coord();
-    // std::cout << coordThree.get_pure_coord() << std::endl;
-    // for (int i = 0; i < 500; ++i){
-    //     coordThree = coordThree.nextExplicitCoord();
-    //     coordThree.print_explicit_udslice_ori_coord();
-    //     std::cout << coordThree.get_pure_coord() << std::endl;
-    // }
-    // UDSliceCoord::print_move_table();
-    std::cout <<"-----------------------"<< std::endl;
-    try{
-        UDSliceCoord test = UDSliceCoord::from_pure_coord(493);
-        test.print_explicit_udslice_ori_coord();
-    }catch (const std::invalid_argument& e) {
-        std::cerr << "Error: " << e.what() << std::endl;}
+    std::cout << "init pure coord udslice " << coordThree.get_pure_coord() << std::endl;
+    coordThree.print_explicit_udslice_ori_coord2();
+    UDSliceCoord::move_table_to_file();
+    for (int i = 0; i < 18; ++i){
+        uint16_t pure = fase_one_coord_from_file(coordThree, i, UDSliceMoveTableFilename);
+        std::cout << "vamos arriba udslice: " << pure << std::endl;
+        UDSliceCoord exp = UDSliceCoord::from_pure_coord(pure);
+        exp.print_explicit_udslice_ori_coord2();
+    }
+    //-------------------------------------
+    UDSliceCoord::print_move_table();
 }
