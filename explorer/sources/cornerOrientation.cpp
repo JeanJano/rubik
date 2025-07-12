@@ -186,7 +186,7 @@ cornerOrientCoord cornerOrientCoord::from_pure_coord(uint16_t coord) {
     return result;
 }
 
-void cornerOrientCoord::move_table_to_file() {
+void cornerOrientCoord::moveTableToFile() {
     std::error_code ec;
     if (!std::filesystem::exists(movesFoldername)) {
         if (!std::filesystem::create_directories(movesFoldername, ec)) {

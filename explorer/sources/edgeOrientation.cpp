@@ -185,7 +185,7 @@ edgeOrientCoord edgeOrientCoord::from_pure_coord(uint16_t coord) {
     return result;
 }
 
-void edgeOrientCoord::move_table_to_file() {
+void edgeOrientCoord::moveTableToFile() {
 
     std::error_code ec;
     if (!std::filesystem::exists(movesFoldername)) {

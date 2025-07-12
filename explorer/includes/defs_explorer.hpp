@@ -9,6 +9,7 @@
 # include <sstream>
 # include <fstream>
 # include <map>
+# include <tuple>
 # include <filesystem>
 
 
@@ -152,7 +153,7 @@ struct cornerOrientCoord{
     static cornerOrientCoord from_pure_coord(uint16_t coord);
     uint16_t get_pure_coord() const;
     cornerOrientCoord nextExplicitCoord();
-    static void move_table_to_file();
+    static void moveTableToFile();
 };
 
 struct edgeOrientCoord{
@@ -168,7 +169,7 @@ struct edgeOrientCoord{
     static edgeOrientCoord from_pure_coord(uint16_t coord);
     uint16_t get_pure_coord() const;
     edgeOrientCoord nextExplicitCoord();
-    static void move_table_to_file();
+    static void moveTableToFile();
 };
 
 
@@ -186,16 +187,21 @@ struct UDSliceCoord{
     uint16_t get_pure_coord() const;
     UDSliceCoord nextExplicitCoord();
     UDSliceCoord nextExplicitCoord(int index, int count);
-    static void move_table_to_file();
+    static void moveTableToFile();
 };
 
-struct faseOneCoord{
+
+struct faseOne{
     cornerOrientCoord corners;
     edgeOrientCoord edges;
     UDSliceCoord slice;
+    std::tuple<int, int, int> state;
 
-    faseOneCoord(const cornerOrientCoord& c, const edgeOrientCoord& e, const UDSliceCoord& s);
+    faseOne(const cornerOrientCoord& c, const edgeOrientCoord& e, const UDSliceCoord& s);
+    static void pruningTableToFile();
+    int stateToIndex();
 };
+
 
 
 uint16_t get_coord(const cornerOrientCoord& coord);
