@@ -13,6 +13,6 @@ cubeCubie get_scrambled_state(const std::vector<Move>& scramble);
 void print_cubie_state(const cubeCubie& cube);
 void print_scramble(const std::vector<Move>& scramble);
 std::string moveToString(Move move);
-
+//faseOne.cpp
 
 #endif

@@ -189,9 +189,15 @@ struct UDSliceCoord{
     static void move_table_to_file();
 };
 
+struct faseOneCoord{
+    cornerOrientCoord corners;
+    edgeOrientCoord edges;
+    UDSliceCoord slice;
+
+    faseOneCoord(const cornerOrientCoord& c, const edgeOrientCoord& e, const UDSliceCoord& s);
+};
 
 
-//corner_orientation.cpp
 uint16_t get_coord(const cornerOrientCoord& coord);
 uint16_t get_coord(const edgeOrientCoord& coord);
 uint16_t get_coord(const UDSliceCoord& coord);

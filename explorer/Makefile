@@ -17,6 +17,7 @@ SOURCES		=	main.cpp \
 				cornerOrientation.cpp \
 				edgeOrientation.cpp \
 				UDSlice.cpp \
+				faseOne.cpp \
 				utils.cpp \
 
 ### FILE MANAGEMENT ###
