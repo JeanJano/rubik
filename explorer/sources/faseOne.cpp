@@ -6,8 +6,8 @@ faseOne::faseOne(const cornerOrientCoord& c, const edgeOrientCoord& e, const UDS
         }
 
 void faseOne::pruningTableToFile(){
-        faseOne initState{cornerOrientCoord(), edgeOrientCoord(), UDSliceCoord()};
-
+    faseOne initState{cornerOrientCoord(), edgeOrientCoord(), UDSliceCoord()};
+    faseOne::createPruningOne("pruning_table_fase_one.bin", N);
 }
 
 long long int faseOne::stateToIndex(){
@@ -22,3 +22,30 @@ faseOne faseOne::moveState(const Move& m) {
     return newCoord;
 }
 
+bool faseOne::createPruningOne(const std::string& filename, std::size_t fileSize) {
+    std::ofstream file(filename, std::ios::binary | std::ios::trunc);
+    if (!file) {
+        std::cerr << "Error: " << filename << " cannot be created \n";
+        return false;
+    }
+
+    file.seekp(fileSize - 1);
+    if (!file) {
+        std::cerr << "Error fixing file size.\n";
+        return false;
+    }
+
+    file.write("", 1);
+    if (!file) {
+        std::cerr << "Error fixin file size\n";
+        return false;
+    }
+
+    file.close();
+    if (!file) {
+        std::cerr << "Error closing file.\n";
+        return false;
+    }
+    std::cout << "fase one table file created!" << std::endl;
+    return true;
+}

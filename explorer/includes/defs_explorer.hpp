@@ -204,6 +204,7 @@ struct faseOne{
     static void seePruningTable(int limitDepth);
     faseOne moveState(const Move& m);
     long long int stateToIndex();
+    static bool createPruningOne(const std::string& filename, std::size_t fileSize);
 };
 
 
