@@ -10,6 +10,7 @@
 # include <fstream>
 # include <map>
 # include <tuple>
+# include <queue>
 # include <filesystem>
 
 
@@ -148,7 +149,7 @@ struct cornerOrientCoord{
     cornerOrientCoord(const cubeCubie& cube);
     void print_explicit_corn_ori_coord() const;
     void print_explicit_corn_ori_coord2() const;
-    cornerOrientCoord move(Move move);
+    cornerOrientCoord move(const Move& move) const;
     static void print_move_table();
     static cornerOrientCoord from_pure_coord(uint16_t coord);
     uint16_t get_pure_coord() const;
@@ -164,7 +165,7 @@ struct edgeOrientCoord{
     edgeOrientCoord(const cubeCubie& cube);
     void print_explicit_edge_ori_coord() const;
     void print_explicit_edge_ori_coord2() const;
-    edgeOrientCoord move(Move move);
+    edgeOrientCoord move(const Move& move) const;
     static void print_move_table();
     static edgeOrientCoord from_pure_coord(uint16_t coord);
     uint16_t get_pure_coord() const;
@@ -181,7 +182,7 @@ struct UDSliceCoord{
     UDSliceCoord(const cubeCubie& cube);
     void print_explicit_udslice_ori_coord() const;
     void print_explicit_udslice_ori_coord2() const;
-    UDSliceCoord move(const Move& move);
+    UDSliceCoord move(const Move& move) const;
     static void print_move_table();
     static UDSliceCoord from_pure_coord(const uint16_t& coord);
     uint16_t get_pure_coord() const;
@@ -192,6 +193,7 @@ struct UDSliceCoord{
 
 
 struct faseOne{
+    static constexpr long long int N = 495LL * 2048 * 2187;
     cornerOrientCoord corners;
     edgeOrientCoord edges;
     UDSliceCoord slice;
@@ -199,7 +201,9 @@ struct faseOne{
 
     faseOne(const cornerOrientCoord& c, const edgeOrientCoord& e, const UDSliceCoord& s);
     static void pruningTableToFile();
-    int stateToIndex();
+    static void seePruningTable(int limitDepth);
+    faseOne moveState(const Move& m);
+    long long int stateToIndex();
 };
 
 

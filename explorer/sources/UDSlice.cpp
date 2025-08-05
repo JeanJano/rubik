@@ -15,7 +15,7 @@ UDSliceCoord::UDSliceCoord(const cubeCubie& cube) {
     }
 }
 
-UDSliceCoord UDSliceCoord::move(const Move& move) {
+UDSliceCoord UDSliceCoord::move(const Move& move) const {
     UDSliceCoord newCoord = *this;
 
     switch (move) {

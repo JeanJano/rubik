@@ -6,13 +6,19 @@ faseOne::faseOne(const cornerOrientCoord& c, const edgeOrientCoord& e, const UDS
         }
 
 void faseOne::pruningTableToFile(){
-        faseOne initState(cornerOrientCoord(), edgeOrientCoord(), UDSliceCoord());
-        // std::vector <std::tuple<int,int>> visibleTable;
-        // std::queue<std::tuple<int,int,int>> bfs;
-        // int depth = 0;
-        std::cout << "aca" << initState.stateToIndex() << std::endl;
+        faseOne initState{cornerOrientCoord(), edgeOrientCoord(), UDSliceCoord()};
+
 }
 
-int faseOne::stateToIndex(){
-        return (this.state[0] + (this.state[1] * 2187) + (this.state[2] * 2187 * 2048));
+long long int faseOne::stateToIndex(){
+        return (std::get<2>(state) + (std::get<1>(state) * 495LL) + (std::get<0>(state) * 495 * 2048));
 }
+
+faseOne faseOne::moveState(const Move& m) {
+    cornerOrientCoord corner = this->corners.move(m);
+    edgeOrientCoord edge = this->edges.move(m);
+    UDSliceCoord slice = this->slice.move(m);
+    faseOne newCoord{corner, edge, slice};
+    return newCoord;
+}
+
