@@ -43,7 +43,7 @@ $(NAME): $(OBJS)
 		@echo "$(GREEN) Compilation succesfully.$(NOC)"
 
 $(OBJ_PATH)%.o: $(SRC_PATH)%.cpp
-	@$(CC) $(FLAGS) $(INCLUDES) -c $< -o $@
+	@$(CC) $(FLAGS) -MMD -MP $(INCLUDES) -c $< -o $@
 
 clean:
 		@$(RM) $(OBJ_PATH)

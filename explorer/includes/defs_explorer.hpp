@@ -19,6 +19,7 @@ inline const std::string movesFoldername = "move_tables";
 inline const std::string cornerOriMoveTableFilename = "/cornerOriMoves.bin";
 inline const std::string edgeOriMoveTableFilename = "/edgeOriMoves.bin";
 inline const std::string UDSliceMoveTableFilename = "/UDSliceMoves.bin";
+inline const std::string pruningTableFilename = "PruningTableFaseOne.bin";
 
 // ------------------------init stuff---------------------------------
 
@@ -193,7 +194,7 @@ struct UDSliceCoord{
 
 
 struct faseOne{
-    static constexpr long long int N = 495LL * 2048 * 2187;
+    static constexpr long long int N = 495L * 2048 * 2187;
     cornerOrientCoord corners;
     edgeOrientCoord edges;
     UDSliceCoord slice;
@@ -203,8 +204,11 @@ struct faseOne{
     static void pruningTableToFile();
     static void seePruningTable(int limitDepth);
     faseOne moveState(const Move& m);
-    long long int stateToIndex();
+    long int stateToIndex();
+    long int stateToIndex(int cornerCoord, int edgeCoord,, int UDSliceCoord);
     static bool createPruningOne(const std::string& filename, std::size_t fileSize);
+    static bool writePruningOne(std::size_t index, uint8_t value);
+    static uint8_t readPruningOne(std::size_t index);
 };
 
 
