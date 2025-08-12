@@ -194,7 +194,7 @@ struct UDSliceCoord{
 
 
 struct faseOne{
-    static constexpr long long int N = 495L * 2048 * 2187;
+    static constexpr long long int N = 495ULL * 2048 * 2187;
     cornerOrientCoord corners;
     edgeOrientCoord edges;
     UDSliceCoord slice;
@@ -203,12 +203,15 @@ struct faseOne{
     faseOne(const cornerOrientCoord& c, const edgeOrientCoord& e, const UDSliceCoord& s);
     static void pruningTableToFile();
     static void seePruningTable(int limitDepth);
-    faseOne moveState(const Move& m);
-    long int stateToIndex();
-    long int stateToIndex(int cornerCoord, int edgeCoord,, int UDSliceCoord);
+    static std::tuple<int, int, int> moveState(std::tuple<int, int, int> state, const Move& m);
+    static std::tuple<int, int, int, int> moveState(std::tuple<int, int, int, int> state, const Move& m);
+    uint64_t stateToIndex();
+    static uint64_t stateToIndex(int cornerCoord, int edgeCoord, int UDSliceCoord);
     static bool createPruningOne(const std::string& filename, std::size_t fileSize);
-    static bool writePruningOne(std::size_t index, uint8_t value);
-    static uint8_t readPruningOne(std::size_t index);
+    static bool writePruningOne(uint64_t index, uint8_t value);
+    static uint8_t readPruningOne(uint64_t index);
+    static void printNonZeroPruningValues();
+    std::string solveFaseOne();
 };
 
 
