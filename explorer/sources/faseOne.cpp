@@ -76,29 +76,93 @@ std::string faseOne::solveFaseOne(){
     return solution;
 }
 
-void faseOne::pruningTableToFile(){
+// void faseOne::pruningTableToFile(){
+//     using namespace std::chrono;
+
+//     auto start = steady_clock::now();
+
+//     std::queue<std::tuple<int,int,int,int>> BFS;
+//     std::tuple<int,int,int,int> initState = std::make_tuple(0,0,0,0);
+//     BFS.push(initState);
+//     if(faseOne::createPruningOne(pruningTableFilename, N)){
+//         while(!BFS.empty()){
+//             long long int CurrIndex = stateToIndex(std::get<0>(BFS.front()), std::get<1>(BFS.front()), std::get<2>(BFS.front()));
+//             if(faseOne::writePruningOne(CurrIndex, std::get<3>(BFS.front()))){
+//                 for (int i = 0; i < 18; ++i){
+//                     std::tuple<int,int,int,int> nextState = faseOne::moveState(BFS.front(), static_cast<Move>(i));
+//                     BFS.push(nextState);
+//                 }
+//             }
+//             BFS.pop();
+//         }
+//     }
+//     else {
+//         std::cout << "Error creating fase one pruning table" << std::endl;
+//         return;
+//     }
+
+//     auto end = steady_clock::now();
+//     auto duration = duration_cast<seconds>(end - start).count();
+
+//     int hours = duration / 3600;
+//     int minutes = (duration % 3600) / 60;
+//     int seconds = duration % 60;
+
+//     std::cout << "Execution time: "
+//               << std::setw(2) << std::setfill('0') << hours << ":"
+//               << std::setw(2) << std::setfill('0') << minutes << ":"
+//               << std::setw(2) << std::setfill('0') << seconds << std::endl;
+// }
+
+
+void faseOne::pruningTableToFile() {
     using namespace std::chrono;
 
     auto start = steady_clock::now();
 
-    std::queue<std::tuple<int,int,int,int>> BFS;
-    std::tuple<int,int,int,int> initState = std::make_tuple(0,0,0,0);
-    BFS.push(initState);
-    if(faseOne::createPruningOne(pruningTableFilename, N)){
-        while(!BFS.empty()){
-            long long int CurrIndex = stateToIndex(std::get<0>(BFS.front()), std::get<1>(BFS.front()), std::get<2>(BFS.front()));
-            if(faseOne::writePruningOne(CurrIndex, std::get<3>(BFS.front()))){
-                for (int i = 0; i < 18; ++i){
-                    std::tuple<int,int,int,int> nextState = faseOne::moveState(BFS.front(), static_cast<Move>(i));
-                    BFS.push(nextState);
-                }
-            }
-            BFS.pop();
-        }
-    }
-    else {
+    if (!faseOne::createPruningOne(pruningTableFilename, N)) {
         std::cout << "Error creating fase one pruning table" << std::endl;
         return;
+    }
+
+    std::vector<std::tuple<int, int, int, int>> currentLayer;
+    std::vector<std::tuple<int, int, int, int>> nextLayer;
+    
+    // El estado inicial debe ser manejado de forma especial
+    std::tuple<int, int, int, int> initState = std::make_tuple(0, 0, 0, 0);
+    currentLayer.push_back(initState);
+
+    // Escribir el estado inicial en la tabla
+    faseOne::writePruningOne(stateToIndex(0, 0, 0), 0);
+    
+    uint64_t statesProcessed = 1; // Ya procesamos el estado inicial
+
+    int currentDepth = 0;
+    while (!currentLayer.empty()) {
+        std::cout << "Processing depth " << currentDepth << " with " << currentLayer.size() << " states." << std::endl;
+
+        nextLayer.clear();
+        for (const auto& currentState : currentLayer) {
+            for (int i = 0; i < 18; ++i) {
+                std::tuple<int, int, int, int> nextState = faseOne::moveState(currentState, static_cast<Move>(i));
+                uint64_t nextStateIndex = stateToIndex(std::get<0>(nextState), std::get<1>(nextState), std::get<2>(nextState));
+
+                if (nextStateIndex != 0 && faseOne::readPruningOne(nextStateIndex) == 0) {
+                    faseOne::writePruningOne(nextStateIndex, static_cast<uint8_t>(currentDepth + 1));
+                    nextLayer.push_back(nextState);
+                }
+            }
+        }
+        
+        // Actualizamos el contador de estados procesados y el porcentaje
+        statesProcessed += nextLayer.size();
+        double progressPercentage = (static_cast<double>(statesProcessed) / N) * 100.0;
+        
+        std::cout << "Current Progress: " << std::fixed << std::setprecision(2) << progressPercentage << "% ("
+                  << statesProcessed << " / " << N << " states)" << std::endl;
+
+        currentLayer = nextLayer;
+        currentDepth++;
     }
 
     auto end = steady_clock::now();
@@ -108,14 +172,11 @@ void faseOne::pruningTableToFile(){
     int minutes = (duration % 3600) / 60;
     int seconds = duration % 60;
 
-    std::cout << "Execution time: "
+    std::cout << "\nExecution time: "
               << std::setw(2) << std::setfill('0') << hours << ":"
               << std::setw(2) << std::setfill('0') << minutes << ":"
               << std::setw(2) << std::setfill('0') << seconds << std::endl;
 }
-
-
-
 
 
 uint64_t faseOne::stateToIndex(){

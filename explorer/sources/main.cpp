@@ -30,10 +30,10 @@ int main(int ac, char** av) {
     faseOne coordOne = faseOne(cornerOrientCoord(scrambledCube), edgeOrientCoord(scrambledCube), UDSliceCoord(scrambledCube));
     // std::cout << "coords: " << coordOne.corners.get_pure_coord() << " | " << coordOne.edges.get_pure_coord() << " | " << coordOne.slice.get_pure_coord() << std::endl;
     std::cout << coordOne.stateToIndex() << std::endl;
-    // cornerOrientCoord::moveTableToFile();
-    // edgeOrientCoord::moveTableToFile();
-    // UDSliceCoord::moveTableToFile();
-    // faseOne::pruningTableToFile();
+    cornerOrientCoord::moveTableToFile();
+    edgeOrientCoord::moveTableToFile();
+    UDSliceCoord::moveTableToFile();
+    faseOne::pruningTableToFile();
     // faseOne::printNonZeroPruningValues();
     // std::cout << coordOne.solveFaseOne() << std::endl;
 
