@@ -1,6 +1,7 @@
 #include "defs_explorer.hpp"
 #include "rubik_explorer.hpp"
 
+// Init the cube to the solved state
 void cubeCubie::reset() {
     for (uint8_t i = 0; i < 8; ++i)
         corners[i] = {i, 0};
@@ -343,6 +344,7 @@ cubeCubie cubeCubie::basicMove(Move move, const cubeCubie& inputCube) const{
     return newCube;
 }
 
+// Apply a sequence of single moves to the cube
 cubeCubie cubeCubie::severalMoves(const std::vector<Move>& moves, const cubeCubie& inputCube) const {
     cubeCubie current = inputCube;
     for (Move move : moves) {
@@ -351,6 +353,7 @@ cubeCubie cubeCubie::severalMoves(const std::vector<Move>& moves, const cubeCubi
     return current;
 }
 
+// Basic function to get the state of a scrambled cube to start the solving process
 cubeCubie get_scrambled_state(const std::vector<Move>& scramble){
     cubeCubie cube;
     cube.reset();
