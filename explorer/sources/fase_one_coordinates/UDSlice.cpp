@@ -134,6 +134,7 @@ UDSliceCoord UDSliceCoord::move(const Move& move) const {
     return newCoord;
 }
 
+
 int binomial(int n, int k) {
     if (k < 0 || k > n) return 0;
     if (k == 0 || k == n) return 1;

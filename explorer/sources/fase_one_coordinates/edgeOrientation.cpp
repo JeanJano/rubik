@@ -131,6 +131,9 @@ edgeOrientCoord edgeOrientCoord::move(const Move& move) const {
     return newCoord;
 }
 
+
+
+
 uint16_t edgeOrientCoord::get_pure_coord() const {
     uint16_t coord = 0;
     for (int i = 0; i < N - 1; ++i) {

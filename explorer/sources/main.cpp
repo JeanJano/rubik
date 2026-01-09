@@ -27,14 +27,11 @@ int main(int ac, char** av) {
     if (scramble.empty())
         return 1;
     cubeCubie scrambledCube = get_scrambled_state(scramble);
-    faseOne coordOne = faseOne(cornerOrientCoord(scrambledCube), edgeOrientCoord(scrambledCube), UDSliceCoord(scrambledCube));
-    // std::cout << "coords: " << coordOne.corners.get_pure_coord() << " | " << coordOne.edges.get_pure_coord() << " | " << coordOne.slice.get_pure_coord() << std::endl;
-    std::cout << coordOne.stateToIndex() << std::endl;
     cornerOrientCoord::moveTableToFile();
     edgeOrientCoord::moveTableToFile();
     UDSliceCoord::moveTableToFile();
-    faseOne::pruningTableToFile();
-    // faseOne::printNonZeroPruningValues();
-    // std::cout << coordOne.solveFaseOne() << std::endl;
-
+    faseOne fase1 = faseOne(cornerOrientCoord(scrambledCube), edgeOrientCoord(scrambledCube), UDSliceCoord(scrambledCube));
+    // faseOne::printNonZeroPruningValues(pruningCOSFilename, 611854, 611852);
+    // faseOne::printNonZeroPruningValues(pruningEOSFilename, 100, 0);
+    std::cout << fase1.solveFaseOne() << std::endl;
 }

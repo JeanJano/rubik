@@ -12,6 +12,7 @@
 # include <tuple>
 # include <queue>
 # include <filesystem>
+# include <limits>
 
 
 //------------------tables names----------------------------------
@@ -19,7 +20,9 @@ inline const std::string movesFoldername = "move_tables";
 inline const std::string cornerOriMoveTableFilename = "/cornerOriMoves.bin";
 inline const std::string edgeOriMoveTableFilename = "/edgeOriMoves.bin";
 inline const std::string UDSliceMoveTableFilename = "/UDSliceMoves.bin";
-inline const std::string pruningTableFilename = "PruningTableFaseOne.bin";
+inline const std::string pruningFoldername = "pruning_tables";
+inline const std::string pruningCOSFilename = "/PruningCOS.bin";
+inline const std::string pruningEOSFilename = "/PruningEOS.bin";
 
 // ------------------------init stuff---------------------------------
 
@@ -107,6 +110,47 @@ inline const std::map<std::string, Move> string_to_move = {
     {"L", Move::L1}, {"L'", Move::L3}, {"L2", Move::L2}
 };
 
+
+//------------------ definition of symetrie names ------------------
+/*
+(C)orner 120 deg along the urf, dlb axis
+(Z) 90 deg over the UD axis
+(Y) 180 deg over FB axis
+(X) a reflection at the RL-slice plane.
+// */
+// enum class Symetry {
+//     Z0C0Y0X0 = 0, Z0C1Y0X0, Z0C2Y0X0, Z0C0Y1X0, Z0C1Y1X0, Z0C2Y1X0,
+//     Z0C0Y0X1, Z0C1Y0X1, Z0C2Y0X1, Z0C0Y1X1, Z0C1Y1X1, Z0C2Y1X1,
+//     Z1C0Y0X0, Z1C1Y0X0, Z1C2Y0X0, Z1C0Y1X0, Z1C1Y1X0, Z1C2Y1X0,
+//     Z1C0Y0X1, Z1C1Y0X1, Z1C2Y0X1, Z1C0Y1X1, Z1C1Y1X1, Z1C2Y1X1,
+//     Z2C0Y0X0, Z2C1Y0X0, Z2C2Y0X0, Z2C0Y1X0, Z2C1Y1X0, Z2C2Y1X0,
+//     Z2C0Y0X1, Z2C1Y0X1, Z2C2Y0X1, Z2C0Y1X1, Z2C1Y1X1, Z2C2Y1X1,
+//     Z3C0Y0X0, Z3C1Y0X0, Z3C2Y0X0, Z3C0Y1X0, Z3C1Y1X0, Z3C2Y1X0,
+//     Z3C0Y0X1, Z3C1Y0X1, Z3C2Y0X1, Z3C0Y1X1, Z3C1Y1X1, Z3C2Y1X1
+// };
+
+// //------------------ symmetry string to Symmetry enum map ------------------
+// inline const std::map<std::string, Symmetry> string_to_symmetry = {
+
+//     {"0000", Symmetry::Z0C0Y0X0}, {"0100", Symmetry::Z0C1Y0X0}, {"0200", Symmetry::Z0C2Y0X0},
+//     {"0010", Symmetry::Z0C0Y1X0}, {"0110", Symmetry::Z0C1Y1X0}, {"0210", Symmetry::Z0C2Y1X0},
+//     {"0001", Symmetry::Z0C0Y0X1}, {"0101", Symmetry::Z0C1Y0X1}, {"0201", Symmetry::Z0C2Y0X1},
+//     {"0011", Symmetry::Z0C0Y1X1}, {"0111", Symmetry::Z0C1Y1X1}, {"0211", Symmetry::Z0C2Y1X1},
+//     {"1000", Symmetry::Z1C0Y0X0}, {"1100", Symmetry::Z1C1Y0X0}, {"1200", Symmetry::Z1C2Y0X0},
+//     {"1010", Symmetry::Z1C0Y1X0}, {"1110", Symmetry::Z1C1Y1X0}, {"1210", Symmetry::Z1C2Y1X0},
+//     {"1001", Symmetry::Z1C0Y0X1}, {"1101", Symmetry::Z1C1Y0X1}, {"1201", Symmetry::Z1C2Y0X1},
+//     {"1011", Symmetry::Z1C0Y1X1}, {"1111", Symmetry::Z1C1Y1X1}, {"1211", Symmetry::Z1C2Y1X1},
+//     {"2000", Symmetry::Z2C0Y0X0}, {"2100", Symmetry::Z2C1Y0X0}, {"2200", Symmetry::Z2C2Y0X0},
+//     {"2010", Symmetry::Z2C0Y1X0}, {"2110", Symmetry::Z2C1Y1X0}, {"2210", Symmetry::Z2C2Y1X0},
+//     {"2001", Symmetry::Z2C0Y0X1}, {"2101", Symmetry::Z2C1Y0X1}, {"2201", Symmetry::Z2C2Y0X1},
+//     {"2011", Symmetry::Z2C0Y1X1}, {"2111", Symmetry::Z2C1Y1X1}, {"2211", Symmetry::Z2C2Y1X1},
+//     {"3000", Symmetry::Z3C0Y0X0}, {"3100", Symmetry::Z3C1Y0X0}, {"3200", Symmetry::Z3C2Y0X0},
+//     {"3010", Symmetry::Z3C0Y1X0}, {"3110", Symmetry::Z3C1Y1X0}, {"3210", Symmetry::Z3C2Y1X0},
+//     {"3001", Symmetry::Z3C0Y0X1}, {"3101", Symmetry::Z3C1Y0X1}, {"3201", Symmetry::Z3C2Y0X1},
+//     {"3011", Symmetry::Z3C0Y1X1}, {"3111", Symmetry::Z3C1Y1X1}, {"3211", Symmetry::Z3C2Y1X1}
+// };
+
+
 // ------------------- Cube Representation -------------------
 
 /**
@@ -172,6 +216,9 @@ struct edgeOrientCoord{
     uint16_t get_pure_coord() const;
     edgeOrientCoord nextExplicitCoord();
     static void moveTableToFile();
+
+    // edgeOrientCoord symetry(const Symetrie& sym) const;
+    // edgeOrientCoord symetryZURF();
 };
 
 
@@ -194,24 +241,28 @@ struct UDSliceCoord{
 
 
 struct faseOne{
-    static constexpr long long int N = 495ULL * 2048 * 2187;
+    static constexpr int NE = 495 * 2048;
+    static constexpr int NC = 495 * 2187;
     cornerOrientCoord corners;
     edgeOrientCoord edges;
     UDSliceCoord slice;
-    std::tuple<int, int, int> state;
+    std::tuple<int, int, int> COSstate;
+    std::tuple<int, int, int> EOSstate;
 
     faseOne(const cornerOrientCoord& c, const edgeOrientCoord& e, const UDSliceCoord& s);
-    static void pruningTableToFile();
-    static void seePruningTable(int limitDepth);
-    static std::tuple<int, int, int> moveState(std::tuple<int, int, int> state, const Move& m);
-    static std::tuple<int, int, int, int> moveState(std::tuple<int, int, int, int> state, const Move& m);
-    uint64_t stateToIndex();
-    static uint64_t stateToIndex(int cornerCoord, int edgeCoord, int UDSliceCoord);
-    static bool createPruningOne(const std::string& filename, std::size_t fileSize);
-    static bool writePruningOne(uint64_t index, uint8_t value);
-    static uint8_t readPruningOne(uint64_t index);
-    static void printNonZeroPruningValues();
+    void showIndex();
+    void DoPruningTables();
+    bool fillTable(const std::string& filename);
+    std::tuple<int, int, int> moveState(const std::string& filename, const std::tuple<int, int, int>& state, const Move& m);
+    bool CreatePruning(const std::string& filename, std::size_t fileSize);
+    bool writePruning(const std::string& filename, uint64_t index, uint8_t value);
+    uint8_t readPruning(const std::string& filename, uint64_t index);
+    uint64_t stateToIndex(const std::tuple<int, int, int>& state);
+    uint64_t stateToIndex(const std::tuple<int, int>& state);
+    int getHeuristic(int COSIndex, int EOSIndex);
     std::string solveFaseOne();
+    std::tuple<std::tuple<int, int>, std::tuple<int, int>, int, int, std::string> moveSolveState(const std::tuple<std::tuple<int, int>, std::tuple<int, int>, int, int, std::string>& solveState, const Move& m);
+    static void printNonZeroPruningValues(const std::string& filename,  size_t upLimit, size_t downLimit);
 };
 
 
@@ -226,6 +277,7 @@ Move get_move(Move move);
 
 template <typename CoordType, typename MoveType>
 uint16_t fase_one_coord_from_file(CoordType coordInput, MoveType moveInput, const std::string& filename) {
+    // std::cout << "en focff " << movesFoldername + filename << std::endl;
     std::ifstream in(movesFoldername + filename, std::ios::binary);
     if (!in) {
         std::cerr << "Error: could not open move table file for reading." << std::endl;

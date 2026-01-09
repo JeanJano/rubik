@@ -12,6 +12,7 @@ cornerOrientCoord::cornerOrientCoord(const cubeCubie& cube) {
     }
 }
 
+
 cornerOrientCoord cornerOrientCoord::move(const Move& move) const {
     cornerOrientCoord newCoord = *this;
 
