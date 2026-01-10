@@ -23,6 +23,11 @@ std::vector<Move> get_scramble(int ac, char** av) {
 
 
 int main(int ac, char** av) {
+    auto start = std::chrono::high_resolution_clock::now();
+
+
+
+
     std::vector<Move> scramble = get_scramble(ac, av);
     if (scramble.empty())
         return 1;
@@ -31,7 +36,16 @@ int main(int ac, char** av) {
     edgeOrientCoord::moveTableToFile();
     UDSliceCoord::moveTableToFile();
     faseOne fase1 = faseOne(cornerOrientCoord(scrambledCube), edgeOrientCoord(scrambledCube), UDSliceCoord(scrambledCube));
-    // faseOne::printNonZeroPruningValues(pruningCOSFilename, 611854, 611852);
-    // faseOne::printNonZeroPruningValues(pruningEOSFilename, 100, 0);
-    std::cout << fase1.solveFaseOne() << std::endl;
+    solveFaseOne solver = solveFaseOne(fase1);
+    std::cout << solver.solutionToString(solver.solve()) << std::endl;
+
+
+
+    auto end = std::chrono::high_resolution_clock::now();
+
+    std::chrono::duration<double> elapsed = end - start;
+
+    std::cout << "Tiempo de ejecucion: "
+              << elapsed.count()
+              << " segundos\n";
 }

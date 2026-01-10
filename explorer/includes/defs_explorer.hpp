@@ -13,6 +13,7 @@
 # include <queue>
 # include <filesystem>
 # include <limits>
+# include <chrono>
 
 
 //------------------tables names----------------------------------
@@ -110,6 +111,12 @@ inline const std::map<std::string, Move> string_to_move = {
     {"L", Move::L1}, {"L'", Move::L3}, {"L2", Move::L2}
 };
 
+enum class GOneMove {
+    U1 = 0, U2, U3,  // U, U2, U'
+    D1, D2, D3,
+    F2, B2, R2,
+    L2,
+};
 
 //------------------ definition of symetrie names ------------------
 /*
@@ -259,12 +266,67 @@ struct faseOne{
     uint8_t readPruning(const std::string& filename, uint64_t index);
     uint64_t stateToIndex(const std::tuple<int, int, int>& state);
     uint64_t stateToIndex(const std::tuple<int, int>& state);
-    int getHeuristic(int COSIndex, int EOSIndex);
-    std::string solveFaseOne();
-    std::tuple<std::tuple<int, int>, std::tuple<int, int>, int, int, std::string> moveSolveState(const std::tuple<std::tuple<int, int>, std::tuple<int, int>, int, int, std::string>& solveState, const Move& m);
     static void printNonZeroPruningValues(const std::string& filename,  size_t upLimit, size_t downLimit);
+    // int getHeuristic(int COSIndex, int EOSIndex);
+    // std::string solveFaseOne();
+    // std::tuple<std::tuple<int, int>, std::tuple<int, int>, int, int, std::string> moveSolveState(const std::tuple<std::tuple<int, int>, std::tuple<int, int>, int, int, std::string>& solveState, const Move& m);
+    // void printState(std::tuple<int, int, int> state);
+    // void initDeepth();
+    // void showSolveState(std::tuple<std::tuple<int, int>, std::tuple<int, int>, int, int, std::string> solveState);
 };
 
+struct solveFaseOneState {
+    int co;
+    int eo; 
+    int s; 
+};
+
+struct solveFaseOne {
+    solveFaseOneState state;
+    uint16_t cornerOriMove[2187][18];
+    uint16_t edgeOriMove[2048][18];
+    uint16_t udSliceMove[495][18];
+    uint8_t pruneCOS[2187 * 495];
+    uint8_t pruneEOS[2048 * 495];
+    static constexpr int FOUND = -1;
+    static constexpr int INF = 10000000;
+
+
+
+    solveFaseOne(const faseOne& toSolve);
+    bool loadMoveTables();
+    bool loadPruningTables();
+    int COS_index(int co, int s);
+    int EOS_index(int eo, int s);
+    void applyMove(solveFaseOneState& st, int m);
+    int heuristic(const solveFaseOneState& st);
+    int dfs(solveFaseOneState& st,
+                      int depth,
+                      int bound,
+                      int lastMove,
+                      std::vector<int>& path);
+    std::vector<int> solve();
+    static std::string solutionToString(const std::vector<int>& path);
+};
+
+struct cornerPermCoord{
+    static constexpr int N = 8;
+    std::array<uint8_t, N> explicitCoor;
+    std::array<uint8_t, N - 1> OrderDiagram;
+    std::array<uint8_t, N - 1> nextOrderDiagram;
+
+    cornerPermCoord();
+    cornerPermCoord(const cubeCubie& cube);
+    void printExplicitCornPermCoord() const;
+    void printExplicitCornPermCoord2() const;
+    cornerPermCoord move(const GOneMove& move) const;
+    static void print_move_table();
+    static cornerPermCoord from_pure_coord(uint16_t coord);
+    uint16_t get_pure_coord() const;
+    cornerPermCoord nextExplicitCoord();
+    static void moveTableToFile();
+    void defineOrderDiag();
+};
 
 
 uint16_t get_coord(const cornerOrientCoord& coord);
@@ -298,6 +360,14 @@ uint16_t fase_one_coord_from_file(CoordType coordInput, MoveType moveInput, cons
     return result;
 }
 
+template <typename T>
+bool loadBinary(const std::string& filename, T* buffer, size_t count) {
+    std::ifstream in(filename, std::ios::binary);
+    if (!in) return false;
+
+    in.read(reinterpret_cast<char*>(buffer), count * sizeof(T));
+    return in.good();
+}
 
 //-------------------nedded to see the cubie representation--------
 std::string edge_to_string(Edge e);

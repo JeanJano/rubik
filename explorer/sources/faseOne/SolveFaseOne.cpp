@@ -1,74 +1,123 @@
 #include "rubik_explorer.hpp"
 #include "defs_explorer.hpp"
 
-// void faseOne::initDeepth() {
-//     faseOne current = *this;
 
-//     std::get<2>(current.COSstate) = faseOne::readPruning(pruningCOSFilename, faseOne::stateToIndex(current.COSstate));
-//     std::get<2>(current.EOSstate) = faseOne::readPruning(pruningEOSFilename, faseOne::stateToIndex(current.EOSstate));
-// }
+solveFaseOne::solveFaseOne(const faseOne& toSolve) {
+    this->state.co = toSolve.corners.get_pure_coord();
+    this->state.eo = toSolve.edges.get_pure_coord();
+    this->state.s = toSolve.slice.get_pure_coord();
 
-int faseOne::getHeuristic(int COSIndex, int EOSIndex){
-    uint8_t cosHeuristic = faseOne::readPruning(pruningCOSFilename, COSIndex);
-    uint8_t eosHeuristic = faseOne::readPruning(pruningEOSFilename, EOSIndex);
-    std::cout << "COSIndex : " << COSIndex << std::to_string(cosHeuristic) << " EOSIndex : " << EOSIndex << std::to_string(eosHeuristic) << std::endl;
-    return std::max(cosHeuristic, eosHeuristic);
+    loadMoveTables();
+    loadPruningTables();
 }
 
-std::string faseOne::solveFaseOne(){
-    namespace fs = std::filesystem;
-    // faseOne toSolve = *this;
-    std::string ret = "solve|||";
-    
-    // int limit = faseOne::getHeuristic(faseOne::stateToIndex(toSolve.COSstate),
-    //                                  faseOne::stateToIndex(toSolve.EOSstate));
-    //                                  return std::to_string(limit);
-    // while (ret.empty()){
-    //     //COSstate, EOSstate, heuristic, stepsDone, movesDone
-    //     std::queue<std::tuple<std::tuple<int, int>, std::tuple<int, int>, int, int, std::string>> IDA;
-    //     std::tuple<std::tuple<int, int>, std::tuple<int, int>, int, int, std::string> startState = 
-    //     std::make_tuple(std::make_tuple(std::get<0>(toSolve.COSstate),std::get<1>(toSolve.COSstate)),
-    //                     std::make_tuple(std::get<0>(toSolve.EOSstate),std::get<1>(toSolve.EOSstate)),
-    //                     faseOne::getHeuristic(faseOne::stateToIndex(toSolve.COSstate),
-    //                                           faseOne::stateToIndex(toSolve.EOSstate)),
-    //                     0,
-    //                     "");
-    //     IDA.push(startState);
-    //     int auxlimit = std::numeric_limits<int>::max();
-    //     while(!IDA.empty()){
-    //         auto currentState = IDA.front();
-    //         if (std::get<2>(currentState) == 0){
-    //             ret = std::get<4>(currentState);
-    //             break;
-    //         }
-    //         for(int i = 0; i < 18; ++i){
-    //             std::tuple<std::tuple<int, int>, std::tuple<int, int>, int, int, std::string> newState = faseOne::moveSolveState(currentState, static_cast<Move>(i));
-    //             int newLimitCandid = std::get<2>(newState) + std::get<3>(newState);
-    //             if (newLimitCandid > limit)
-    //             {
-    //                 if (newLimitCandid <= auxlimit) auxlimit = newLimitCandid;
-    //             }
-    //             else {
-    //                 IDA.push(newState);
-    //             }
-    //         }
-    //         IDA.pop();
-    //     }
-    //     limit = auxlimit;
-    // }
-    return ret;
+bool solveFaseOne::loadMoveTables() {
+    return
+        loadBinary(movesFoldername + cornerOriMoveTableFilename,
+                   &cornerOriMove[0][0], 2187 * 18) &&
+        loadBinary(movesFoldername + edgeOriMoveTableFilename,
+                   &edgeOriMove[0][0], 2048 * 18) &&
+        loadBinary(movesFoldername + UDSliceMoveTableFilename,
+                   &udSliceMove[0][0], 495 * 18);
 }
 
-std::tuple<std::tuple<int, int>, std::tuple<int, int>, int, int, std::string> faseOne::moveSolveState(const std::tuple<std::tuple<int, int>, std::tuple<int, int>, int, int, std::string>& solveState, const Move& m) {
-    std::tuple<std::tuple<int, int> , std::tuple<int, int>, int, int, std::string> result = solveState;
+bool solveFaseOne::loadPruningTables() {
+    return
+        loadBinary(pruningFoldername + pruningCOSFilename,
+                   pruneCOS, 2187 * 495) &&
+        loadBinary(pruningFoldername + pruningEOSFilename,
+                   pruneEOS, 2048 * 495);
+}
 
-    std::get<0>(std::get<0>(result)) = fase_one_coord_from_file(std::get<0>(std::get<0>(solveState)), m, UDSliceMoveTableFilename);
-    std::get<1>(std::get<0>(result)) = fase_one_coord_from_file(std::get<1>(std::get<0>(solveState)), m, cornerOriMoveTableFilename);
-    std::get<0>(std::get<1>(result)) = std::get<0>(std::get<0>(result));
-    std::get<1>(std::get<1>(result)) = fase_one_coord_from_file(std::get<1>(std::get<0>(solveState)), m, edgeOriMoveTableFilename);
-    std::get<2>(result) = faseOne::getHeuristic(faseOne::stateToIndex(std::get<0>(result)), faseOne::stateToIndex(std::get<1>(result)));
-    std::get<3>(result)++;
-    if (std::get<4>(result).empty()){std::get<4>(result) += moveToString(m);}
-    else{std::get<4>(result) += (" " + moveToString(m));}
-    return result;
+int solveFaseOne::COS_index(int co, int s) {
+    return co * 495 + s;
+}
+
+int solveFaseOne::EOS_index(int eo, int s) {
+    return eo * 495 + s;
+}
+
+void solveFaseOne::applyMove(solveFaseOneState& st, int m) {
+    st.co = cornerOriMove[st.co][m];
+    st.eo = edgeOriMove[st.eo][m];
+    st.s  = udSliceMove[st.s][m];
+}
+
+int solveFaseOne::heuristic(const solveFaseOneState& st) {
+    int h1 = pruneCOS[COS_index(st.co, st.s)];
+    int h2 = pruneEOS[EOS_index(st.eo, st.s)];
+    return (h1 > h2) ? h1 : h2;
+}
+
+inline bool sameFace(int m1, int m2) {
+    return (m1 / 3) == (m2 / 3);
+}
+
+int solveFaseOne::dfs(solveFaseOneState& st,
+                      int depth,
+                      int bound,
+                      int lastMove,
+                      std::vector<int>& path)
+{
+    int h = heuristic(st);
+    int f = depth + h;
+
+    if (f > bound)
+        return f;
+
+    if (h == 0)
+        return FOUND;
+
+    int minNextBound = INF;
+
+    for (int m = 0; m < 18; ++m) {
+
+        if (lastMove != -1 && sameFace(m, lastMove))
+            continue;
+
+        solveFaseOneState backup = st;
+        applyMove(st, m);
+
+        path.push_back(m);
+
+        int t = dfs(st, depth + 1, bound, m, path);
+
+        if (t == FOUND)
+            return FOUND;
+
+        if (t < minNextBound)
+            minNextBound = t;
+
+        path.pop_back();
+        st = backup;
+    }
+
+    return minNextBound;
+}
+
+std::vector<int> solveFaseOne::solve() {
+    int bound = heuristic(state);
+
+    std::vector<int> path;
+
+    while (true) {
+        int t = dfs(state, 0, bound, -1, path);
+
+        if (t == FOUND)
+            return path;
+
+        if (t >= INF)
+            throw std::runtime_error("No solution found in phase 1");
+
+        bound = t;
+    }
+}
+
+std::string solveFaseOne::solutionToString(const std::vector<int>& path) {
+    std::string res;
+    for (int m : path) {
+        if (!res.empty()) res += " ";
+        res += moveToString(static_cast<Move>(m));
+    }
+    return res;
 }
