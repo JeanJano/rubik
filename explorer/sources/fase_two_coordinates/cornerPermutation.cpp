@@ -1,6 +1,12 @@
+#include "rubik_explorer.hpp"
+#include "defs_explorer.hpp"
+
 cornerPermCoord::cornerPermCoord() {
-    explicitCoor.fill(0);
-    OrderDiagram.fill(0);
+    for(int i = 0; i < N; ++i){
+        explicitCoor[i] = i;
+    }
+    cornerPermCoord::defineOrderDiag();
+    cornerPermCoord::defineNextOrderDiag();
 }
 
 //extract orientation corner coordinate from cubie representation
@@ -9,12 +15,15 @@ cornerPermCoord::cornerPermCoord(const cubeCubie& cube) {
         explicitCoor[i] = cube.corners[i].pos;
     }
     cornerPermCoord::defineOrderDiag();
+    cornerPermCoord::defineNextOrderDiag();
 }
 
 
 cornerPermCoord cornerPermCoord::move(const GOneMove& move) const {
     cornerPermCoord newCoord = *this;
 
+    // std::cout << "in move" << std::endl;
+    // newCoord.printExplicitCornPermCoord();
     switch (move) {
         case GOneMove::U1:
             newCoord.explicitCoor[0] = explicitCoor[3];
@@ -80,10 +89,17 @@ cornerPermCoord cornerPermCoord::move(const GOneMove& move) const {
             std::cerr << "Fatal error in cornerPermCoord::move: unsupported move." << std::endl;
             break;
     }
+    newCoord.defineOrderDiag();
+    newCoord.defineNextOrderDiag();
+    // std::cout << "final: " << std::endl;
+    // newCoord.printExplicitCornPermCoord();
     return newCoord;
 }
 
+
 uint16_t cornerPermCoord::get_pure_coord() const {
+
+
     uint16_t coord = 0;
     uint16_t factor = 7;
 
@@ -113,70 +129,123 @@ cornerPermCoord cornerPermCoord::from_pure_coord(uint16_t coord) {
 }
 
 cornerPermCoord cornerPermCoord::nextExplicitCoord(){
-    cornerPermCoord::defineNextOrderDiag();
     cornerPermCoord next = cornerPermCoord::fromNextOrderDiag();
+
+    // std::cout << "next :" << std::endl;
+    // next.printExplicitCornPermCoord();
     return next;
 }
 
 cornerPermCoord cornerPermCoord::fromNextOrderDiag() {
-    cornerPermCoord ret;
+    cornerPermCoord ret = *this;
     std::vector<int> avalaibleValues = {0,1,2,3,4,5,6,7};
-    for (int i = N - 1; i > 0: --i){
-        index = avalaibleValues.size() - nextOrderDiagram[i]
+        // print_first(avalaibleValues, 8);
+
+        // std::cout << "vista de ret: antes " << N << std::endl;
+        // ret.printExplicitCornPermCoord();
+        // ret.printOrderDiagram();
+        // ret.defineNextOrderDiag();
+        // ret.printNextOrderDiagram();
+    // for (int i = N - 1; i >= 0; --i){
+    //     int diagIndex = i - 1;
+    //     // std::cout << "dentro del for: " << " | i: " << i  << " | size: " << avalaibleValues.size() << " | diagrama(i): " << static_cast<int>(nextOrderDiagram[i]) << std::endl;
+    //     int index = avalaibleValues.size() - 1 - nextOrderDiagram[diagIndex];
+    //     // std::cout << "index calculado    " << index << std::endl;
+        
+    //     // print_first(avalaibleValues, 8);
+    //     // ret.printExplicitCornPermCoord();
+    //     ret.explicitCoor[i] = avalaibleValues[index];
+    //     // ret.printExplicitCornPermCoord();
+    //     avalaibleValues.erase(avalaibleValues.begin() + index); 
+    // }
+    for (int i = N - 1; i >= 0; --i) {
+        int index;
+        if (i == 0) {
+            index = 0;
+        } else {
+            index = avalaibleValues.size() - 1 - nextOrderDiagram[i - 1];
+        }
+
         ret.explicitCoor[i] = avalaibleValues[index];
-        avalaibleValues.erase(avalaibleValues.begin() + index); 
+        avalaibleValues.erase(avalaibleValues.begin() + index);
     }
+        // std::cout << "vista de ret: despues" << std::endl;
+        // ret.printExplicitCornPermCoord();
+        ret.defineOrderDiag();
+        ret.defineNextOrderDiag();
+        // ret.printOrderDiagram();
+        // ret.defineNextOrderDiag();
+        // ret.printNextOrderDiagram();
     return ret;
 }
 
 void cornerPermCoord::defineOrderDiag(){
+    // std::cout << "Defining Order Diagram..." << std::endl;
+    // this->printOrderDiagram();
     for (int i = N - 1; i >= 1; --i) {
         int count = 0;
         for (int j = i - 1; j >= 0; --j) {
             if (explicitCoor[j] > explicitCoor[i]) {
                 ++count;
             }
+            // std::cout << "in define " << i << ' ' << j << std::endl;
         }
+        // std::cout << "count "<< count << std::endl; 
         OrderDiagram[i - 1] = count;
+    }
+    // std::cout << "Defining Order Diagram...fin" << std::endl;
+    // this->printOrderDiagram();
+}
+
+void cornerPermCoord::oneStep(int BigIndex) {
+    uint8_t index = static_cast<uint8_t>(BigIndex);
+    // this->printNextOrderDiagram();
+        // std::cout << "in oneStep: " << static_cast<int>(index) << " | " << static_cast<int>(nextOrderDiagram[index]) << std::endl;
+    if (OrderDiagram[index] < (index + 1)){
+        nextOrderDiagram[index] = OrderDiagram[index] + 1;
+        // std::cout << "in oneStep2: " << static_cast<int>(index) << " | " << static_cast<int>(nextOrderDiagram[index]) << std::endl;
+        return;
+    }
+    else if (OrderDiagram[index] >= (index + 1)) {
+        // std::cout << "ep: " << static_cast<int>(index) << " | " << static_cast<int>(nextOrderDiagram[index]) << std::endl;
+        nextOrderDiagram[index] = 0;
+        oneStep(index + 1);
     }
 }
 
 void cornerPermCoord::defineNextOrderDiag(){
+    nextOrderDiagram = OrderDiagram;
     oneStep(0);
+    // std::cout << "Defining Next Order Diagram..." << std::endl;
+    // this->printNextOrderDiagram();
 }
 
-void oneStep(int index) {
-    if (OrderDiagram[index] < (index + 1)){
-        OrderDiagram[index]++;
-        if(OrderDiagram[index] == N - 1) //revisar limites
-            return;
-    }
-    else if {
-        OrderDiagram[index] = 0;
-        oneStep(index + 1)
-    }
-}
-
-void cornerPermCoord::print_move_table(){
+void cornerPermCoord::printMoveTable(){
     cornerPermCoord state;
-    for (int i = 0; i < 2187; ++i){
+    // state.printExplicitCornPermCoord();
+    for (int i = 0; i < 40320; ++i){
         std::cout << state.get_pure_coord() << " => ";
 
         for (int m = 0; m < 10; ++m) {
-            Move move = static_cast<GOneMove>(m);
+            GOneMove move = static_cast<GOneMove>(m);
+            // std::cout << moveToString(move) << std::endl;
             cornerPermCoord next = state.move(move);
+            // std::cout << "En printmovetable" << std::endl;
+            // next.printNextOrderDiagram();
+            // next.printExplicitCornPermCoord();
             std::cout << next.get_pure_coord();
-            if (m != 17) std::cout << " | ";
+            if (m != 9) std::cout << " | ";
         }
-
         std::cout << std::endl;
         state = state.nextExplicitCoord();
+        // state.printExplicitCornPermCoord();
+
     }
 }
 
 
 
-void cornerPermCoord::moveTableToFile() {
+// void cornerPermCoord::moveTableToFile() {
     // std::error_code ec;
     // if (!std::filesystem::exists(movesFoldername)) {
     //     if (!std::filesystem::create_directories(movesFoldername, ec)) {
@@ -204,8 +273,4 @@ void cornerPermCoord::moveTableToFile() {
     // }
 
     // out.close();
-}
-
-inline uint16_t factorial(uint6_t n){
-    return (n <= 1) ? 1 : n * factorial(n - 1);
-}
+// }

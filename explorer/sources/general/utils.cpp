@@ -48,6 +48,36 @@ void cornerOrientCoord::print_explicit_corn_ori_coord2() const {
 }
 
 
+void cornerPermCoord::printExplicitCornPermCoord() {
+    std::cout << "Corner Permutation (explicit): ";
+    for (int i = 0; i < N; ++i) {
+        std::cout << static_cast<int>(explicitCoor[i]) << " ";
+    }
+    std::cout << std::endl;
+}
+
+void cornerPermCoord::printExplicitCornPermCoord2() {
+    for (int i = 0; i < N; ++i) {
+        std::cout << static_cast<int>(explicitCoor[i]) << " ";
+    }
+    std::cout << std::endl;
+}
+
+void edgePermCoord::printExplicitEdgePermCoord() {
+    std::cout << "edge Permutation (explicit): ";
+    for (int i = 0; i < N; ++i) {
+        std::cout << static_cast<int>(explicitCoor[i]) << " ";
+    }
+    std::cout << std::endl;
+}
+
+void edgePermCoord::printExplicitEdgePermCoord2() {
+    for (int i = 0; i < N; ++i) {
+        std::cout << static_cast<int>(explicitCoor[i]) << " ";
+    }
+    std::cout << std::endl;
+}
+
 
 void edgeOrientCoord::print_explicit_edge_ori_coord() const {
     std::cout << "Edge Orientation (explicit): ";
@@ -85,7 +115,53 @@ void UDSliceCoord::print_explicit_udslice_ori_coord2() const {
 }
 
 
+void cornerPermCoord::printOrderDiagram() const {
+    std::cout << "OrderDiagram (" << OrderDiagram.size() << "): [ ";
 
+    for (size_t i = 0; i < OrderDiagram.size(); ++i) {
+        std::cout << int(OrderDiagram[i]);
+        if (i + 1 < OrderDiagram.size())
+            std::cout << " ";
+    }
+
+    std::cout << " ]\n";
+}
+
+void cornerPermCoord::printNextOrderDiagram() const {
+    std::cout << "nextOrderDiagram (" << nextOrderDiagram.size() << "): [ ";
+
+    for (size_t i = 0; i < nextOrderDiagram.size(); ++i) {
+        std::cout << int(nextOrderDiagram[i]);
+        if (i + 1 < nextOrderDiagram.size())
+            std::cout << " ";
+    }
+
+    std::cout << " ]\n";
+}
+
+void edgePermCoord::printOrderDiagram() const {
+    std::cout << "edge OrderDiagram (" << OrderDiagram.size() << "): [ ";
+
+    for (size_t i = 0; i < OrderDiagram.size(); ++i) {
+        std::cout << int(OrderDiagram[i]);
+        if (i + 1 < OrderDiagram.size())
+            std::cout << " ";
+    }
+
+    std::cout << " ]\n";
+}
+
+void edgePermCoord::printNextOrderDiagram() const {
+    std::cout << "edge nextOrderDiagram (" << nextOrderDiagram.size() << "): [ ";
+
+    for (size_t i = 0; i < nextOrderDiagram.size(); ++i) {
+        std::cout << int(nextOrderDiagram[i]);
+        if (i + 1 < nextOrderDiagram.size())
+            std::cout << " ";
+    }
+
+    std::cout << " ]\n";
+}
 
 std::string moveToString(Move move) {
     switch (move) {
@@ -107,6 +183,22 @@ std::string moveToString(Move move) {
         case Move::B1:  return "B";
         case Move::B2:  return "B2";
         case Move::B3:  return "B'";
+        default:        return "Unknown";
+    }
+}
+
+std::string moveToString(GOneMove move) {
+    switch (move) {
+        case GOneMove::U1:  return "U";
+        case GOneMove::U2:  return "U2";
+        case GOneMove::U3:  return "U'";
+        case GOneMove::R2:  return "R2";
+        case GOneMove::F2:  return "F2";
+        case GOneMove::D1:  return "D";
+        case GOneMove::D2:  return "D2";
+        case GOneMove::D3:  return "D'";
+        case GOneMove::L2:  return "L2";
+        case GOneMove::B2:  return "B2";
         default:        return "Unknown";
     }
 }
@@ -144,4 +236,8 @@ Move get_move(int moveIndex) {
 
 Move get_move(Move move) {
     return move;
+}
+
+uint16_t factorial(uint16_t n){
+    return (n <= 1) ? 1 : n * factorial(n - 1);
 }

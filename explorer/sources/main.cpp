@@ -39,13 +39,14 @@ int main(int ac, char** av) {
     solveFaseOne solver = solveFaseOne(fase1);
     std::cout << solver.solutionToString(solver.solve()) << std::endl;
 
-
+    // edgePermCoord::printMoveTable();
+    cornerPermCoord::printMoveTable();
 
     auto end = std::chrono::high_resolution_clock::now();
 
     std::chrono::duration<double> elapsed = end - start;
 
-    std::cout << "Tiempo de ejecucion: "
+    std::cout << "\n\n\nTiempo de ejecucion: "
               << elapsed.count()
               << " segundos\n";
 }

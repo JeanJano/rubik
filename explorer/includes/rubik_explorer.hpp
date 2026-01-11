@@ -15,4 +15,10 @@ void print_scramble(const std::vector<Move>& scramble);
 std::string moveToString(Move move);
 //faseOne.cpp
 
+
+std::string moveToString(GOneMove move);
+
+uint16_t factorial(uint16_t n);
+unsigned int factorialInt(unsigned int n);
+
 #endif

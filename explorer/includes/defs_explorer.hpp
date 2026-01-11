@@ -317,15 +317,44 @@ struct cornerPermCoord{
 
     cornerPermCoord();
     cornerPermCoord(const cubeCubie& cube);
-    void printExplicitCornPermCoord() const;
-    void printExplicitCornPermCoord2() const;
+    void printExplicitCornPermCoord();
+    void printExplicitCornPermCoord2();
     cornerPermCoord move(const GOneMove& move) const;
-    static void print_move_table();
+    static void printMoveTable();
     static cornerPermCoord from_pure_coord(uint16_t coord);
     uint16_t get_pure_coord() const;
     cornerPermCoord nextExplicitCoord();
     static void moveTableToFile();
     void defineOrderDiag();
+    void defineNextOrderDiag();
+    cornerPermCoord fromNextOrderDiag();
+    void oneStep(int index);
+    void printOrderDiagram() const;
+    void printNextOrderDiagram() const;
+};
+
+struct edgePermCoord{
+    static constexpr int N = 8;
+    std::array<uint8_t, N> explicitCoor;
+    std::array<uint8_t, N - 1> OrderDiagram;
+    std::array<uint8_t, N - 1> nextOrderDiagram;
+
+    edgePermCoord();
+    edgePermCoord(const cubeCubie& cube);
+    void printExplicitEdgePermCoord();
+    void printExplicitEdgePermCoord2();
+    edgePermCoord move(const GOneMove& move) const;
+    static void printMoveTable();
+    static edgePermCoord from_pure_coord(unsigned int coord);
+    unsigned int get_pure_coord() const;
+    edgePermCoord nextExplicitCoord();
+    static void moveTableToFile();
+    void defineOrderDiag();
+    void defineNextOrderDiag();
+    edgePermCoord fromNextOrderDiag();
+    void oneStep(int index);
+    void printOrderDiagram() const;
+    void printNextOrderDiagram() const;
 };
 
 
