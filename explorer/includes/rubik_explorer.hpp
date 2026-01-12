@@ -19,6 +19,5 @@ std::string moveToString(Move move);
 std::string moveToString(GOneMove move);
 
 uint16_t factorial(uint16_t n);
-unsigned int factorialInt(unsigned int n);
 
 #endif

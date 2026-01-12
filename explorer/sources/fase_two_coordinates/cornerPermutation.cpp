@@ -244,33 +244,32 @@ void cornerPermCoord::printMoveTable(){
 }
 
 
+void cornerPermCoord::moveTableToFile() {
+    std::error_code ec;
+    if (!std::filesystem::exists(movesFoldername)) {
+        if (!std::filesystem::create_directories(movesFoldername, ec)) {
+            std::cerr << "Error: no se pudo crear la carpeta '" << movesFoldername << "': " << ec.message() << std::endl;
+            return;
+        }
+    }
 
-// void cornerPermCoord::moveTableToFile() {
-    // std::error_code ec;
-    // if (!std::filesystem::exists(movesFoldername)) {
-    //     if (!std::filesystem::create_directories(movesFoldername, ec)) {
-    //         std::cerr << "Error: no se pudo crear la carpeta '" << movesFoldername << "': " << ec.message() << std::endl;
-    //         return;
-    //     }
-    // }
+    std::string filepath = movesFoldername + cornerPermMoveTableFilename;
+    std::ofstream out(filepath, std::ios::binary);
+    if (!out) {
+        std::cerr << "Error: no se pudo abrir el archivo para escritura: " << filepath << std::endl;
+        return;
+    }
 
-    // std::string filepath = movesFoldername + cornerOriMoveTableFilename;
-    // std::ofstream out(filepath, std::ios::binary);
-    // if (!out) {
-    //     std::cerr << "Error: no se pudo abrir el archivo para escritura: " << filepath << std::endl;
-    //     return;
-    // }
+    cornerPermCoord state;
+    for (int i = 0; i < 40320; ++i) {
+        for (int m = 0; m < 10; ++m) {
+            GOneMove move = static_cast<GOneMove>(m);
+            cornerPermCoord next = state.move(move);
+            uint16_t nextCoord = next.get_pure_coord();
+            out.write(reinterpret_cast<const char*>(&nextCoord), sizeof(uint16_t));
+        }
+        state = state.nextExplicitCoord();
+    }
 
-    // cornerPermCoord state;
-    // for (int i = 0; i < 2187; ++i) {
-    //     for (int m = 0; m < 18; ++m) {
-    //         Move move = static_cast<Move>(m);
-    //         cornerPermCoord next = state.move(move);
-    //         uint16_t nextCoord = next.get_pure_coord();
-    //         out.write(reinterpret_cast<const char*>(&nextCoord), sizeof(uint16_t));
-    //     }
-    //     state = state.nextExplicitCoord();
-    // }
-
-    // out.close();
-// }
+    out.close();
+}

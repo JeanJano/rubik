@@ -57,7 +57,7 @@ int solveFaseOne::dfs(solveFaseOneState& st,
                       int depth,
                       int bound,
                       int lastMove,
-                      std::vector<int>& path)
+                      std::vector<Move>& path)
 {
     int h = heuristic(st);
     int f = depth + h;
@@ -78,7 +78,7 @@ int solveFaseOne::dfs(solveFaseOneState& st,
         solveFaseOneState backup = st;
         applyMove(st, m);
 
-        path.push_back(m);
+        path.push_back(static_cast<Move>(m));
 
         int t = dfs(st, depth + 1, bound, m, path);
 
@@ -95,10 +95,10 @@ int solveFaseOne::dfs(solveFaseOneState& st,
     return minNextBound;
 }
 
-std::vector<int> solveFaseOne::solve() {
+std::vector<Move> solveFaseOne::solve() {
     int bound = heuristic(state);
 
-    std::vector<int> path;
+    std::vector<Move> path;
 
     while (true) {
         int t = dfs(state, 0, bound, -1, path);
@@ -113,9 +113,10 @@ std::vector<int> solveFaseOne::solve() {
     }
 }
 
-std::string solveFaseOne::solutionToString(const std::vector<int>& path) {
+std::string solveFaseOne::solutionToString(const std::vector<Move>& path) {
     std::string res;
-    for (int m : path) {
+    for (Move m : path) {
+        std::cout << "move: " << moveToString(static_cast<Move>(m)) << std::endl;
         if (!res.empty()) res += " ";
         res += moveToString(static_cast<Move>(m));
     }

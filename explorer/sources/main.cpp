@@ -32,15 +32,25 @@ int main(int ac, char** av) {
     if (scramble.empty())
         return 1;
     cubeCubie scrambledCube = get_scrambled_state(scramble);
-    cornerOrientCoord::moveTableToFile();
-    edgeOrientCoord::moveTableToFile();
-    UDSliceCoord::moveTableToFile();
+    // cornerOrientCoord::moveTableToFile();
+    // edgeOrientCoord::moveTableToFile();
+    // UDSliceCoord::moveTableToFile();
+    // cornerPermCoord::moveTableToFile();
+    // edgePermCoord::moveTableToFile();
+    // UDSTwoCoord::moveTableToFile();
+
     faseOne fase1 = faseOne(cornerOrientCoord(scrambledCube), edgeOrientCoord(scrambledCube), UDSliceCoord(scrambledCube));
     solveFaseOne solver = solveFaseOne(fase1);
     std::cout << solver.solutionToString(solver.solve()) << std::endl;
+    scrambledCube.severalMoves(solver.solve(), scrambledCube);
 
+    faseTwo fase2 = faseTwo(cornerPermCoord(scrambledCube), edgePermCoord(scrambledCube), UDSTwoCoord(scrambledCube));
+    solveFaseTwo solver2 = solveFaseTwo(fase2);
+    std::cout << solver2.solutionToString(solver2.solve()) << std::endl;
+    // fase2.DoPruningTables();
     // edgePermCoord::printMoveTable();
-    cornerPermCoord::printMoveTable();
+    // cornerPermCoord::printMoveTable();
+    // UDSTwoCoord::printMoveTable();
 
     auto end = std::chrono::high_resolution_clock::now();
 

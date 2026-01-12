@@ -24,6 +24,9 @@ SOURCES		=	main.cpp \
 				parser/parser.cpp \
 				fase_two_coordinates/cornerPermutation.cpp \
 				fase_two_coordinates/edgePermutation.cpp \
+				fase_two_coordinates/UDSliceTwo.cpp \
+				faseTwo/faseTwo.cpp \
+				faseTwo/SolveFaseTwo.cpp \
 # 				symetry/EdgeOriSym.cpp \
 
 
@@ -48,6 +51,7 @@ tmp:
 		@mkdir -p $(OBJ_PATH)fase_one_coordinates
 		@mkdir -p $(OBJ_PATH)fase_two_coordinates
 		@mkdir -p $(OBJ_PATH)faseOne
+		@mkdir -p $(OBJ_PATH)faseTwo
 		@mkdir -p $(OBJ_PATH)general
 
 $(NAME): $(OBJS)

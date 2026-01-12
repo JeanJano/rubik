@@ -89,12 +89,11 @@ edgePermCoord edgePermCoord::move(const GOneMove& move) const {
 }
 
 
+uint16_t edgePermCoord::get_pure_coord() const {
 
-unsigned int  edgePermCoord::get_pure_coord() const {
 
-
-    unsigned int  coord = 0;
-    unsigned int  factor = 7;
+    uint16_t coord = 0;
+    uint16_t factor = 7;
 
     for (int i = N - 1; i >= 1; --i) {
         int count = 0;
@@ -110,9 +109,9 @@ unsigned int  edgePermCoord::get_pure_coord() const {
     return coord;
 }
 
-edgePermCoord edgePermCoord::from_pure_coord(unsigned int  coord) {
+edgePermCoord edgePermCoord::from_pure_coord(uint16_t coord) {
     edgePermCoord result;
-    unsigned int  temp = coord;
+    uint16_t temp = coord;
 
     for (int i = N - 1; i > 0; --i) {
         result.explicitCoor[i] = temp / factorial(i);
@@ -237,33 +236,32 @@ void edgePermCoord::printMoveTable(){
 }
 
 
+void edgePermCoord::moveTableToFile() {
+    std::error_code ec;
+    if (!std::filesystem::exists(movesFoldername)) {
+        if (!std::filesystem::create_directories(movesFoldername, ec)) {
+            std::cerr << "Error: no se pudo crear la carpeta '" << movesFoldername << "': " << ec.message() << std::endl;
+            return;
+        }
+    }
 
-// void edgePermCoord::GOneMoveTableToFile() {
-    // std::error_code ec;
-    // if (!std::filesystem::exists(GOneMovesFoldername)) {
-    //     if (!std::filesystem::create_directories(GOneMovesFoldername, ec)) {
-    //         std::cerr << "Error: no se pudo crear la carpeta '" << GOneMovesFoldername << "': " << ec.message() << std::endl;
-    //         return;
-    //     }
-    // }
+    std::string filepath = movesFoldername + edgePermMoveTableFilename;
+    std::ofstream out(filepath, std::ios::binary);
+    if (!out) {
+        std::cerr << "Error: no se pudo abrir el archivo para escritura: " << filepath << std::endl;
+        return;
+    }
 
-    // std::string filepath = GOneMovesFoldername + cornerOriGOneMoveTableFilename;
-    // std::ofstream out(filepath, std::ios::binary);
-    // if (!out) {
-    //     std::cerr << "Error: no se pudo abrir el archivo para escritura: " << filepath << std::endl;
-    //     return;
-    // }
+    edgePermCoord state;
+    for (int i = 0; i < 40320; ++i) {
+        for (int m = 0; m < 10; ++m) {
+            GOneMove move = static_cast<GOneMove>(m);
+            edgePermCoord next = state.move(move);
+            uint16_t nextCoord = next.get_pure_coord();
+            out.write(reinterpret_cast<const char*>(&nextCoord), sizeof(uint16_t));
+        }
+        state = state.nextExplicitCoord();
+    }
 
-    // edgePermCoord state;
-    // for (int i = 0; i < 2187; ++i) {
-    //     for (int m = 0; m < 18; ++m) {
-    //         GOneMove GOneMove = static_cast<GOneMove>(m);
-    //         edgePermCoord next = state.GOneMove(GOneMove);
-    //         unsigned int  nextCoord = next.get_pure_coord();
-    //         out.write(reinterpret_cast<const char*>(&nextCoord), sizeof(unsigned int ));
-    //     }
-    //     state = state.nextExplicitCoord();
-    // }
-
-    // out.close();
-// }
+    out.close();
+}

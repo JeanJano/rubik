@@ -78,6 +78,21 @@ void edgePermCoord::printExplicitEdgePermCoord2() {
     std::cout << std::endl;
 }
 
+void UDSTwoCoord::printExplicitUDSTPermCoord() {
+    std::cout << "edge Permutation (explicit): ";
+    for (int i = 0; i < N; ++i) {
+        std::cout << static_cast<int>(explicitCoor[i]) << " ";
+    }
+    std::cout << std::endl;
+}
+
+void UDSTwoCoord::printExplicitUDSTPermCoord2() {
+    for (int i = 0; i < N; ++i) {
+        std::cout << static_cast<int>(explicitCoor[i]) << " ";
+    }
+    std::cout << std::endl;
+}
+
 
 void edgeOrientCoord::print_explicit_edge_ori_coord() const {
     std::cout << "Edge Orientation (explicit): ";
@@ -163,6 +178,30 @@ void edgePermCoord::printNextOrderDiagram() const {
     std::cout << " ]\n";
 }
 
+void UDSTwoCoord::printOrderDiagram() const {
+    std::cout << "UDS2 OrderDiagram (" << OrderDiagram.size() << "): [ ";
+
+    for (size_t i = 0; i < OrderDiagram.size(); ++i) {
+        std::cout << int(OrderDiagram[i]);
+        if (i + 1 < OrderDiagram.size())
+            std::cout << " ";
+    }
+
+    std::cout << " ]\n";
+}
+
+void UDSTwoCoord::printNextOrderDiagram() const {
+    std::cout << "UDS2 nextOrderDiagram (" << nextOrderDiagram.size() << "): [ ";
+
+    for (size_t i = 0; i < nextOrderDiagram.size(); ++i) {
+        std::cout << int(nextOrderDiagram[i]);
+        if (i + 1 < nextOrderDiagram.size())
+            std::cout << " ";
+    }
+
+    std::cout << " ]\n";
+}
+
 std::string moveToString(Move move) {
     switch (move) {
         case Move::U1:  return "U";
@@ -215,6 +254,18 @@ uint16_t get_coord(const UDSliceCoord& coord) {
     return coord.get_pure_coord();
 }
 
+uint16_t get_coord(const cornerPermCoord& coord) {
+    return coord.get_pure_coord();
+}
+
+uint16_t get_coord(const edgePermCoord& coord) {
+    return coord.get_pure_coord();
+}
+
+uint16_t get_coord(const UDSTwoCoord& coord) {
+    return coord.get_pure_coord();
+}
+
 uint16_t get_coord(uint16_t coord) {
     return coord;
 }
@@ -237,6 +288,29 @@ Move get_move(int moveIndex) {
 Move get_move(Move move) {
     return move;
 }
+
+
+
+GOneMove getGOneMve(const std::string& moveStr) {
+    auto it = stringToGOneMove.find(moveStr);
+    if (it != stringToGOneMove.end()) {
+        return it->second;
+    }
+    throw std::invalid_argument("Invalid move string: " + moveStr);
+}
+
+GOneMove getGOneMove(int moveIndex) {
+    if (moveIndex < 0 || moveIndex > 9) {
+        throw std::invalid_argument("Invalid move index: " + std::to_string(moveIndex));
+    }
+    return static_cast<GOneMove>(moveIndex);
+}
+
+GOneMove getGOneMove(GOneMove move) {
+    return move;
+}
+
+
 
 uint16_t factorial(uint16_t n){
     return (n <= 1) ? 1 : n * factorial(n - 1);
