@@ -348,6 +348,7 @@ cubeCubie cubeCubie::basicMove(Move move, const cubeCubie& inputCube) const{
 cubeCubie cubeCubie::severalMoves(const std::vector<Move>& moves, const cubeCubie& inputCube) const {
     cubeCubie current = inputCube;
     for (Move move : moves) {
+        // std::cout << "in several moves " << moveToString(move) << std::endl;
         current = this->basicMove(move, current);
     }
     return current;

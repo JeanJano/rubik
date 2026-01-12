@@ -24,9 +24,9 @@ faseTwo::faseTwo(const cornerPermCoord& c, const edgePermCoord& e, const UDSTwoC
 
         // std::tuple<int,int,int> initState = std::make_tuple(0,0,0);
 
-        // for (int i = 0; i < 18; ++i) {
-        //         std::tuple<int, int, int> nextStateC = faseTwo::moveState(pruningCPSFilename, initState, static_cast<Move>(i));
-        //         std::tuple<int, int, int> nextStateE = faseTwo::moveState(pruningEPSFilename, initState, static_cast<Move>(i));
+        // for (int i = 0; i < 10; ++i) {
+        //         std::tuple<int, int, int> nextStateC = faseTwo::moveState(pruningCPSFilename, initState, static_cast<GOneMove>(i));
+        //         std::tuple<int, int, int> nextStateE = faseTwo::moveState(pruningEPSFilename, initState, static_cast<GOneMove>(i));
         //         std::cout << "move: " << i << "\nCorner: " << std::get<0>(nextStateC) << " " << std::get<1>(nextStateC) << " " << std::get<2>(nextStateC)
         //         << "\nEdge: " << std::get<0>(nextStateE) << " " << std::get<1>(nextStateE) << " " << std::get<2>(nextStateE) << std::endl;
         //         std::cout << "index: " << " | CPS Index: " << faseTwo::stateToIndex(nextStateC) << " | EPS Index: " << faseTwo::stateToIndex(nextStateE) << std::endl;
@@ -79,12 +79,12 @@ bool faseTwo::fillTable(const std::string& filename) {
             for (int i = 0; i < 10; ++i) {
                 std::tuple<int, int, int> nextState = faseTwo::moveState(filename, currentState, static_cast<GOneMove>(i));
                 uint64_t nextStateIndex = faseTwo::stateToIndex(nextState);
-                if (faseTwo::readPruning(filename, nextStateIndex) == 255)
-                {
-                    std::cout << "acotando fillTable BFS.front " << std::get<0>(currentState) << " " << std::get<1>(currentState) << " " << std::get<2>(currentState) << " index: " << static_cast<int>(faseTwo::stateToIndex(currentState)) << std::endl;
-                    std::cout << "acotando fillTable nextstate " << std::get<0>(nextState) << " " << std::get<1>(nextState) << " " << std::get<2>(nextState) << " index: "  << static_cast<int>(faseTwo::stateToIndex(nextState)) << " read: " << static_cast<int>(faseTwo::readPruning(filename, nextStateIndex)) << std::endl;
-                    break;
-                }
+                // if (faseTwo::readPruning(filename, nextStateIndex) == 255)
+                // {
+                //     std::cout << "acotando fillTable BFS.front " << std::get<0>(currentState) << " " << std::get<1>(currentState) << " " << std::get<2>(currentState) << " index: " << static_cast<int>(faseTwo::stateToIndex(currentState)) << std::endl;
+                //     std::cout << "acotando fillTable nextstate " << std::get<0>(nextState) << " " << std::get<1>(nextState) << " " << std::get<2>(nextState) << " index: "  << static_cast<int>(faseTwo::stateToIndex(nextState)) << " read: " << static_cast<int>(faseTwo::readPruning(filename, nextStateIndex)) << std::endl;
+                //     break;
+                // }
                 if (nextStateIndex != 0 && faseTwo::readPruning(filename, nextStateIndex) == 0) {
                     faseTwo::writePruning(filename, nextStateIndex, std::get<2>(nextState));
                     BFS.push(nextState);
@@ -145,7 +145,7 @@ bool faseTwo::CreatePruning(const std::string& filename, std::size_t fileSize) {
         std::cerr << "Error closing file.\n";
         return false;
     }
-    std::cout << "fase one table file created!" << std::endl;
+    std::cout << "fase two table file created!" << std::endl;
     return true;
 }
 
@@ -217,11 +217,11 @@ uint8_t faseTwo::readPruning(const std::string& filename, uint64_t index) {
 }
 
 uint64_t faseTwo::stateToIndex(const std::tuple<int, int, int>& state){
-        return (std::get<0>(state) + (std::get<1>(state) * 23));
+        return (std::get<0>(state) + (std::get<1>(state) * 24));
 }
 
 uint64_t faseTwo::stateToIndex(const std::tuple<int, int>& state){
-        return (std::get<0>(state) + (std::get<1>(state) * 23));
+        return (std::get<0>(state) + (std::get<1>(state) * 24));
 }
 
 void faseTwo::showIndex(){

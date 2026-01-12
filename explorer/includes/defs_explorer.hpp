@@ -428,8 +428,8 @@ struct faseTwo{
 };
 
 struct solveFaseTwoState {
-    int co;
-    int eo; 
+    int cp;
+    int ep; 
     int s; 
 };
 
@@ -448,8 +448,8 @@ struct solveFaseTwo {
     solveFaseTwo(const faseTwo& toSolve);
     bool loadMoveTables();
     bool loadPruningTables();
-    int CPS_index(int co, int s);
-    int EPS_index(int eo, int s);
+    int CPS_index(int cp, int s);
+    int EPS_index(int ep, int s);
     void applyMove(solveFaseTwoState& st, int m);
     int heuristic(const solveFaseTwoState& st);
     int dfs(solveFaseTwoState& st,
@@ -524,6 +524,41 @@ uint16_t fase_two_coord_from_file(CoordType coordInput, MoveType moveInput, cons
 }
 
 
+// template <typename T>
+// bool loadBinary(const std::string& filename, T* buffer, size_t count) {
+//     std::ifstream in(filename, std::ios::binary);
+//     if (!in) return false;
+
+//     in.read(reinterpret_cast<char*>(buffer), count * sizeof(T));
+//     return in.good();
+// }
+
+// //-------------------nedded to see the cubie representation--------
+// std::string edge_to_string(Edge e);
+// std::string corner_to_string(Corner c);
+
+// bool loadBinary(const std::string& filename, int* buffer, size_t count) {
+//     std::ifstream file(filename, std::ios::binary);
+
+//     if (!file.is_open()) {
+//         std::cerr << "❌ Cannot open file: " << filename << std::endl;
+//         return false;
+//     }
+
+//     file.read(reinterpret_cast<char*>(buffer),
+//               count * sizeof(int));
+
+//     if (!file) {
+//         std::cerr << "❌ Error reading file: " << filename << std::endl;
+//         std::cerr << "   expected bytes: " << count * sizeof(int) << std::endl;
+//         std::cerr << "   read bytes:     " << file.gcount() << std::endl;
+//         return false;
+//     }
+
+//     std::cout << "✅ Loaded: " << filename << std::endl;
+//     return true;
+// }
+
 template <typename T>
 bool loadBinary(const std::string& filename, T* buffer, size_t count) {
     std::ifstream in(filename, std::ios::binary);
@@ -533,8 +568,5 @@ bool loadBinary(const std::string& filename, T* buffer, size_t count) {
     return in.good();
 }
 
-//-------------------nedded to see the cubie representation--------
-std::string edge_to_string(Edge e);
-std::string corner_to_string(Corner c);
 
 #endif

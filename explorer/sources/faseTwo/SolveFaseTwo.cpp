@@ -3,8 +3,8 @@
 
 
 solveFaseTwo::solveFaseTwo(const faseTwo& toSolve) {
-    this->state.co = toSolve.corners.get_pure_coord();
-    this->state.eo = toSolve.edges.get_pure_coord();
+    this->state.cp = toSolve.corners.get_pure_coord();
+    this->state.ep = toSolve.edges.get_pure_coord();
     this->state.s = toSolve.slice.get_pure_coord();
 
     loadMoveTables();
@@ -29,31 +29,43 @@ bool solveFaseTwo::loadPruningTables() {
                    pruneEPS, 40320 * 24);
 }
 
-int solveFaseTwo::CPS_index(int co, int s) {
-    return co * 23 + s;
+int solveFaseTwo::CPS_index(int cp, int s) {
+    return cp * 24 + s;
 }
 
-int solveFaseTwo::EPS_index(int eo, int s) {
-    return eo * 23 + s;
+int solveFaseTwo::EPS_index(int ep, int s) {
+    return ep * 24 + s;
 }
 
 void solveFaseTwo::applyMove(solveFaseTwoState& st, int m) {
-    st.co = cornerPermMove[st.co][m];
-    st.eo = edgePermMove[st.eo][m];
+    st.cp = cornerPermMove[st.cp][m];
+    st.ep = edgePermMove[st.ep][m];
     st.s  = udSliceMove[st.s][m];
 }
 
 int solveFaseTwo::heuristic(const solveFaseTwoState& st) {
-    int h1 = pruneCPS[CPS_index(st.co, st.s)];
-    int h2 = pruneEPS[EPS_index(st.eo, st.s)];
+    int h1 = pruneCPS[CPS_index(st.cp, st.s)];
+    int h2 = pruneEPS[EPS_index(st.ep, st.s)];
     return (h1 > h2) ? h1 : h2;
 }
 
-inline bool sameFace(int m1, int m2) {
-    if (5 < m2 && m2 <= 9)
-        return true;
-    return (m1 / 3) == (m2 / 3);
+// inline bool sameFace(int m1, int m2) {
+//     if (5 < m2 && m2 <= 9)
+//         return true;
+//     return (m1 / 3) == (m2 / 3);
+// }
+
+
+inline int faceOf(int m) {
+    if (m <= 2) return 0; // U
+    if (m <= 5) return 1; // D
+    return m;             // L2 R2 F2 B2
 }
+
+inline bool sameFace(int m1, int m2) {
+    return faceOf(m1) == faceOf(m2);
+}
+
 
 int solveFaseTwo::dfs(solveFaseTwoState& st,
                       int depth,
@@ -61,6 +73,7 @@ int solveFaseTwo::dfs(solveFaseTwoState& st,
                       int lastMove,
                       std::vector<GOneMove>& path)
 {
+    if (depth == 5) return FOUND;
     int h = heuristic(st);
     int f = depth + h;
 
@@ -72,7 +85,8 @@ int solveFaseTwo::dfs(solveFaseTwoState& st,
 
     int minNextBound = INF;
 
-    for (int m = 0; m < 18; ++m) {
+        std::cout << "\n\n----------\ninit state [" << st.cp << " " << st.ep << " " << st.s << "] \nheuristic : " << h  << "\ndepth: "<< depth << "\nbound: " << bound << "\nlastMove: " << moveToString(static_cast<GOneMove>(lastMove)) << "\npath: " << solveFaseTwo::solutionToString(path) << std::endl;
+    for (int m = 0; m < 10; ++m) {
 
         if (lastMove != -1 && sameFace(m, lastMove))
             continue;
@@ -81,8 +95,9 @@ int solveFaseTwo::dfs(solveFaseTwoState& st,
         applyMove(st, m);
 
         path.push_back(static_cast<GOneMove>(m));
-
+        
         int t = dfs(st, depth + 1, bound, m, path);
+        std::cout << "\n\nmove done: " << m << "  middle state [" << st.cp << " " << st.ep << " " << st.s << "] \nheuristic : " << heuristic(st)  << "\ndepth: "<< depth + 1 << "\nbound: " << bound << "\nlastMove: " << moveToString(static_cast<GOneMove>(lastMove)) << "\npath: " << solveFaseTwo::solutionToString(path) << "\nt: " << t << std::endl;
 
         if (t == FOUND)
             return FOUND;
@@ -93,6 +108,7 @@ int solveFaseTwo::dfs(solveFaseTwoState& st,
         path.pop_back();
         st = backup;
     }
+        std::cout << "apres backup ret*************************" << std::endl;
 
     return minNextBound;
 }

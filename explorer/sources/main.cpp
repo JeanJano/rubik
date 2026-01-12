@@ -32,6 +32,8 @@ int main(int ac, char** av) {
     if (scramble.empty())
         return 1;
     cubeCubie scrambledCube = get_scrambled_state(scramble);
+    // std::cout << "aca 1" << std::endl;
+    // print_cubie_state(scrambledCube);
     // cornerOrientCoord::moveTableToFile();
     // edgeOrientCoord::moveTableToFile();
     // UDSliceCoord::moveTableToFile();
@@ -41,12 +43,25 @@ int main(int ac, char** av) {
 
     faseOne fase1 = faseOne(cornerOrientCoord(scrambledCube), edgeOrientCoord(scrambledCube), UDSliceCoord(scrambledCube));
     solveFaseOne solver = solveFaseOne(fase1);
-    std::cout << solver.solutionToString(solver.solve()) << std::endl;
-    scrambledCube.severalMoves(solver.solve(), scrambledCube);
+    std::vector<Move> first = solver.solve();
+    std::cout << solver.solutionToString(first) << std::endl;
+    scrambledCube = scrambledCube.severalMoves(first, scrambledCube);
+
 
     faseTwo fase2 = faseTwo(cornerPermCoord(scrambledCube), edgePermCoord(scrambledCube), UDSTwoCoord(scrambledCube));
+    fase2.DoPruningTables();
+    // faseTwo::printNonZeroPruningValues(pruningCPSFilename,40320*24 + 1 ,0);
+    // faseTwo::printNonZeroPruningValues(pruningEPSFilename,40320*24+1,40320);
+
+    // cornerPermCoord::printMoveTable();
+    // edgePermCoord::printMoveTable();
+    // UDSTwoCoord::printMoveTable();
+
+
+
     solveFaseTwo solver2 = solveFaseTwo(fase2);
-    std::cout << solver2.solutionToString(solver2.solve()) << std::endl;
+    std::vector<GOneMove> second = solver2.solve();
+    std::cout << solver2.solutionToString(second) << std::endl;
     // fase2.DoPruningTables();
     // edgePermCoord::printMoveTable();
     // cornerPermCoord::printMoveTable();

@@ -7,8 +7,21 @@ solveFaseOne::solveFaseOne(const faseOne& toSolve) {
     this->state.eo = toSolve.edges.get_pure_coord();
     this->state.s = toSolve.slice.get_pure_coord();
 
-    loadMoveTables();
-    loadPruningTables();
+    if (!loadMoveTables())
+    throw std::runtime_error("Error loading move tables");
+
+    if (!loadPruningTables())
+    throw std::runtime_error("Error loading pruning tables");
+
+    // std::cout << cornerOriMove[0][0] << std::endl;
+    // std::cout << cornerOriMove[0][1] << std::endl;
+    // std::cout << edgeOriMove[0][0] << std::endl;
+    // std::cout << udSliceMove[0][0] << std::endl;
+
+    // std::cout << int(pruneCOS[0]) << std::endl;
+    // std::cout << int(pruneEOS[0]) << std::endl;
+
+
 }
 
 bool solveFaseOne::loadMoveTables() {
@@ -38,9 +51,11 @@ int solveFaseOne::EOS_index(int eo, int s) {
 }
 
 void solveFaseOne::applyMove(solveFaseOneState& st, int m) {
+    // std::cout << " in apply move state A [" << st.co << " " << st.eo << " " << st.s << "]" << std::endl;
     st.co = cornerOriMove[st.co][m];
     st.eo = edgeOriMove[st.eo][m];
     st.s  = udSliceMove[st.s][m];
+    // std::cout << " in apply move state B [" << st.co << " " << st.eo << " " << st.s << "]" << std::endl;
 }
 
 int solveFaseOne::heuristic(const solveFaseOneState& st) {
@@ -59,6 +74,7 @@ int solveFaseOne::dfs(solveFaseOneState& st,
                       int lastMove,
                       std::vector<Move>& path)
 {
+    // std::cout << " state [" << st.co << " " << st.eo << " " << st.s << "] \n depth: "<< depth << "\n bound: " << bound << "\nlastMove: " << lastMove << "\npath size: " << path.size() << std::endl;
     int h = heuristic(st);
     int f = depth + h;
 
@@ -81,6 +97,7 @@ int solveFaseOne::dfs(solveFaseOneState& st,
         path.push_back(static_cast<Move>(m));
 
         int t = dfs(st, depth + 1, bound, m, path);
+        // std::cout << " bound " << bound << "m " << m << "  " << path.size() << " t " << t << std::endl;
 
         if (t == FOUND)
             return FOUND;
@@ -116,7 +133,7 @@ std::vector<Move> solveFaseOne::solve() {
 std::string solveFaseOne::solutionToString(const std::vector<Move>& path) {
     std::string res;
     for (Move m : path) {
-        std::cout << "move: " << moveToString(static_cast<Move>(m)) << std::endl;
+        // std::cout << "move: " << moveToString(static_cast<Move>(m)) << std::endl;
         if (!res.empty()) res += " ";
         res += moveToString(static_cast<Move>(m));
     }
