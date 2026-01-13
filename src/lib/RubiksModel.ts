@@ -150,9 +150,14 @@ export default class RubiksModel {
         const parse = input.split(' ');
         for (let i = 0; i < parse.length; i++) {
             const isClockwise = parse[i].includes("'");
-            if (isClockwise) 
+            if (isClockwise && parse[i].length === 2) 
                 parse[i] = parse[i][0];
-            this._queue.push({move: parse[i], clockwise: isClockwise});
+            if (parse[i].includes("2")) {
+                parse[i] = parse[i][0]
+                this._queue.push({move: parse[i], clockwise: !isClockwise});
+                this._queue.push({move: parse[i], clockwise: !isClockwise});
+            } else
+                this._queue.push({move: parse[i], clockwise: !isClockwise});
         }
 
         this._processQueue();
