@@ -1,14 +1,21 @@
 #include "rubik_explorer.hpp"
 #include "defs_explorer.hpp"
 
+void printState(int c,int e ,int s){
+    std::cout << "state: [" << c << ", " << e << ", " << s << "]" << std::endl;
+}
 
 solveFaseTwo::solveFaseTwo(const faseTwo& toSolve) {
     this->state.cp = toSolve.corners.get_pure_coord();
     this->state.ep = toSolve.edges.get_pure_coord();
     this->state.s = toSolve.slice.get_pure_coord();
 
+    // std::cout << "in solveFaseTwo: " << std::endl;
+    // printState(this->state.cp, this->state.ep, this->state.s);
     loadMoveTables();
     loadPruningTables();
+    // std::cout << "in solveFaseTwo: " << std::endl;
+    // std::cout << static_cast<int>(pruneEPS[512*24 + 1]) << std::endl;
 }
 
 bool solveFaseTwo::loadMoveTables() {
@@ -73,7 +80,7 @@ int solveFaseTwo::dfs(solveFaseTwoState& st,
                       int lastMove,
                       std::vector<GOneMove>& path)
 {
-    if (depth == 5) return FOUND;
+    // if (depth == 5) return FOUND;
     int h = heuristic(st);
     int f = depth + h;
 
@@ -85,7 +92,7 @@ int solveFaseTwo::dfs(solveFaseTwoState& st,
 
     int minNextBound = INF;
 
-        std::cout << "\n\n----------\ninit state [" << st.cp << " " << st.ep << " " << st.s << "] \nheuristic : " << h  << "\ndepth: "<< depth << "\nbound: " << bound << "\nlastMove: " << moveToString(static_cast<GOneMove>(lastMove)) << "\npath: " << solveFaseTwo::solutionToString(path) << std::endl;
+        // std::cout << "\n\n----------\ninit state [" << st.cp << " " << st.ep << " " << st.s << "] \nheuristic : " << h  << "\ndepth: "<< depth << "\nbound: " << bound << "\nlastMove: " << moveToString(static_cast<GOneMove>(lastMove)) << "\npath: " << solveFaseTwo::solutionToString(path) << std::endl;
     for (int m = 0; m < 10; ++m) {
 
         if (lastMove != -1 && sameFace(m, lastMove))
@@ -97,7 +104,7 @@ int solveFaseTwo::dfs(solveFaseTwoState& st,
         path.push_back(static_cast<GOneMove>(m));
         
         int t = dfs(st, depth + 1, bound, m, path);
-        std::cout << "\n\nmove done: " << m << "  middle state [" << st.cp << " " << st.ep << " " << st.s << "] \nheuristic : " << heuristic(st)  << "\ndepth: "<< depth + 1 << "\nbound: " << bound << "\nlastMove: " << moveToString(static_cast<GOneMove>(lastMove)) << "\npath: " << solveFaseTwo::solutionToString(path) << "\nt: " << t << std::endl;
+        // std::cout << "\n\nmove done: " << m << "  middle state [" << st.cp << " " << st.ep << " " << st.s << "] \nheuristic : " << heuristic(st)  << "\ndepth: "<< depth + 1 << "\nbound: " << bound << "\nlastMove: " << moveToString(static_cast<GOneMove>(lastMove)) << "\npath: " << solveFaseTwo::solutionToString(path) << "\nt: " << t << std::endl;
 
         if (t == FOUND)
             return FOUND;
@@ -108,7 +115,7 @@ int solveFaseTwo::dfs(solveFaseTwoState& st,
         path.pop_back();
         st = backup;
     }
-        std::cout << "apres backup ret*************************" << std::endl;
+        // std::cout << "apres backup ret*************************" << std::endl;
 
     return minNextBound;
 }

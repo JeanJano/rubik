@@ -12,8 +12,10 @@ edgePermCoord::edgePermCoord() {
 //extract orientation corner coordinate from cubie representation
 edgePermCoord::edgePermCoord(const cubeCubie& cube) {
     for (int i = 0; i < N; ++i) {
-        explicitCoor[i] = cube.corners[i].pos;
+        explicitCoor[i] = cube.edges[i].pos;
     }
+    // std::cout << "in Eperm const" << std::endl;
+    // this->printExplicitEdgePermCoord();
     edgePermCoord::defineOrderDiag();
     edgePermCoord::defineNextOrderDiag();
 }
@@ -213,6 +215,7 @@ void edgePermCoord::defineNextOrderDiag(){
 void edgePermCoord::printMoveTable(){
     edgePermCoord state;
     for (int i = 0; i < 40320; ++i){
+    // for (int i = 0; i < 515; ++i){
         // std::cout << "empezando  " << std::endl;
         // state.printExplicitEdgePermCoord();
         std::cout << state.get_pure_coord() << " => ";

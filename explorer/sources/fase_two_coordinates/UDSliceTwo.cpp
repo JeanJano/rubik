@@ -12,8 +12,10 @@ UDSTwoCoord::UDSTwoCoord() {
 //extract orientation corner coordinate from cubie representation
 UDSTwoCoord::UDSTwoCoord(const cubeCubie& cube) {
     for (int i = 0; i < N; ++i) {
-        explicitCoor[i] = cube.corners[i - 8].pos;
+        explicitCoor[i] = cube.edges[i + 8].pos - 8;
     }
+    // std::cout << "in UDSperm const" << std::endl;
+    // this->printExplicitUDSTPermCoord();
     UDSTwoCoord::defineOrderDiag();
     UDSTwoCoord::defineNextOrderDiag();
 }

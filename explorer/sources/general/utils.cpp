@@ -48,7 +48,7 @@ void cornerOrientCoord::print_explicit_corn_ori_coord2() const {
 }
 
 
-void cornerPermCoord::printExplicitCornPermCoord() {
+void cornerPermCoord::printExplicitCornPermCoord() const {
     std::cout << "Corner Permutation (explicit): ";
     for (int i = 0; i < N; ++i) {
         std::cout << static_cast<int>(explicitCoor[i]) << " ";
@@ -79,7 +79,7 @@ void edgePermCoord::printExplicitEdgePermCoord2() {
 }
 
 void UDSTwoCoord::printExplicitUDSTPermCoord() {
-    std::cout << "edge Permutation (explicit): ";
+    std::cout << "UDSTwo Permutation (explicit): ";
     for (int i = 0; i < N; ++i) {
         std::cout << static_cast<int>(explicitCoor[i]) << " ";
     }

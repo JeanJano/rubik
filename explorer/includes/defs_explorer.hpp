@@ -23,7 +23,7 @@ inline const std::string edgeOriMoveTableFilename = "/edgeOriMoves.bin";
 inline const std::string UDSliceMoveTableFilename = "/UDSliceMoves.bin";
 inline const std::string cornerPermMoveTableFilename = "/cornerPerMoves.bin";
 inline const std::string edgePermMoveTableFilename = "/edgePerMoves.bin";
-inline const std::string UDSTwoTableFilename = "/UDSTwpMoves.bin";
+inline const std::string UDSTwoTableFilename = "/UDSTwoMoves.bin";
 inline const std::string pruningFoldername = "pruning_tables";
 inline const std::string pruningCOSFilename = "/PruningCOS.bin";
 inline const std::string pruningEOSFilename = "/PruningEOS.bin";
@@ -335,7 +335,7 @@ struct cornerPermCoord{
 
     cornerPermCoord();
     cornerPermCoord(const cubeCubie& cube);
-    void printExplicitCornPermCoord();
+    void printExplicitCornPermCoord() const;
     void printExplicitCornPermCoord2();
     cornerPermCoord move(const GOneMove& move) const;
     static void printMoveTable();

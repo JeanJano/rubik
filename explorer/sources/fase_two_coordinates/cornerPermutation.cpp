@@ -14,6 +14,8 @@ cornerPermCoord::cornerPermCoord(const cubeCubie& cube) {
     for (int i = 0; i < N; ++i) {
         explicitCoor[i] = cube.corners[i].pos;
     }
+    // std::cout << "in Cperm const" << std::endl;
+    // this->printExplicitCornPermCoord();
     cornerPermCoord::defineOrderDiag();
     cornerPermCoord::defineNextOrderDiag();
 }
@@ -112,6 +114,7 @@ uint16_t cornerPermCoord::get_pure_coord() const {
         }
         coord += count * factorial(factor);
         factor--;
+        // std::cout << "in get pure coord: i: " << i << " " << static_cast<int>(coord) << std::endl;
     }
 
     return coord;
@@ -224,6 +227,7 @@ void cornerPermCoord::printMoveTable(){
     cornerPermCoord state;
     // state.printExplicitCornPermCoord();
     for (int i = 0; i < 40320; ++i){
+    // for (int i = 0; i < 715; ++i){
         std::cout << state.get_pure_coord() << " => ";
 
         for (int m = 0; m < 10; ++m) {

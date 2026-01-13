@@ -49,9 +49,10 @@ int main(int ac, char** av) {
 
 
     faseTwo fase2 = faseTwo(cornerPermCoord(scrambledCube), edgePermCoord(scrambledCube), UDSTwoCoord(scrambledCube));
-    fase2.DoPruningTables();
-    // faseTwo::printNonZeroPruningValues(pruningCPSFilename,40320*24 + 1 ,0);
-    // faseTwo::printNonZeroPruningValues(pruningEPSFilename,40320*24+1,40320);
+    // fase2.DoPruningTables();
+    // (void)fase2;
+    // faseTwo::printNonZeroPruningValues(pruningCPSFilename, 17120 ,17110);
+    // faseTwo::printNonZeroPruningValues(pruningEPSFilename, 12290 ,12280);
 
     // cornerPermCoord::printMoveTable();
     // edgePermCoord::printMoveTable();
@@ -60,6 +61,7 @@ int main(int ac, char** av) {
 
 
     solveFaseTwo solver2 = solveFaseTwo(fase2);
+    // (void)solver2;
     std::vector<GOneMove> second = solver2.solve();
     std::cout << solver2.solutionToString(second) << std::endl;
     // fase2.DoPruningTables();

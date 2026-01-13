@@ -1,19 +1,21 @@
 #include "rubik_explorer.hpp"
 #include "defs_explorer.hpp"
 
+void printState(const std::tuple<int,int,int>& state){
+    std::cout << std::get<0>(state) << " | " << std::get<1>(state) << " | " << std::get<2>(state) << std::endl;}
+
 faseTwo::faseTwo(const cornerPermCoord& c, const edgePermCoord& e, const UDSTwoCoord& s)
         : corners(c), edges(e), slice(s), CPSstate(s.get_pure_coord(), c.get_pure_coord(), 0),
         EPSstate(s.get_pure_coord(), e.get_pure_coord(), 0) {
-        // std::error_code ec;
 
         // std::cout << "Initial States: CPS & EPS inicializador" << std::endl;
-        // faseTwo::printState(this->CPSstate);
-        // faseTwo::printState(this->EPSstate);
-        // faseTwo::initDeepth();
-        // std::cout << "Initial States: CPS & EPS after" << std::endl;
-        // faseTwo::printState(this->CPSstate);
-        // faseTwo::printState(this->EPSstate);
-
+        // printState(this->CPSstate);
+        // printState(this->EPSstate);
+        
+        // c.printExplicitCornPermCoord();
+        // c.printOrderDiagram();
+        // c.printNextOrderDiagram();
+        // std::cout << "pure coord init faseTwo: " << static_cast<int>(c.get_pure_coord()) << std::endl;
         // if (!std::filesystem::exists(pruningFoldername)) {
         //     if (!std::filesystem::create_directories(pruningFoldername, ec)) {
         //         std::cerr << "Error: no se pudo crear la carpeta '" << pruningFoldername << "': " << ec.message() << std::endl;
@@ -67,18 +69,19 @@ void faseTwo::DoPruningTables(){
 
 bool faseTwo::fillTable(const std::string& filename) {
     // if (filename == pruningCPSFilename) std::cout << "im in CPS" << std::endl;
-    // else if (filename == pruningEPSFilename) {std::cout << "im in EPS" << std::endl; return false;}
+    // else if (filename == pruningEPSFilename) {std::cout << "im in EPS" << std::endl;}
     std::queue<std::tuple<int, int, int>> BFS;
     std::tuple<int,int,int> initState = std::make_tuple(0,0,0);
     BFS.push(initState);
-    // int p =0;
-    // while(!BFS.empty() && p < 200000){
+    // int p = 0;
+    // while(!BFS.empty() && p < 11){
     while(!BFS.empty()){
         auto currentState = BFS.front();
             // std::cout << "acotando fillTable BFS.front " << std::get<0>(currentState) << " " << std::get<1>(currentState) << " " << std::get<2>(currentState) << " index: " << static_cast<int>(faseTwo::stateToIndex(currentState)) << std::endl;
             for (int i = 0; i < 10; ++i) {
                 std::tuple<int, int, int> nextState = faseTwo::moveState(filename, currentState, static_cast<GOneMove>(i));
                 uint64_t nextStateIndex = faseTwo::stateToIndex(nextState);
+                // std::cout << "viendo fillTable BFS.front " << std::get<0>(nextState) << " " << std::get<1>(nextState) << " " << std::get<2>(nextState) << " index: " << nextStateIndex << std::endl;
                 // if (faseTwo::readPruning(filename, nextStateIndex) == 255)
                 // {
                 //     std::cout << "acotando fillTable BFS.front " << std::get<0>(currentState) << " " << std::get<1>(currentState) << " " << std::get<2>(currentState) << " index: " << static_cast<int>(faseTwo::stateToIndex(currentState)) << std::endl;
