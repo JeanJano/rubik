@@ -1,28 +1,30 @@
 ---
 import Button from "./Button.astro"
 ---
-
 <div class="transition-all duration-300 bottom-5 flex flex-wrap justify-center mx-[5dvw] p-4 bg-[#EA5863] hover:bg-[#ffffff] w-[90dvw] absolute z-1 rounded-sm hover:rounded-lg border-1 border-indigo">
-    <div>
+    <div class="flex flex-col">
+        <input id="input" type="text" class="z-1 border-1 rounded-sm bg-white mb-2 mx-2 p-2"> </input>
         <div>
-            <Button label="front" name="F" />
-            <Button label="front'" name="F'"/>
-            <Button label="back" name="B"/>
-            <Button label="back'" name="B'"/>
-            <Button label="right" name="R"/>
-            <Button label="right'" name="R'"/>
-            <Button label="left" name="L"/>
-            <Button label="left'" name="L'"/>
-            <Button label="up" name="U"/>
-            <Button label="up'" name="U'"/>
-            <Button label="down" name="D"/>
-            <Button label="down'" name="D'"/>
-        </div>
-        <div>
-            <Button label="reversemove" name="Reverse Move"/>
-            <Button label="reversecube" name="Reverse Cube"/>
-            <Button label="mix" name="Mix"/>
-            <Button label="resolve" name="Resolve"/>
+            <div>
+                <Button label="front" name="F" />
+                <Button label="front'" name="F'"/>
+                <Button label="back" name="B"/>
+                <Button label="back'" name="B'"/>
+                <Button label="right" name="R"/>
+                <Button label="right'" name="R'"/>
+                <Button label="left" name="L"/>
+                <Button label="left'" name="L'"/>
+                <Button label="up" name="U"/>
+                <Button label="up'" name="U'"/>
+                <Button label="down" name="D"/>
+                <Button label="down'" name="D'"/>
+            </div>
+            <div>
+                <Button label="reversemove" name="Reverse Move"/>
+                <Button label="reversecube" name="Reverse Cube"/>
+                <Button label="mix" name="Mix"/>
+                <Button label="resolve" name="Resolve"/>
+            </div>
         </div>
     </div>
 </div>

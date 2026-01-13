@@ -52,12 +52,12 @@
         // {move: "R2", clockwise: false},
     ]
 
-    window.addEventListener("keydown", (event) => {
+    window.addEventListener("keydown", (event: KeyboardEvent) => {
         switch (event.key) {
             case 'z':
                 console.log(cube.getMix());
                 break;
-            case ' ':
+            case '\\':
                 cube.reversemove();
                 break;
             case 'm':
@@ -120,7 +120,16 @@
                 cube.raycastMiddleCube(event, camera, false);
                 break ;
         }
-    })
+    });
+
+    const input = document.getElementById('input') as HTMLInputElement;
+    if (!input)
+        throw Error("input id not found");
+
+    input.addEventListener('keydown', (e: KeyboardEvent) => {
+        if (e.key === "Enter")
+            cube.execInput(input.value);
+    });
 
     window.addEventListener('resize', () => {
       camera.aspect = window.innerWidth / window.innerHeight;

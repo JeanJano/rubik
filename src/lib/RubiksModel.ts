@@ -64,7 +64,7 @@ export default class RubiksModel {
             const randomIndex = Math.floor(Math.random() * movesArray.length);
             let move = movesArray[randomIndex];
             const clockwise = Math.random() > 0.5;
-            if (Math.random() < 0.3) move += "2"; // ajouter 2 de temps en temps
+            if (Math.random() < 0.3) move += "2";
 
             this._queue.push({ move, clockwise });
         }
@@ -144,6 +144,18 @@ export default class RubiksModel {
         }
 
         return null
+    }
+
+    public execInput(input: string): void {
+        const parse = input.split(' ');
+        for (let i = 0; i < parse.length; i++) {
+            const isClockwise = parse[i].includes("'");
+            if (isClockwise) 
+                parse[i] = parse[i][0];
+            this._queue.push({move: parse[i], clockwise: isClockwise});
+        }
+
+        this._processQueue();
     }
 
     private async _processQueue(isPushToMix: boolean = true): Promise<void> {
