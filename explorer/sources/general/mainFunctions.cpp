@@ -36,6 +36,11 @@ bool ensureDirectoryExists(const std::string& path) {
 
 std::string getFinalString(const std::vector<Move>& solvedFaseOne, const std::vector<GOneMove>& solvedFaseTwo){
     std::vector<Move> fin = solvedFaseOne;
+    int lastOfFirst = static_cast<int>(solvedFaseOne.back());
+    int firstOfLast = static_cast<int>(GOneToRealMove(solvedFaseTwo.front()))
+    if (lastOfFirst / 3 == firstOfLast / 3){
+        
+    }
     for (auto GOne: solvedFaseTwo){
         fin.push_back(GOneToRealMove(GOne));
     }
