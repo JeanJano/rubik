@@ -20,7 +20,7 @@ faseOne::faseOne(const cornerOrientCoord& c, const edgeOrientCoord& e, const UDS
         //         return;
         //     }
         // }
-        // faseOne::DoPruningTables();
+        faseOne::DoPruningTables();
 
         // std::tuple<int,int,int> initState = std::make_tuple(0,0,0);
 
@@ -49,13 +49,15 @@ void faseOne::DoPruningTables(){
             return;
         }
     }
-    if(faseOne::readPruning(pruningCOSFilename, 1) != 0){
+    if(true){
+    // if(faseOne::readPruning(pruningCOSFilename, 1) != 0){
         if (!faseOne::fillTable(pruningCOSFilename)) {
             std::cout << "Error filling fase one COS pruning table" << std::endl;
             return;
         } 
     }
-    if(faseOne::readPruning(pruningEOSFilename, 1) != 0){
+    if(true){
+    // if(faseOne::readPruning(pruningEOSFilename, 1) != 0){
         if (!faseOne::fillTable(pruningEOSFilename)) {
             std::cout << "Error filling fase one EOS pruning table" << std::endl;
             return;

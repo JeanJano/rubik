@@ -22,7 +22,7 @@ faseTwo::faseTwo(const cornerPermCoord& c, const edgePermCoord& e, const UDSTwoC
         //         return;
         //     }
         // }
-        // faseTwo::DoPruningTables();
+        faseTwo::DoPruningTables();
 
         // std::tuple<int,int,int> initState = std::make_tuple(0,0,0);
 
