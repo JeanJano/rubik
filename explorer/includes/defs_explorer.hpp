@@ -524,41 +524,6 @@ uint16_t fase_two_coord_from_file(CoordType coordInput, MoveType moveInput, cons
 }
 
 
-// template <typename T>
-// bool loadBinary(const std::string& filename, T* buffer, size_t count) {
-//     std::ifstream in(filename, std::ios::binary);
-//     if (!in) return false;
-
-//     in.read(reinterpret_cast<char*>(buffer), count * sizeof(T));
-//     return in.good();
-// }
-
-// //-------------------nedded to see the cubie representation--------
-// std::string edge_to_string(Edge e);
-// std::string corner_to_string(Corner c);
-
-// bool loadBinary(const std::string& filename, int* buffer, size_t count) {
-//     std::ifstream file(filename, std::ios::binary);
-
-//     if (!file.is_open()) {
-//         std::cerr << "❌ Cannot open file: " << filename << std::endl;
-//         return false;
-//     }
-
-//     file.read(reinterpret_cast<char*>(buffer),
-//               count * sizeof(int));
-
-//     if (!file) {
-//         std::cerr << "❌ Error reading file: " << filename << std::endl;
-//         std::cerr << "   expected bytes: " << count * sizeof(int) << std::endl;
-//         std::cerr << "   read bytes:     " << file.gcount() << std::endl;
-//         return false;
-//     }
-
-//     std::cout << "✅ Loaded: " << filename << std::endl;
-//     return true;
-// }
-
 template <typename T>
 bool loadBinary(const std::string& filename, T* buffer, size_t count) {
     std::ifstream in(filename, std::ios::binary);
@@ -569,4 +534,28 @@ bool loadBinary(const std::string& filename, T* buffer, size_t count) {
 }
 
 
+
+
+///////////////////////////////
+
+//parser.cpp
+bool isValidMove(const std::string& move);
+// std::vector<std::string> parseMoves(const std::string& input);
+std::vector<Move> parseMoves(const std::string& input);
+// cubeCubie.cpp
+cubeCubie get_scrambled_state(const std::vector<Move>& scramble);
+// utils.cpp
+void print_cubie_state(const cubeCubie& cube);
+void print_scramble(const std::vector<Move>& scramble);
+std::string moveToString(Move move);
+//faseOne.cpp
+
+
+std::string moveToString(GOneMove move);
+
+uint16_t factorial(uint16_t n);
+std::vector<Move> get_scramble(int ac, char** av);
+bool ensureDirectoryExists(const std::string& path);
+bool solve3x3 (int ac, char** av);
+bool install (int ac, char** av);
 #endif

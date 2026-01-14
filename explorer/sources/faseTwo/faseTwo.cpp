@@ -1,4 +1,4 @@
-#include "rubik_explorer.hpp"
+
 #include "defs_explorer.hpp"
 
 void printState(const std::tuple<int,int,int>& state){
@@ -7,34 +7,6 @@ void printState(const std::tuple<int,int,int>& state){
 faseTwo::faseTwo(const cornerPermCoord& c, const edgePermCoord& e, const UDSTwoCoord& s)
         : corners(c), edges(e), slice(s), CPSstate(s.get_pure_coord(), c.get_pure_coord(), 0),
         EPSstate(s.get_pure_coord(), e.get_pure_coord(), 0) {
-
-        // std::cout << "Initial States: CPS & EPS inicializador" << std::endl;
-        // printState(this->CPSstate);
-        // printState(this->EPSstate);
-        
-        // c.printExplicitCornPermCoord();
-        // c.printOrderDiagram();
-        // c.printNextOrderDiagram();
-        // std::cout << "pure coord init faseTwo: " << static_cast<int>(c.get_pure_coord()) << std::endl;
-        // if (!std::filesystem::exists(pruningFoldername)) {
-        //     if (!std::filesystem::create_directories(pruningFoldername, ec)) {
-        //         std::cerr << "Error: no se pudo crear la carpeta '" << pruningFoldername << "': " << ec.message() << std::endl;
-        //         return;
-        //     }
-        // }
-        // faseTwo::DoPruningTables();
-
-        // std::tuple<int,int,int> initState = std::make_tuple(0,0,0);
-
-        // for (int i = 0; i < 10; ++i) {
-        //         std::tuple<int, int, int> nextStateC = faseTwo::moveState(pruningCPSFilename, initState, static_cast<GOneMove>(i));
-        //         std::tuple<int, int, int> nextStateE = faseTwo::moveState(pruningEPSFilename, initState, static_cast<GOneMove>(i));
-        //         std::cout << "move: " << i << "\nCorner: " << std::get<0>(nextStateC) << " " << std::get<1>(nextStateC) << " " << std::get<2>(nextStateC)
-        //         << "\nEdge: " << std::get<0>(nextStateE) << " " << std::get<1>(nextStateE) << " " << std::get<2>(nextStateE) << std::endl;
-        //         std::cout << "index: " << " | CPS Index: " << faseTwo::stateToIndex(nextStateC) << " | EPS Index: " << faseTwo::stateToIndex(nextStateE) << std::endl;
-        // }
-
-
 }
 
 void faseTwo::DoPruningTables(){

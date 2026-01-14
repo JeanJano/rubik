@@ -1,5 +1,5 @@
 #include "defs_explorer.hpp"
-#include "rubik_explorer.hpp"
+
 
 // Init the cube to the solved state
 void cubeCubie::reset() {

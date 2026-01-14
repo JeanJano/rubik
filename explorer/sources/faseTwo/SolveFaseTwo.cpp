@@ -1,4 +1,4 @@
-#include "rubik_explorer.hpp"
+
 #include "defs_explorer.hpp"
 
 void printState(int c,int e ,int s){

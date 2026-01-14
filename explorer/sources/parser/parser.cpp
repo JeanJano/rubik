@@ -1,5 +1,5 @@
 #include "defs_explorer.hpp"
-#include "rubik_explorer.hpp"
+
 
 Move stringToMove(const std::string& moveStr) {
     if (moveStr == "U")  return Move::U1;

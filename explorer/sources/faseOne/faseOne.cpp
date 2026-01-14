@@ -1,38 +1,9 @@
-#include "rubik_explorer.hpp"
+
 #include "defs_explorer.hpp"
 
 faseOne::faseOne(const cornerOrientCoord& c, const edgeOrientCoord& e, const UDSliceCoord& s)
         : corners(c), edges(e), slice(s), COSstate(s.get_pure_coord(), c.get_pure_coord(), 0),
         EOSstate(s.get_pure_coord(), e.get_pure_coord(), 0) {
-        std::error_code ec;
-
-        // std::cout << "Initial States: COS & EOS inicializador" << std::endl;
-        // faseOne::printState(this->COSstate);
-        // faseOne::printState(this->EOSstate);
-        // faseOne::initDeepth();
-        // std::cout << "Initial States: COS & EOS after" << std::endl;
-        // faseOne::printState(this->COSstate);
-        // faseOne::printState(this->EOSstate);
-
-        // if (!std::filesystem::exists(pruningFoldername)) {
-        //     if (!std::filesystem::create_directories(pruningFoldername, ec)) {
-        //         std::cerr << "Error: no se pudo crear la carpeta '" << pruningFoldername << "': " << ec.message() << std::endl;
-        //         return;
-        //     }
-        // }
-        // faseOne::DoPruningTables();
-
-        // std::tuple<int,int,int> initState = std::make_tuple(0,0,0);
-
-        // for (int i = 0; i < 18; ++i) {
-        //         std::tuple<int, int, int> nextStateC = faseOne::moveState(pruningCOSFilename, initState, static_cast<Move>(i));
-        //         std::tuple<int, int, int> nextStateE = faseOne::moveState(pruningEOSFilename, initState, static_cast<Move>(i));
-        //         std::cout << "move: " << i << "\nCorner: " << std::get<0>(nextStateC) << " " << std::get<1>(nextStateC) << " " << std::get<2>(nextStateC)
-        //         << "\nEdge: " << std::get<0>(nextStateE) << " " << std::get<1>(nextStateE) << " " << std::get<2>(nextStateE) << std::endl;
-        //         std::cout << "index: " << " | COS Index: " << faseOne::stateToIndex(nextStateC) << " | EOS Index: " << faseOne::stateToIndex(nextStateE) << std::endl;
-        // }
-
-
 }
 
 void faseOne::DoPruningTables(){

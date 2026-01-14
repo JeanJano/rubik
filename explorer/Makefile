@@ -16,6 +16,7 @@ PRUNING_PATH = pruning_tables/
 SOURCES		=	main.cpp \
 				general/cubeCubie.cpp \
 				general/utils.cpp \
+				general/mainFunctions.cpp \
 				fase_one_coordinates/cornerOrientation.cpp \
 				fase_one_coordinates/edgeOrientation.cpp \
 				fase_one_coordinates/UDSlice.cpp \
