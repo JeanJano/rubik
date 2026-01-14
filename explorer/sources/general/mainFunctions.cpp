@@ -34,23 +34,36 @@ bool ensureDirectoryExists(const std::string& path) {
     }
 }
 
+std::string getFinalString(const std::vector<Move>& solvedFaseOne, const std::vector<GOneMove>& solvedFaseTwo){
+    std::vector<Move> fin = solvedFaseOne;
+    for (auto GOne: solvedFaseTwo){
+        fin.push_back(GOneToRealMove(GOne));
+    }
+    return solveFaseOne::solutionToString(fin);
+}
+
+
 bool solve3x3 (int ac, char** av){
     auto start = std::chrono::high_resolution_clock::now();
+
 
     std::vector<Move> scramble = get_scramble(ac, av);
     if (scramble.empty())
         return false;
-    cubeCubie scrambledCube = get_scrambled_state(scramble);
-    faseOne fase1 = faseOne(cornerOrientCoord(scrambledCube), edgeOrientCoord(scrambledCube), UDSliceCoord(scrambledCube));
-    solveFaseOne solver = solveFaseOne(fase1);
+    cubeCubie cube = get_scrambled_state(scramble);
+
+    solveFaseOne solver = solveFaseOne(cube);
     std::vector<Move> first = solver.solve();
     std::cout << solver.solutionToString(first) << std::endl;
 
-    scrambledCube = scrambledCube.severalMoves(first, scrambledCube);
-    faseTwo fase2 = faseTwo(cornerPermCoord(scrambledCube), edgePermCoord(scrambledCube), UDSTwoCoord(scrambledCube));
-    solveFaseTwo solver2 = solveFaseTwo(fase2);
+    cube = cube.severalMoves(first, cube);
+
+    solveFaseTwo solver2 = solveFaseTwo(cube);
     std::vector<GOneMove> second = solver2.solve();
     std::cout << solver2.solutionToString(second) << std::endl;
+     std::cout << getFinalString(first, second) << std::endl;
+
+
 
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> elapsed = end - start;
@@ -60,30 +73,22 @@ bool solve3x3 (int ac, char** av){
     return true;
 }
 
-bool install (int ac, char** av){
+bool install (){
     auto start = std::chrono::high_resolution_clock::now();
     if (!ensureDirectoryExists(pruningFoldername))
         return false;
-    std::vector<Move> scramble = get_scramble(ac, av);
-    if (scramble.empty())
-        return false;
-    cubeCubie scrambledCube = get_scrambled_state(scramble);
     cornerOrientCoord::moveTableToFile();
     edgeOrientCoord::moveTableToFile();
     UDSliceCoord::moveTableToFile();
     cornerPermCoord::moveTableToFile();
     edgePermCoord::moveTableToFile();
     UDSTwoCoord::moveTableToFile();
-
-    faseOne fase1 = faseOne(cornerOrientCoord(scrambledCube), edgeOrientCoord(scrambledCube), UDSliceCoord(scrambledCube));
-    fase1.DoPruningTables();
-
-    faseTwo fase2 = faseTwo(cornerPermCoord(scrambledCube), edgePermCoord(scrambledCube), UDSTwoCoord(scrambledCube));
-    fase2.DoPruningTables();
+    faseOne::DoPruningTables();
+    faseTwo::DoPruningTables();
 
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> elapsed = end - start;
-    std::cout << "\n\n\nTiempo de ejecucion: "
+    std::cout << "\n Execution time: "
               << elapsed.count()
               << " segundos\n";
     return true;

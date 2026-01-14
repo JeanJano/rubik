@@ -1,21 +1,17 @@
 
 #include "defs_explorer.hpp"
 
-void printState(int c,int e ,int s){
-    std::cout << "state: [" << c << ", " << e << ", " << s << "]" << std::endl;
-}
+solveFaseTwo::solveFaseTwo(const cubeCubie& cube){
+    this->state.cp = cornerPermCoord(cube).get_pure_coord();
+    this->state.ep = edgePermCoord(cube).get_pure_coord();
+    this->state.s = UDSTwoCoord(cube).get_pure_coord();
 
-solveFaseTwo::solveFaseTwo(const faseTwo& toSolve) {
-    this->state.cp = toSolve.corners.get_pure_coord();
-    this->state.ep = toSolve.edges.get_pure_coord();
-    this->state.s = toSolve.slice.get_pure_coord();
+    if (!loadMoveTables())
+        throw std::runtime_error("Error loading move tables");
 
-    // std::cout << "in solveFaseTwo: " << std::endl;
-    // printState(this->state.cp, this->state.ep, this->state.s);
-    loadMoveTables();
-    loadPruningTables();
-    // std::cout << "in solveFaseTwo: " << std::endl;
-    // std::cout << static_cast<int>(pruneEPS[512*24 + 1]) << std::endl;
+    if (!loadPruningTables())
+        throw std::runtime_error("Error loading pruning tables");
+
 }
 
 bool solveFaseTwo::loadMoveTables() {
@@ -139,6 +135,7 @@ std::vector<GOneMove> solveFaseTwo::solve() {
 }
 
 std::string solveFaseTwo::solutionToString(const std::vector<GOneMove>& path) {
+    std::cout << "aca 2" << std::endl;
     std::string res;
     for (GOneMove m : path) {
         if (!res.empty()) res += " ";

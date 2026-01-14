@@ -315,3 +315,12 @@ GOneMove getGOneMove(GOneMove move) {
 uint16_t factorial(uint16_t n){
     return (n <= 1) ? 1 : n * factorial(n - 1);
 }
+
+Move GOneToRealMove(const GOneMove& m){
+    int raw = static_cast<int>(m);
+    if (raw == 6) raw = 7;
+    if (raw == 7) raw = 10;
+    if (raw == 8) raw = 13;
+    if (raw == 9) raw = 16;
+    return(static_cast<Move>(raw));
+}

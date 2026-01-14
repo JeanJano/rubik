@@ -1,26 +1,16 @@
 
 #include "defs_explorer.hpp"
 
-
-solveFaseOne::solveFaseOne(const faseOne& toSolve) {
-    this->state.co = toSolve.corners.get_pure_coord();
-    this->state.eo = toSolve.edges.get_pure_coord();
-    this->state.s = toSolve.slice.get_pure_coord();
+solveFaseOne::solveFaseOne(const cubeCubie& cube){
+    this->state.co = cornerOrientCoord(cube).get_pure_coord();
+    this->state.eo = edgeOrientCoord(cube).get_pure_coord();
+    this->state.s = UDSliceCoord(cube).get_pure_coord();
 
     if (!loadMoveTables())
-    throw std::runtime_error("Error loading move tables");
+        throw std::runtime_error("Error loading move tables");
 
     if (!loadPruningTables())
-    throw std::runtime_error("Error loading pruning tables");
-
-    // std::cout << cornerOriMove[0][0] << std::endl;
-    // std::cout << cornerOriMove[0][1] << std::endl;
-    // std::cout << edgeOriMove[0][0] << std::endl;
-    // std::cout << udSliceMove[0][0] << std::endl;
-
-    // std::cout << int(pruneCOS[0]) << std::endl;
-    // std::cout << int(pruneEOS[0]) << std::endl;
-
+        throw std::runtime_error("Error loading pruning tables");
 
 }
 
@@ -131,6 +121,7 @@ std::vector<Move> solveFaseOne::solve() {
 }
 
 std::string solveFaseOne::solutionToString(const std::vector<Move>& path) {
+    std::cout << "aca 1" << std::endl;
     std::string res;
     for (Move m : path) {
         // std::cout << "move: " << moveToString(static_cast<Move>(m)) << std::endl;

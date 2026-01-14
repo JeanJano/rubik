@@ -276,14 +276,14 @@ struct faseOne{
 
     faseOne(const cornerOrientCoord& c, const edgeOrientCoord& e, const UDSliceCoord& s);
     void showIndex();
-    void DoPruningTables();
-    bool fillTable(const std::string& filename);
-    std::tuple<int, int, int> moveState(const std::string& filename, const std::tuple<int, int, int>& state, const Move& m);
-    bool CreatePruning(const std::string& filename, std::size_t fileSize);
-    bool writePruning(const std::string& filename, uint64_t index, uint8_t value);
-    uint8_t readPruning(const std::string& filename, uint64_t index);
-    uint64_t stateToIndex(const std::tuple<int, int, int>& state);
-    uint64_t stateToIndex(const std::tuple<int, int>& state);
+    static void DoPruningTables();
+    static bool fillTable(const std::string& filename);
+    static std::tuple<int, int, int> moveState(const std::string& filename, const std::tuple<int, int, int>& state, const Move& m);
+    static bool CreatePruning(const std::string& filename, std::size_t fileSize);
+    static bool writePruning(const std::string& filename, uint64_t index, uint8_t value);
+    static uint8_t readPruning(const std::string& filename, uint64_t index);
+    static uint64_t stateToIndex(const std::tuple<int, int, int>& state);
+    static uint64_t stateToIndex(const std::tuple<int, int>& state);
     static void printNonZeroPruningValues(const std::string& filename,  size_t upLimit, size_t downLimit);
     // int getHeuristic(int COSIndex, int EOSIndex);
     // std::string solveFaseOne();
@@ -309,9 +309,7 @@ struct solveFaseOne {
     static constexpr int FOUND = -1;
     static constexpr int INF = 10000000;
 
-
-
-    solveFaseOne(const faseOne& toSolve);
+    solveFaseOne(const cubeCubie& cube);
     bool loadMoveTables();
     bool loadPruningTables();
     int COS_index(int co, int s);
@@ -410,21 +408,15 @@ struct faseTwo{
 
     faseTwo(const cornerPermCoord& c, const edgePermCoord& e, const UDSTwoCoord& s);
     void showIndex();
-    void DoPruningTables();
-    bool fillTable(const std::string& filename);
-    std::tuple<int, int, int> moveState(const std::string& filename, const std::tuple<int, int, int>& state, const GOneMove& m);
-    bool CreatePruning(const std::string& filename, std::size_t fileSize);
-    bool writePruning(const std::string& filename, uint64_t index, uint8_t value);
-    uint8_t readPruning(const std::string& filename, uint64_t index);
-    uint64_t stateToIndex(const std::tuple<int, int, int>& state);
-    uint64_t stateToIndex(const std::tuple<int, int>& state);
+    static void DoPruningTables();
+    static bool fillTable(const std::string& filename);
+    static std::tuple<int, int, int> moveState(const std::string& filename, const std::tuple<int, int, int>& state, const GOneMove& m);
+    static bool CreatePruning(const std::string& filename, std::size_t fileSize);
+    static bool writePruning(const std::string& filename, uint64_t index, uint8_t value);
+    static uint8_t readPruning(const std::string& filename, uint64_t index);
+    static uint64_t stateToIndex(const std::tuple<int, int, int>& state);
+    static uint64_t stateToIndex(const std::tuple<int, int>& state);
     static void printNonZeroPruningValues(const std::string& filename,  size_t upLimit, size_t downLimit);
-    // int getHeuristic(int COSIndex, int EOSIndex);
-    // std::string solveFaseOne();
-    // std::tuple<std::tuple<int, int>, std::tuple<int, int>, int, int, std::string> moveSolveState(const std::tuple<std::tuple<int, int>, std::tuple<int, int>, int, int, std::string>& solveState, const Move& m);
-    // void printState(std::tuple<int, int, int> state);
-    // void initDeepth();
-    // void showSolveState(std::tuple<std::tuple<int, int>, std::tuple<int, int>, int, int, std::string> solveState);
 };
 
 struct solveFaseTwoState {
@@ -445,7 +437,7 @@ struct solveFaseTwo {
 
 
 
-    solveFaseTwo(const faseTwo& toSolve);
+    solveFaseTwo(const cubeCubie& cube);
     bool loadMoveTables();
     bool loadPruningTables();
     int CPS_index(int cp, int s);
@@ -478,7 +470,6 @@ GOneMove getGOneMove(GOneMove move);
 
 template <typename CoordType, typename MoveType>
 uint16_t fase_one_coord_from_file(CoordType coordInput, MoveType moveInput, const std::string& filename) {
-    // std::cout << "en focff " << movesFoldername + filename << std::endl;
     std::ifstream in(movesFoldername + filename, std::ios::binary);
     if (!in) {
         std::cerr << "Error: could not open move table file for reading." << std::endl;
@@ -502,7 +493,6 @@ uint16_t fase_one_coord_from_file(CoordType coordInput, MoveType moveInput, cons
 
 template <typename CoordType, typename MoveType>
 uint16_t fase_two_coord_from_file(CoordType coordInput, MoveType moveInput, const std::string& filename) {
-    // std::cout << "en focff " << movesFoldername + filename << std::endl;
     std::ifstream in(movesFoldername + filename, std::ios::binary);
     if (!in) {
         std::cerr << "Error: could not open move table file for reading." << std::endl;
@@ -557,5 +547,7 @@ uint16_t factorial(uint16_t n);
 std::vector<Move> get_scramble(int ac, char** av);
 bool ensureDirectoryExists(const std::string& path);
 bool solve3x3 (int ac, char** av);
-bool install (int ac, char** av);
+bool install ();
+std::string getFinalString(const std::vector<Move>& solvedFaseOne, const std::vector<GOneMove>& solvedFaseTwo);
+Move GOneToRealMove(const GOneMove& m);
 #endif
