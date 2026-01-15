@@ -121,7 +121,7 @@ std::vector<Move> solveFaseOne::solve() {
 }
 
 std::string solveFaseOne::solutionToString(const std::vector<Move>& path) {
-    std::cout << "aca 1" << std::endl;
+    // std::cout << "aca 1" << std::endl;
     std::string res;
     for (Move m : path) {
         // std::cout << "move: " << moveToString(static_cast<Move>(m)) << std::endl;

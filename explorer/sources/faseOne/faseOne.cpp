@@ -1,10 +1,10 @@
 
 #include "defs_explorer.hpp"
 
-faseOne::faseOne(const cornerOrientCoord& c, const edgeOrientCoord& e, const UDSliceCoord& s)
-        : corners(c), edges(e), slice(s), COSstate(s.get_pure_coord(), c.get_pure_coord(), 0),
-        EOSstate(s.get_pure_coord(), e.get_pure_coord(), 0) {
-}
+// faseOne::faseOne(const cornerOrientCoord& c, const edgeOrientCoord& e, const UDSliceCoord& s)
+//         : corners(c), edges(e), slice(s), COSstate(s.get_pure_coord(), c.get_pure_coord(), 0),
+//         EOSstate(s.get_pure_coord(), e.get_pure_coord(), 0) {
+// }
 
 void faseOne::DoPruningTables(){
     namespace fs = std::filesystem;
@@ -60,8 +60,8 @@ bool faseOne::fillTable(const std::string& filename) {
         BFS.pop();
         // p++;  
     }
-    // std::cout << "pruning table" << std::endl;
-    // filename == pruningCOSFilename? faseOne::printNonZeroPruningValues(pruningCOSFilename,10000000,0) : faseOne::printNonZeroPruningValues(pruningEOSFilename,10000000, 0);
+    if (filename == pruningCOSFilename) std::cout << "fase one pruning table(corner orientation + slide) created!" << std::endl;
+    else if (filename == pruningEOSFilename) std::cout << "fase one pruning table(edge orientation + slide) created!" << std::endl;
     return true;
 }
 
@@ -111,7 +111,6 @@ bool faseOne::CreatePruning(const std::string& filename, std::size_t fileSize) {
         std::cerr << "Error closing file.\n";
         return false;
     }
-    std::cout << "fase one table file created!" << std::endl;
     return true;
 }
 
@@ -204,11 +203,11 @@ uint64_t faseOne::stateToIndex(const std::tuple<int, int>& state){
         return (std::get<0>(state) + (std::get<1>(state) * 495));
 }
 
-void faseOne::showIndex(){
-    faseOne current = *this;
+// void faseOne::showIndex(){
+//     faseOne current = *this;
 
-    std::cout << "COS: | "<< faseOne::stateToIndex(current.COSstate) << " | EOS: | " << faseOne::stateToIndex(current.EOSstate) << std::endl;
-}
+//     std::cout << "COS: | "<< faseOne::stateToIndex(current.COSstate) << " | EOS: | " << faseOne::stateToIndex(current.EOSstate) << std::endl;
+// }
 
 void faseOne::printNonZeroPruningValues(const std::string& filename, size_t upLimit, size_t downLimit) {
     std::ifstream file(pruningFoldername + filename, std::ios::binary);

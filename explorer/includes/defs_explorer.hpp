@@ -30,14 +30,55 @@ inline const std::string pruningEOSFilename = "/PruningEOS.bin";
 inline const std::string pruningCPSFilename = "/PruningCPS.bin";
 inline const std::string pruningEPSFilename = "/PruningEPS.bin";
 
-// ------------------------init stuff---------------------------------
+// ------------------- Moves -------------------
 
+/**
+ * Enum for the 18 basic face moves in the face-turn metric (quarter turns).
+ */
+enum class Move {
+    U1 = 0, U2, U3,  // U, U2, U'
+    D1, D2, D3,
+    F1, F2, F3,
+    B1, B2, B3,
+    R1, R2, R3,
+    L1, L2, L3
+};
+
+inline const std::map<std::string, Move> string_to_move = {
+    {"U", Move::U1}, {"U'", Move::U3}, {"U2", Move::U2},
+    {"D", Move::D1}, {"D'", Move::D3}, {"D2", Move::D2},
+    {"F", Move::F1}, {"F'", Move::F3}, {"F2", Move::F2},
+    {"B", Move::B1}, {"B'", Move::B3}, {"B2", Move::B2},
+    {"R", Move::R1}, {"R'", Move::R3}, {"R2", Move::R2},
+    {"L", Move::L1}, {"L'", Move::L3}, {"L2", Move::L2}
+};
+
+enum class GOneMove {
+    U1 = 0, U2, U3,  // U, U2, U'
+    D1, D2, D3,
+    F2, B2, R2, L2    
+};
+
+inline const std::map<std::string, GOneMove> stringToGOneMove = {
+    {"U", GOneMove::U1}, {"U'", GOneMove::U3}, {"U2", GOneMove::U2},
+    {"D", GOneMove::D1}, {"D'", GOneMove::D3}, {"D2", GOneMove::D2},
+    {"F2", GOneMove::F2},
+    {"B2", GOneMove::B2},
+    {"R2", GOneMove::R2},
+    {"L2", GOneMove::L2}
+};
+
+// ------------------------Instalation & Parsing---------------------------------
 const std::string UsageMessage =
     "Insert a valid Rubik's cube scrambling in double quoutes:\n"
     "allowed movements:\n"
-    "F, F', F2, R, R', R2, U, U', U2, B, B', B2, L, L', L2, D, D', D2";
+    "F, F', F2, R, R', R2, U, U', U2, B, B', B2, L, L', L2, D, D', D2\n\n"
+    "Flags: \n"
+    "-i \n"
+    "Calcule and install the move and pruning tables\n\n"
+    "-2 \n"
+    "Solve scramble as 2x2 cube";
 
-// ------------------- Valid Move Strings -------------------
 
 /**
  * Set of valid string representations of moves for scrambler.
@@ -51,22 +92,20 @@ inline const std::unordered_set<std::string> validRubikMoves = {
     "B", "B'", "B2"
 };
 
-// ----------------------
-enum class Facelet {
-    U1 = 0, U2, U3, U4, U5, U6, U7, U8, U9,
-    R1, R2, R3, R4, R5, R6, R7, R8, R9,
-    F1, F2, F3, F4, F5, F6, F7, F8, F9,
-    D1, D2, D3, D4, D5, D6, D7, D8, D9,
-    L1, L2, L3, L4, L5, L6, L7, L8, L9,
-    B1, B2, B3, B4, B5, B6, B7, B8, B9
+struct initOptions {
+    bool init = false;
+    bool solve2 = false;
+    bool solve3 = false;
+    std::vector<Move> scramble;
 };
 
-/**
- * Enum representing the 6 face colors of a Rubik's cube.
- */
-enum class Color {
-    U = 0, R, F, D, L, B
-};
+initOptions init(int ac, char** av);
+
+
+
+
+// ------------------- Cube Representation -------------------
+
 /**
  * Enum for the 8 corner cubies.
  * Each corner has 3 facelets: for example, URF = Up-Right-Front.
@@ -87,96 +126,9 @@ enum class Edge {
     UR = 0, UF, UL, UB, DR, DF, DL, DB, FR, FL, BL, BR
 };
 
-
 inline const char* edge_names[] = {
     "UR", "UF", "UL", "UB", "DR", "DF", "DL", "DB", "FR", "FL", "BL", "BR"
 };
-
-// ------------------- Moves -------------------
-
-/**
- * Enum for the 18 basic face moves in the face-turn metric (quarter turns).
- */
-enum class Move {
-    U1 = 0, U2, U3,  // U, U2, U'
-    D1, D2, D3,
-    F1, F2, F3,
-    B1, B2, B3,
-    R1, R2, R3,
-    L1, L2, L3
-};
-
-
-//------------------ move string to Move enum map ------------------
-inline const std::map<std::string, Move> string_to_move = {
-    {"U", Move::U1}, {"U'", Move::U3}, {"U2", Move::U2},
-    {"D", Move::D1}, {"D'", Move::D3}, {"D2", Move::D2},
-    {"F", Move::F1}, {"F'", Move::F3}, {"F2", Move::F2},
-    {"B", Move::B1}, {"B'", Move::B3}, {"B2", Move::B2},
-    {"R", Move::R1}, {"R'", Move::R3}, {"R2", Move::R2},
-    {"L", Move::L1}, {"L'", Move::L3}, {"L2", Move::L2}
-};
-
-
-enum class GOneMove {
-    U1 = 0, U2, U3,  // U, U2, U'
-    D1, D2, D3,
-    F2, B2, R2,
-    L2,
-};
-
-inline const std::map<std::string, GOneMove> stringToGOneMove = {
-    {"U", GOneMove::U1}, {"U'", GOneMove::U3}, {"U2", GOneMove::U2},
-    {"D", GOneMove::D1}, {"D'", GOneMove::D3}, {"D2", GOneMove::D2},
-    {"F2", GOneMove::F2},
-    {"B2", GOneMove::B2},
-    {"R2", GOneMove::R2},
-    {"L2", GOneMove::L2}
-};
-
-
-
-//------------------ definition of symetrie names ------------------
-/*
-(C)orner 120 deg along the urf, dlb axis
-(Z) 90 deg over the UD axis
-(Y) 180 deg over FB axis
-(X) a reflection at the RL-slice plane.
-// */
-// enum class Symetry {
-//     Z0C0Y0X0 = 0, Z0C1Y0X0, Z0C2Y0X0, Z0C0Y1X0, Z0C1Y1X0, Z0C2Y1X0,
-//     Z0C0Y0X1, Z0C1Y0X1, Z0C2Y0X1, Z0C0Y1X1, Z0C1Y1X1, Z0C2Y1X1,
-//     Z1C0Y0X0, Z1C1Y0X0, Z1C2Y0X0, Z1C0Y1X0, Z1C1Y1X0, Z1C2Y1X0,
-//     Z1C0Y0X1, Z1C1Y0X1, Z1C2Y0X1, Z1C0Y1X1, Z1C1Y1X1, Z1C2Y1X1,
-//     Z2C0Y0X0, Z2C1Y0X0, Z2C2Y0X0, Z2C0Y1X0, Z2C1Y1X0, Z2C2Y1X0,
-//     Z2C0Y0X1, Z2C1Y0X1, Z2C2Y0X1, Z2C0Y1X1, Z2C1Y1X1, Z2C2Y1X1,
-//     Z3C0Y0X0, Z3C1Y0X0, Z3C2Y0X0, Z3C0Y1X0, Z3C1Y1X0, Z3C2Y1X0,
-//     Z3C0Y0X1, Z3C1Y0X1, Z3C2Y0X1, Z3C0Y1X1, Z3C1Y1X1, Z3C2Y1X1
-// };
-
-// //------------------ symmetry string to Symmetry enum map ------------------
-// inline const std::map<std::string, Symmetry> string_to_symmetry = {
-
-//     {"0000", Symmetry::Z0C0Y0X0}, {"0100", Symmetry::Z0C1Y0X0}, {"0200", Symmetry::Z0C2Y0X0},
-//     {"0010", Symmetry::Z0C0Y1X0}, {"0110", Symmetry::Z0C1Y1X0}, {"0210", Symmetry::Z0C2Y1X0},
-//     {"0001", Symmetry::Z0C0Y0X1}, {"0101", Symmetry::Z0C1Y0X1}, {"0201", Symmetry::Z0C2Y0X1},
-//     {"0011", Symmetry::Z0C0Y1X1}, {"0111", Symmetry::Z0C1Y1X1}, {"0211", Symmetry::Z0C2Y1X1},
-//     {"1000", Symmetry::Z1C0Y0X0}, {"1100", Symmetry::Z1C1Y0X0}, {"1200", Symmetry::Z1C2Y0X0},
-//     {"1010", Symmetry::Z1C0Y1X0}, {"1110", Symmetry::Z1C1Y1X0}, {"1210", Symmetry::Z1C2Y1X0},
-//     {"1001", Symmetry::Z1C0Y0X1}, {"1101", Symmetry::Z1C1Y0X1}, {"1201", Symmetry::Z1C2Y0X1},
-//     {"1011", Symmetry::Z1C0Y1X1}, {"1111", Symmetry::Z1C1Y1X1}, {"1211", Symmetry::Z1C2Y1X1},
-//     {"2000", Symmetry::Z2C0Y0X0}, {"2100", Symmetry::Z2C1Y0X0}, {"2200", Symmetry::Z2C2Y0X0},
-//     {"2010", Symmetry::Z2C0Y1X0}, {"2110", Symmetry::Z2C1Y1X0}, {"2210", Symmetry::Z2C2Y1X0},
-//     {"2001", Symmetry::Z2C0Y0X1}, {"2101", Symmetry::Z2C1Y0X1}, {"2201", Symmetry::Z2C2Y0X1},
-//     {"2011", Symmetry::Z2C0Y1X1}, {"2111", Symmetry::Z2C1Y1X1}, {"2211", Symmetry::Z2C2Y1X1},
-//     {"3000", Symmetry::Z3C0Y0X0}, {"3100", Symmetry::Z3C1Y0X0}, {"3200", Symmetry::Z3C2Y0X0},
-//     {"3010", Symmetry::Z3C0Y1X0}, {"3110", Symmetry::Z3C1Y1X0}, {"3210", Symmetry::Z3C2Y1X0},
-//     {"3001", Symmetry::Z3C0Y0X1}, {"3101", Symmetry::Z3C1Y0X1}, {"3201", Symmetry::Z3C2Y0X1},
-//     {"3011", Symmetry::Z3C0Y1X1}, {"3111", Symmetry::Z3C1Y1X1}, {"3211", Symmetry::Z3C2Y1X1}
-// };
-
-
-// ------------------- Cube Representation -------------------
 
 /**
  * Structure representing a corner cubie by its position and orientation.
@@ -241,9 +193,6 @@ struct edgeOrientCoord{
     uint16_t get_pure_coord() const;
     edgeOrientCoord nextExplicitCoord();
     static void moveTableToFile();
-
-    // edgeOrientCoord symetry(const Symetrie& sym) const;
-    // edgeOrientCoord symetryZURF();
 };
 
 
@@ -268,14 +217,14 @@ struct UDSliceCoord{
 struct faseOne{
     static constexpr int NE = 495 * 2048;
     static constexpr int NC = 495 * 2187;
-    cornerOrientCoord corners;
-    edgeOrientCoord edges;
-    UDSliceCoord slice;
-    std::tuple<int, int, int> COSstate;
-    std::tuple<int, int, int> EOSstate;
+    // cornerOrientCoord corners;
+    // edgeOrientCoord edges;
+    // UDSliceCoord slice;
+    // std::tuple<int, int, int> COSstate;
+    // std::tuple<int, int, int> EOSstate;
 
-    faseOne(const cornerOrientCoord& c, const edgeOrientCoord& e, const UDSliceCoord& s);
-    void showIndex();
+    // faseOne(const cornerOrientCoord& c, const edgeOrientCoord& e, const UDSliceCoord& s);
+    // void showIndex();
     static void DoPruningTables();
     static bool fillTable(const std::string& filename);
     static std::tuple<int, int, int> moveState(const std::string& filename, const std::tuple<int, int, int>& state, const Move& m);
@@ -285,12 +234,6 @@ struct faseOne{
     static uint64_t stateToIndex(const std::tuple<int, int, int>& state);
     static uint64_t stateToIndex(const std::tuple<int, int>& state);
     static void printNonZeroPruningValues(const std::string& filename,  size_t upLimit, size_t downLimit);
-    // int getHeuristic(int COSIndex, int EOSIndex);
-    // std::string solveFaseOne();
-    // std::tuple<std::tuple<int, int>, std::tuple<int, int>, int, int, std::string> moveSolveState(const std::tuple<std::tuple<int, int>, std::tuple<int, int>, int, int, std::string>& solveState, const Move& m);
-    // void printState(std::tuple<int, int, int> state);
-    // void initDeepth();
-    // void showSolveState(std::tuple<std::tuple<int, int>, std::tuple<int, int>, int, int, std::string> solveState);
 };
 
 struct solveFaseOneState {
@@ -400,14 +343,14 @@ struct UDSTwoCoord{
 
 struct faseTwo{
     static constexpr int N = 40320 * 24;
-    cornerPermCoord corners;
-    edgePermCoord edges;
-    UDSTwoCoord slice;
-    std::tuple<int, int, int> CPSstate;
-    std::tuple<int, int, int> EPSstate;
+    // cornerPermCoord corners;
+    // edgePermCoord edges;
+    // UDSTwoCoord slice;
+    // std::tuple<int, int, int> CPSstate;
+    // std::tuple<int, int, int> EPSstate;
 
-    faseTwo(const cornerPermCoord& c, const edgePermCoord& e, const UDSTwoCoord& s);
-    void showIndex();
+    // faseTwo(const cornerPermCoord& c, const edgePermCoord& e, const UDSTwoCoord& s);
+    // void showIndex();
     static void DoPruningTables();
     static bool fillTable(const std::string& filename);
     static std::tuple<int, int, int> moveState(const std::string& filename, const std::tuple<int, int, int>& state, const GOneMove& m);
@@ -533,7 +476,7 @@ bool isValidMove(const std::string& move);
 // std::vector<std::string> parseMoves(const std::string& input);
 std::vector<Move> parseMoves(const std::string& input);
 // cubeCubie.cpp
-cubeCubie get_scrambled_state(const std::vector<Move>& scramble);
+cubeCubie getScrambledState(const std::vector<Move>& scramble);
 // utils.cpp
 void print_cubie_state(const cubeCubie& cube);
 void print_scramble(const std::vector<Move>& scramble);
@@ -544,10 +487,12 @@ std::string moveToString(Move move);
 std::string moveToString(GOneMove move);
 
 uint16_t factorial(uint16_t n);
-std::vector<Move> get_scramble(int ac, char** av);
+std::vector<Move> getScramble(char* av);
 bool ensureDirectoryExists(const std::string& path);
-bool solve3x3 (int ac, char** av);
+bool solve3x3(const std::vector<Move>& scramble);
+bool solve2x2(const std::vector<Move>& scramble);
 bool install ();
 std::string getFinalString(const std::vector<Move>& solvedFaseOne, const std::vector<GOneMove>& solvedFaseTwo);
 Move GOneToRealMove(const GOneMove& m);
+bool allTablesExist(); 
 #endif

@@ -1,13 +1,13 @@
 
 #include "defs_explorer.hpp"
 
-void printState(const std::tuple<int,int,int>& state){
-    std::cout << std::get<0>(state) << " | " << std::get<1>(state) << " | " << std::get<2>(state) << std::endl;}
+// void printState(const std::tuple<int,int,int>& state){
+//     std::cout << std::get<0>(state) << " | " << std::get<1>(state) << " | " << std::get<2>(state) << std::endl;}
 
-faseTwo::faseTwo(const cornerPermCoord& c, const edgePermCoord& e, const UDSTwoCoord& s)
-        : corners(c), edges(e), slice(s), CPSstate(s.get_pure_coord(), c.get_pure_coord(), 0),
-        EPSstate(s.get_pure_coord(), e.get_pure_coord(), 0) {
-}
+// faseTwo::faseTwo(const cornerPermCoord& c, const edgePermCoord& e, const UDSTwoCoord& s)
+//         : corners(c), edges(e), slice(s), CPSstate(s.get_pure_coord(), c.get_pure_coord(), 0),
+//         EPSstate(s.get_pure_coord(), e.get_pure_coord(), 0) {
+// }
 
 void faseTwo::DoPruningTables(){
     namespace fs = std::filesystem;
@@ -71,6 +71,8 @@ bool faseTwo::fillTable(const std::string& filename) {
     }
     // std::cout << "pruning table" << std::endl;
     // filename == pruningCPSFilename? faseTwo::printNonZeroPruningValues(pruningCPSFilename,10000000,0) : faseTwo::printNonZeroPruningValues(pruningEPSFilename,10000000, 0);
+    if (filename == pruningCOSFilename) std::cout << "fase two pruning table(corner permutation + slide) created!" << std::endl;
+    else if (filename == pruningEOSFilename) std::cout << "fase two pruning table(edge permutation + slide) created!" << std::endl;
     return true;
 }
 
@@ -120,7 +122,6 @@ bool faseTwo::CreatePruning(const std::string& filename, std::size_t fileSize) {
         std::cerr << "Error closing file.\n";
         return false;
     }
-    std::cout << "fase two table file created!" << std::endl;
     return true;
 }
 
@@ -199,11 +200,11 @@ uint64_t faseTwo::stateToIndex(const std::tuple<int, int>& state){
         return (std::get<0>(state) + (std::get<1>(state) * 24));
 }
 
-void faseTwo::showIndex(){
-    faseTwo current = *this;
+// void faseTwo::showIndex(){
+//     faseTwo current = *this;
 
-    std::cout << "CPS: | "<< faseTwo::stateToIndex(current.CPSstate) << " | EPS: | " << faseTwo::stateToIndex(current.EPSstate) << std::endl;
-}
+//     std::cout << "CPS: | "<< faseTwo::stateToIndex(current.CPSstate) << " | EPS: | " << faseTwo::stateToIndex(current.EPSstate) << std::endl;
+// }
 
 void faseTwo::printNonZeroPruningValues(const std::string& filename, size_t upLimit, size_t downLimit) {
     std::ifstream file(pruningFoldername + filename, std::ios::binary);

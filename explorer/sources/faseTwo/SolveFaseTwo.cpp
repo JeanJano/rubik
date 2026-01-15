@@ -135,7 +135,7 @@ std::vector<GOneMove> solveFaseTwo::solve() {
 }
 
 std::string solveFaseTwo::solutionToString(const std::vector<GOneMove>& path) {
-    std::cout << "aca 2" << std::endl;
+    // std::cout << "aca 2" << std::endl;
     std::string res;
     for (GOneMove m : path) {
         if (!res.empty()) res += " ";

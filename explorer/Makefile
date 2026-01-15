@@ -17,18 +17,17 @@ SOURCES		=	main.cpp \
 				general/cubeCubie.cpp \
 				general/utils.cpp \
 				general/mainFunctions.cpp \
-				fase_one_coordinates/cornerOrientation.cpp \
-				fase_one_coordinates/edgeOrientation.cpp \
-				fase_one_coordinates/UDSlice.cpp \
+				general/initAndParser.cpp \
+				faseOneCoordinates/cornerOrientation.cpp \
+				faseOneCoordinates/edgeOrientation.cpp \
+				faseOneCoordinates/UDSlice.cpp \
 				faseOne/faseOne.cpp \
 				faseOne/SolveFaseOne.cpp \
-				parser/parser.cpp \
-				fase_two_coordinates/cornerPermutation.cpp \
-				fase_two_coordinates/edgePermutation.cpp \
-				fase_two_coordinates/UDSliceTwo.cpp \
+				faseTwoCoordinates/cornerPermutation.cpp \
+				faseTwoCoordinates/edgePermutation.cpp \
+				faseTwoCoordinates/UDSliceTwo.cpp \
 				faseTwo/faseTwo.cpp \
 				faseTwo/SolveFaseTwo.cpp \
-# 				symetry/EdgeOriSym.cpp \
 
 
 ### FILE MANAGEMENT ###
@@ -48,9 +47,8 @@ all: tmp $(NAME)
 
 tmp:
 		@mkdir -p $(OBJ_PATH)
-		@mkdir -p $(OBJ_PATH)parser
-		@mkdir -p $(OBJ_PATH)fase_one_coordinates
-		@mkdir -p $(OBJ_PATH)fase_two_coordinates
+		@mkdir -p $(OBJ_PATH)faseOneCoordinates
+		@mkdir -p $(OBJ_PATH)faseTwoCoordinates
 		@mkdir -p $(OBJ_PATH)faseOne
 		@mkdir -p $(OBJ_PATH)faseTwo
 		@mkdir -p $(OBJ_PATH)general

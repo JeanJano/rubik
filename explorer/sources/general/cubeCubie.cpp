@@ -355,7 +355,7 @@ cubeCubie cubeCubie::severalMoves(const std::vector<Move>& moves, const cubeCubi
 }
 
 // Basic function to get the state of a scrambled cube to start the solving process
-cubeCubie get_scrambled_state(const std::vector<Move>& scramble){
+cubeCubie getScrambledState(const std::vector<Move>& scramble){
     cubeCubie cube;
     cube.reset();
     cube = cube.severalMoves(scramble, cube);

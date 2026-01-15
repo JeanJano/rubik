@@ -1,23 +1,6 @@
 #include "defs_explorer.hpp"
 
-std::vector<Move> get_scramble(int ac, char** av) {
-    if (ac != 2) {
-        std::cout << UsageMessage << std::endl;
-        return {};
-    }
 
-    try {
-        std::vector<Move> scramble = parseMoves(av[1]);
-        if (scramble.empty()) {
-            std::cout << UsageMessage << std::endl;
-            return {};
-        }
-        return scramble;
-    } catch (const std::invalid_argument& e) {
-        std::cerr << "Error parsing moves: " << e.what() << std::endl;
-        return {};
-    }
-}
 
 bool ensureDirectoryExists(const std::string& path) {
     namespace fs = std::filesystem;
@@ -34,54 +17,42 @@ bool ensureDirectoryExists(const std::string& path) {
     }
 }
 
+
 std::string getFinalString(const std::vector<Move>& solvedFaseOne, const std::vector<GOneMove>& solvedFaseTwo){
     std::vector<Move> fin = solvedFaseOne;
-    int lastOfFirst = static_cast<int>(solvedFaseOne.back());
-    int firstOfLast = static_cast<int>(GOneToRealMove(solvedFaseTwo.front()))
-    if (lastOfFirst / 3 == firstOfLast / 3){
-        
+    std::vector<GOneMove> aux = solvedFaseTwo;
+    if (!fin.empty() && !aux.empty()) {
+        int lastOfFirst = static_cast<int>(fin.back());
+        int firstOfLast = static_cast<int>(GOneToRealMove(aux.front()));
+
+        if (lastOfFirst / 3 == firstOfLast / 3) {
+            fin.pop_back();
+            aux.erase(aux.begin());
+
+            if (lastOfFirst % 3 == 0 && firstOfLast % 3 == 0)
+                fin.push_back(static_cast<Move>((lastOfFirst / 3) * 3 + 1));
+            else if (lastOfFirst % 3 == 0 && firstOfLast % 3 == 1)
+                fin.push_back(static_cast<Move>((lastOfFirst / 3) * 3 + 2));
+            else if (lastOfFirst % 3 == 1 && firstOfLast % 3 == 0)
+                fin.push_back(static_cast<Move>((lastOfFirst / 3) * 3 + 2));
+            else if (lastOfFirst % 3 == 1 && firstOfLast % 3 == 2)
+                fin.push_back(static_cast<Move>((lastOfFirst / 3) * 3));
+            else if (lastOfFirst % 3 == 2 && firstOfLast % 3 == 1)
+                fin.push_back(static_cast<Move>((lastOfFirst / 3) * 3));
+            else if (lastOfFirst % 3 == 2 && firstOfLast % 3 == 2)
+                fin.push_back(static_cast<Move>((lastOfFirst / 3) * 3 + 1));
+        }
     }
-    for (auto GOne: solvedFaseTwo){
+    for (auto GOne: aux){
         fin.push_back(GOneToRealMove(GOne));
     }
     return solveFaseOne::solutionToString(fin);
 }
 
-
-bool solve3x3 (int ac, char** av){
-    auto start = std::chrono::high_resolution_clock::now();
-
-
-    std::vector<Move> scramble = get_scramble(ac, av);
-    if (scramble.empty())
-        return false;
-    cubeCubie cube = get_scrambled_state(scramble);
-
-    solveFaseOne solver = solveFaseOne(cube);
-    std::vector<Move> first = solver.solve();
-    std::cout << solver.solutionToString(first) << std::endl;
-
-    cube = cube.severalMoves(first, cube);
-
-    solveFaseTwo solver2 = solveFaseTwo(cube);
-    std::vector<GOneMove> second = solver2.solve();
-    std::cout << solver2.solutionToString(second) << std::endl;
-     std::cout << getFinalString(first, second) << std::endl;
-
-
-
-    auto end = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> elapsed = end - start;
-    std::cout << "\n\n\nTiempo de ejecucion: "
-              << elapsed.count()
-              << " segundos\n";
-    return true;
-}
-
 bool install (){
-    auto start = std::chrono::high_resolution_clock::now();
     if (!ensureDirectoryExists(pruningFoldername))
         return false;
+
     cornerOrientCoord::moveTableToFile();
     edgeOrientCoord::moveTableToFile();
     UDSliceCoord::moveTableToFile();
@@ -90,11 +61,28 @@ bool install (){
     UDSTwoCoord::moveTableToFile();
     faseOne::DoPruningTables();
     faseTwo::DoPruningTables();
+    
+    return true;
+}
 
-    auto end = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> elapsed = end - start;
-    std::cout << "\n Execution time: "
-              << elapsed.count()
-              << " segundos\n";
+bool solve3x3 (const std::vector<Move>& scramble){
+
+    cubeCubie cube = getScrambledState(scramble);
+
+    solveFaseOne solver = solveFaseOne(cube);
+    std::vector<Move> first = solver.solve();
+
+    cube = cube.severalMoves(first, cube);
+
+    solveFaseTwo solver2 = solveFaseTwo(cube);
+    std::vector<GOneMove> second = solver2.solve();
+    std::cout << getFinalString(first, second) << std::endl;
+
+    return true;
+}
+
+bool solve2x2(const std::vector<Move>& scramble){
+    (void)scramble;
+    std::cout << "por hacer" << std::endl;
     return true;
 }
