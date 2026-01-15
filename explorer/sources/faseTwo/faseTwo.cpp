@@ -5,8 +5,8 @@
 //     std::cout << std::get<0>(state) << " | " << std::get<1>(state) << " | " << std::get<2>(state) << std::endl;}
 
 // faseTwo::faseTwo(const cornerPermCoord& c, const edgePermCoord& e, const UDSTwoCoord& s)
-//         : corners(c), edges(e), slice(s), CPSstate(s.get_pure_coord(), c.get_pure_coord(), 0),
-//         EPSstate(s.get_pure_coord(), e.get_pure_coord(), 0) {
+//         : corners(c), edges(e), slice(s), CPSstate(s.getPureCoord(), c.getPureCoord(), 0),
+//         EPSstate(s.getPureCoord(), e.getPureCoord(), 0) {
 // }
 
 void faseTwo::DoPruningTables(){
@@ -23,19 +23,13 @@ void faseTwo::DoPruningTables(){
             return;
         }
     }
-    if(true){
-    // if(faseTwo::readPruning(pruningCPSFilename, 1) != 0){
-        if (!faseTwo::fillTable(pruningCPSFilename)) {
-            std::cout << "Error filling fase one CPS pruning table" << std::endl;
-            return;
-        } 
-    }
-    if(true){
-    // if(faseTwo::readPruning(pruningEPSFilename, 1) != 0){
-        if (!faseTwo::fillTable(pruningEPSFilename)) {
-            std::cout << "Error filling fase one EPS pruning table" << std::endl;
-            return;
-        }
+    if (!faseTwo::fillTable(pruningCPSFilename)) {
+        std::cout << "Error filling fase one CPS pruning table" << std::endl;
+        return;
+    } 
+    if (!faseTwo::fillTable(pruningEPSFilename)) {
+        std::cout << "Error filling fase one EPS pruning table" << std::endl;
+        return;
     }
 }
 
@@ -69,10 +63,8 @@ bool faseTwo::fillTable(const std::string& filename) {
         // p++;  
         // std::cout << "p " << BFS.size() << std::endl;  
     }
-    // std::cout << "pruning table" << std::endl;
-    // filename == pruningCPSFilename? faseTwo::printNonZeroPruningValues(pruningCPSFilename,10000000,0) : faseTwo::printNonZeroPruningValues(pruningEPSFilename,10000000, 0);
-    if (filename == pruningCOSFilename) std::cout << "fase two pruning table(corner permutation + slide) created!" << std::endl;
-    else if (filename == pruningEOSFilename) std::cout << "fase two pruning table(edge permutation + slide) created!" << std::endl;
+    if (filename == pruningCPSFilename) std::cout << "fase two pruning table(corner permutation + slide) created!" << std::endl;
+    else if (filename == pruningEPSFilename) std::cout << "fase two pruning table(edge permutation + slide) created!" << std::endl;
     return true;
 }
 

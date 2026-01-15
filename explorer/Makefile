@@ -28,6 +28,9 @@ SOURCES		=	main.cpp \
 				faseTwoCoordinates/UDSliceTwo.cpp \
 				faseTwo/faseTwo.cpp \
 				faseTwo/SolveFaseTwo.cpp \
+				twoByTwo/solveTwoByTwo.cpp \
+				twoByTwo/twoByTwo.cpp \
+				twoByTwoCoordinates/cornerPermAllMoves.cpp \
 
 
 ### FILE MANAGEMENT ###
@@ -52,6 +55,8 @@ tmp:
 		@mkdir -p $(OBJ_PATH)faseOne
 		@mkdir -p $(OBJ_PATH)faseTwo
 		@mkdir -p $(OBJ_PATH)general
+		@mkdir -p $(OBJ_PATH)twoByTwo
+		@mkdir -p $(OBJ_PATH)twoByTwoCoordinates
 
 $(NAME): $(OBJS)
 		@$(CC) $(FLAGS) $(INCLUDES) $(OBJS) -o $(NAME)

@@ -61,7 +61,9 @@ bool allTablesExist() {
         pruningCOSFilename,
         pruningCPSFilename,
         pruningEOSFilename,
-        pruningEPSFilename
+        pruningEPSFilename,
+        pruningCOFilename,
+        pruningCPFilename,
     };
 
     const std::vector<std::string> moveTables = {
@@ -69,6 +71,7 @@ bool allTablesExist() {
         edgeOriMoveTableFilename,
         UDSliceMoveTableFilename,
         cornerPermMoveTableFilename,
+        cornerPermTwoMoveTableFilename,
         edgePermMoveTableFilename,
         UDSTwoTableFilename
     };

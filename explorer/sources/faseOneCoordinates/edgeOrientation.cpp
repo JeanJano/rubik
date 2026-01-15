@@ -134,7 +134,7 @@ edgeOrientCoord edgeOrientCoord::move(const Move& move) const {
 
 
 
-uint16_t edgeOrientCoord::get_pure_coord() const {
+uint16_t edgeOrientCoord::getPureCoord() const {
     uint16_t coord = 0;
     for (int i = 0; i < N - 1; ++i) {
         coord = coord * 2 + static_cast<uint16_t>(this->explicitCoor[i]);
@@ -162,12 +162,12 @@ edgeOrientCoord edgeOrientCoord::nextExplicitCoord(){
 void edgeOrientCoord::print_move_table(){
     edgeOrientCoord state;
     for (int i = 0; i < 2048; ++i){
-        std::cout << state.get_pure_coord() << " => ";
+        std::cout << state.getPureCoord() << " => ";
 
         for (int m = 0; m < 18; ++m) {
             Move move = static_cast<Move>(m);
             edgeOrientCoord next = state.move(move);
-            std::cout << next.get_pure_coord();
+            std::cout << next.getPureCoord();
             if (m != 17) std::cout << " | ";
         }
 
@@ -176,7 +176,7 @@ void edgeOrientCoord::print_move_table(){
     }
 }
 
-edgeOrientCoord edgeOrientCoord::from_pure_coord(uint16_t coord) {
+edgeOrientCoord edgeOrientCoord::fromPureCoord(uint16_t coord) {
     edgeOrientCoord result;
     int sum = 0;
     for (int i = N - 2; i >= 0; --i) {
@@ -210,7 +210,7 @@ void edgeOrientCoord::moveTableToFile() {
         for (int m = 0; m < 18; ++m) {
             Move move = static_cast<Move>(m);
             edgeOrientCoord next = state.move(move);
-            uint16_t nextCoord = next.get_pure_coord();
+            uint16_t nextCoord = next.getPureCoord();
             out.write(reinterpret_cast<const char*>(&nextCoord), sizeof(uint16_t));
         }
         state = state.nextExplicitCoord();

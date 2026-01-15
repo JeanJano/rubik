@@ -68,7 +68,7 @@ UDSTwoCoord UDSTwoCoord::move(const GOneMove& move) const {
 
 
 
-uint16_t  UDSTwoCoord::get_pure_coord() const {
+uint16_t  UDSTwoCoord::getPureCoord() const {
 
 
     uint16_t coord = 0;
@@ -88,7 +88,7 @@ uint16_t  UDSTwoCoord::get_pure_coord() const {
     return coord;
 }
 
-UDSTwoCoord UDSTwoCoord::from_pure_coord(uint16_t coord) {
+UDSTwoCoord UDSTwoCoord::fromPureCoord(uint16_t coord) {
     UDSTwoCoord result;
     uint16_t temp = coord;
 
@@ -194,7 +194,7 @@ void UDSTwoCoord::printMoveTable(){
     for (int i = 0; i < 24; ++i){
         // std::cout << "empezando  " << std::endl;
         // state.printExplicitUDSTPermCoord();
-        std::cout << state.get_pure_coord() << " => ";
+        std::cout << state.getPureCoord() << " => ";
 
         for (int m = 0; m < 10; ++m) {
             GOneMove move = static_cast<GOneMove>(m);
@@ -203,7 +203,7 @@ void UDSTwoCoord::printMoveTable(){
             // std::cout << "En printGOneMovetable" << std::endl;
             // next.printNextOrderDiagram();
             // next.printExplicitCornPermCoord();
-            std::cout << next.get_pure_coord();
+            std::cout << next.getPureCoord();
             if (m != 9) std::cout << " | ";
         }
         std::cout << std::endl;
@@ -237,7 +237,7 @@ void UDSTwoCoord::moveTableToFile() {
         for (int m = 0; m < 10; ++m) {
             GOneMove move = static_cast<GOneMove>(m);
             UDSTwoCoord next = state.move(move);
-            uint16_t nextCoord = next.get_pure_coord();
+            uint16_t nextCoord = next.getPureCoord();
             out.write(reinterpret_cast<const char*>(&nextCoord), sizeof(uint16_t));
         }
         state = state.nextExplicitCoord();

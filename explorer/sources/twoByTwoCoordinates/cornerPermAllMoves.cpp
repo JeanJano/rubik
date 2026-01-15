@@ -1,86 +1,141 @@
-
 #include "defs_explorer.hpp"
 
-edgePermCoord::edgePermCoord() {
+cornerPermCoordTwo::cornerPermCoordTwo() {
     for(int i = 0; i < N; ++i){
         explicitCoor[i] = i;
     }
-    edgePermCoord::defineOrderDiag();
-    edgePermCoord::defineNextOrderDiag();
+    cornerPermCoordTwo::defineOrderDiag();
+    cornerPermCoordTwo::defineNextOrderDiag();
 }
 
 //extract orientation corner coordinate from cubie representation
-edgePermCoord::edgePermCoord(const cubeCubie& cube) {
+cornerPermCoordTwo::cornerPermCoordTwo(const cubeCubie& cube) {
     for (int i = 0; i < N; ++i) {
-        explicitCoor[i] = cube.edges[i].pos;
+        explicitCoor[i] = cube.corners[i].pos;
     }
-    // std::cout << "in Eperm const" << std::endl;
-    // this->printExplicitEdgePermCoord();
-    edgePermCoord::defineOrderDiag();
-    edgePermCoord::defineNextOrderDiag();
+    // std::cout << "in Cperm const" << std::endl;
+    // this->printExplicitCornPermCoord();
+    cornerPermCoordTwo::defineOrderDiag();
+    cornerPermCoordTwo::defineNextOrderDiag();
 }
 
 
-edgePermCoord edgePermCoord::move(const GOneMove& move) const {
-    edgePermCoord newCoord = *this;
+cornerPermCoordTwo cornerPermCoordTwo::move(const Move& move) const {
+    cornerPermCoordTwo newCoord = *this;
 
-    // std::cout << "in GOneMove" << std::endl;
+    // std::cout << "in move" << std::endl;
     // newCoord.printExplicitCornPermCoord();
     switch (move) {
-        case GOneMove::U1:
+        case Move::U1:
             newCoord.explicitCoor[0] = explicitCoor[3];
             newCoord.explicitCoor[1] = explicitCoor[0];
             newCoord.explicitCoor[2] = explicitCoor[1];
             newCoord.explicitCoor[3] = explicitCoor[2];
             break;
-        case GOneMove::U2:
+        case Move::U2:
             newCoord.explicitCoor[0] = explicitCoor[2];
             newCoord.explicitCoor[1] = explicitCoor[3];
             newCoord.explicitCoor[2] = explicitCoor[0];
             newCoord.explicitCoor[3] = explicitCoor[1];
             break;
-        case GOneMove::U3:
+        case Move::U3:
             newCoord.explicitCoor[0] = explicitCoor[1];
             newCoord.explicitCoor[1] = explicitCoor[2];
             newCoord.explicitCoor[2] = explicitCoor[3];
             newCoord.explicitCoor[3] = explicitCoor[0];
             break;
-        case GOneMove::D1:
+        case Move::D1:
             newCoord.explicitCoor[4] = explicitCoor[5];
             newCoord.explicitCoor[5] = explicitCoor[6];
             newCoord.explicitCoor[6] = explicitCoor[7];
             newCoord.explicitCoor[7] = explicitCoor[4];
             break;
-        case GOneMove::D2:
+        case Move::D2:
             newCoord.explicitCoor[4] = explicitCoor[6];
             newCoord.explicitCoor[5] = explicitCoor[7];
             newCoord.explicitCoor[6] = explicitCoor[4];
             newCoord.explicitCoor[7] = explicitCoor[5];
             break;
-        case GOneMove::D3:
+        case Move::D3:
             newCoord.explicitCoor[4] = explicitCoor[7];
             newCoord.explicitCoor[5] = explicitCoor[4];
             newCoord.explicitCoor[6] = explicitCoor[5];
             newCoord.explicitCoor[7] = explicitCoor[6];
             break;
-        case GOneMove::F2:
+        case Move::F1:
+            newCoord.explicitCoor[0] = explicitCoor[1];
             newCoord.explicitCoor[1] = explicitCoor[5];
-            newCoord.explicitCoor[5] = explicitCoor[1];
-            break;
-        case GOneMove::B2:
-            newCoord.explicitCoor[3] = explicitCoor[7];
-            newCoord.explicitCoor[7] = explicitCoor[3];
-            break;
-        case GOneMove::R2:
-            newCoord.explicitCoor[0] = explicitCoor[4];
+            newCoord.explicitCoor[5] = explicitCoor[4];
             newCoord.explicitCoor[4] = explicitCoor[0];
             break;
-        case GOneMove::L2:
-            newCoord.explicitCoor[2] = explicitCoor[6];
+        case Move::F2:
+            newCoord.explicitCoor[0] = explicitCoor[5];
+            newCoord.explicitCoor[1] = explicitCoor[4];
+            newCoord.explicitCoor[5] = explicitCoor[0];
+            newCoord.explicitCoor[4] = explicitCoor[1];
+            break;
+        case Move::F3:
+            newCoord.explicitCoor[0] = explicitCoor[4];
+            newCoord.explicitCoor[1] = explicitCoor[0];
+            newCoord.explicitCoor[5] = explicitCoor[1];
+            newCoord.explicitCoor[4] = explicitCoor[5];
+            break;
+        case Move::B1:
+            newCoord.explicitCoor[2] = explicitCoor[3];
+            newCoord.explicitCoor[3] = explicitCoor[7];
+            newCoord.explicitCoor[7] = explicitCoor[6];
             newCoord.explicitCoor[6] = explicitCoor[2];
             break;
+        case Move::B2:
+            newCoord.explicitCoor[2] = explicitCoor[7];
+            newCoord.explicitCoor[3] = explicitCoor[6];
+            newCoord.explicitCoor[7] = explicitCoor[2];
+            newCoord.explicitCoor[6] = explicitCoor[3];
+            break;
+        case Move::B3:
+            newCoord.explicitCoor[2] = explicitCoor[6];
+            newCoord.explicitCoor[3] = explicitCoor[2];
+            newCoord.explicitCoor[7] = explicitCoor[3];
+            newCoord.explicitCoor[6] = explicitCoor[7];
+            break;
+        case Move::R1:
+            newCoord.explicitCoor[0] = explicitCoor[4];
+            newCoord.explicitCoor[3] = explicitCoor[0];
+            newCoord.explicitCoor[7] = explicitCoor[3];
+            newCoord.explicitCoor[4] = explicitCoor[7];
+            break;
+        case Move::R2:
+            newCoord.explicitCoor[0] = explicitCoor[7];
+            newCoord.explicitCoor[3] = explicitCoor[4];
+            newCoord.explicitCoor[7] = explicitCoor[0];
+            newCoord.explicitCoor[4] = explicitCoor[3];
+            break;
+        case Move::R3:
+            newCoord.explicitCoor[0] = explicitCoor[3];
+            newCoord.explicitCoor[3] = explicitCoor[7];
+            newCoord.explicitCoor[7] = explicitCoor[4];
+            newCoord.explicitCoor[4] = explicitCoor[0];
+            break;
+        case Move::L1:
+            newCoord.explicitCoor[1] = explicitCoor[2];
+            newCoord.explicitCoor[2] = explicitCoor[6];
+            newCoord.explicitCoor[6] = explicitCoor[5];
+            newCoord.explicitCoor[5] = explicitCoor[1];
+            break;
+        case Move::L2:
+            newCoord.explicitCoor[1] = explicitCoor[6];
+            newCoord.explicitCoor[2] = explicitCoor[5];
+            newCoord.explicitCoor[6] = explicitCoor[1];
+            newCoord.explicitCoor[5] = explicitCoor[2];
+            break;
+        case Move::L3:
+            newCoord.explicitCoor[1] = explicitCoor[5];
+            newCoord.explicitCoor[2] = explicitCoor[1];
+            newCoord.explicitCoor[6] = explicitCoor[2];
+            newCoord.explicitCoor[5] = explicitCoor[6];
+            break;
         default:
-            std::cerr << "Fatal error in edgePermCoord::GOneMove: unsupported GOneMove." << std::endl;
+            std::cerr << "Fatal error in cornerPermCoordTwo::move: unsupported move." << std::endl;
             break;
     }
     newCoord.defineOrderDiag();
@@ -91,7 +146,7 @@ edgePermCoord edgePermCoord::move(const GOneMove& move) const {
 }
 
 
-uint16_t edgePermCoord::getPureCoord() const {
+uint16_t cornerPermCoordTwo::getPureCoord() const {
 
 
     uint16_t coord = 0;
@@ -106,13 +161,14 @@ uint16_t edgePermCoord::getPureCoord() const {
         }
         coord += count * factorial(factor);
         factor--;
+        // std::cout << "in get pure coord: i: " << i << " " << static_cast<int>(coord) << std::endl;
     }
-    // std::cout << "pure coord: " << coord << std::endl;
+
     return coord;
 }
 
-edgePermCoord edgePermCoord::fromPureCoord(uint16_t coord) {
-    edgePermCoord result;
+cornerPermCoordTwo cornerPermCoordTwo::fromPureCoord(uint16_t coord) {
+    cornerPermCoordTwo result;
     uint16_t temp = coord;
 
     for (int i = N - 1; i > 0; --i) {
@@ -122,22 +178,23 @@ edgePermCoord edgePermCoord::fromPureCoord(uint16_t coord) {
     return result;
 }
 
-edgePermCoord edgePermCoord::nextExplicitCoord(){
-    edgePermCoord next = edgePermCoord::fromNextOrderDiag();
+cornerPermCoordTwo cornerPermCoordTwo::nextExplicitCoord(){
+    cornerPermCoordTwo next = cornerPermCoordTwo::fromNextOrderDiag();
 
     // std::cout << "next :" << std::endl;
-    // next.printExplicitEdgePermCoord();
+    // next.printExplicitCornPermCoord();
     return next;
 }
 
-edgePermCoord edgePermCoord::fromNextOrderDiag() {
-    edgePermCoord ret = *this;
+cornerPermCoordTwo cornerPermCoordTwo::fromNextOrderDiag() {
+    cornerPermCoordTwo ret = *this;
     std::vector<int> avalaibleValues = {0,1,2,3,4,5,6,7};
         // print_first(avalaibleValues, 8);
 
         // std::cout << "vista de ret: antes " << N << std::endl;
-        // ret.printExplicitEdgePermCoord();
+        // ret.printExplicitCornPermCoord();
         // ret.printOrderDiagram();
+        // ret.defineNextOrderDiag();
         // ret.printNextOrderDiagram();
     // for (int i = N - 1; i >= 0; --i){
     //     int diagIndex = i - 1;
@@ -158,20 +215,21 @@ edgePermCoord edgePermCoord::fromNextOrderDiag() {
         } else {
             index = avalaibleValues.size() - 1 - nextOrderDiagram[i - 1];
         }
-    
+
         ret.explicitCoor[i] = avalaibleValues[index];
         avalaibleValues.erase(avalaibleValues.begin() + index);
     }
+        // std::cout << "vista de ret: despues" << std::endl;
+        // ret.printExplicitCornPermCoord();
         ret.defineOrderDiag();
         ret.defineNextOrderDiag();
-        // std::cout << "vista de ret: despues" << std::endl;
-        // ret.printExplicitEdgePermCoord();
         // ret.printOrderDiagram();
+        // ret.defineNextOrderDiag();
         // ret.printNextOrderDiagram();
     return ret;
 }
 
-void edgePermCoord::defineOrderDiag(){
+void cornerPermCoordTwo::defineOrderDiag(){
     // std::cout << "Defining Order Diagram..." << std::endl;
     // this->printOrderDiagram();
     for (int i = N - 1; i >= 1; --i) {
@@ -189,7 +247,7 @@ void edgePermCoord::defineOrderDiag(){
     // this->printOrderDiagram();
 }
 
-void edgePermCoord::oneStep(int BigIndex) {
+void cornerPermCoordTwo::oneStep(int BigIndex) {
     uint8_t index = static_cast<uint8_t>(BigIndex);
     // this->printNextOrderDiagram();
         // std::cout << "in oneStep: " << static_cast<int>(index) << " | " << static_cast<int>(nextOrderDiagram[index]) << std::endl;
@@ -205,41 +263,39 @@ void edgePermCoord::oneStep(int BigIndex) {
     }
 }
 
-void edgePermCoord::defineNextOrderDiag(){
+void cornerPermCoordTwo::defineNextOrderDiag(){
     nextOrderDiagram = OrderDiagram;
     oneStep(0);
     // std::cout << "Defining Next Order Diagram..." << std::endl;
     // this->printNextOrderDiagram();
 }
 
-void edgePermCoord::printMoveTable(){
-    edgePermCoord state;
+void cornerPermCoordTwo::printMoveTable(){
+    cornerPermCoordTwo state;
+    // state.printExplicitCornPermCoord();
     for (int i = 0; i < 40320; ++i){
-    // for (int i = 0; i < 515; ++i){
-        // std::cout << "empezando  " << std::endl;
-        // state.printExplicitEdgePermCoord();
+    // for (int i = 0; i < 715; ++i){
         std::cout << state.getPureCoord() << " => ";
 
-        for (int m = 0; m < 10; ++m) {
-            GOneMove move = static_cast<GOneMove>(m);
-            // std::cout << GOneMoveToString(move) << std::endl;
-            edgePermCoord next = state.move(move);
-            // std::cout << "En printGOneMovetable" << std::endl;
+        for (int m = 0; m < 18; ++m) {
+            Move move = static_cast<Move>(m);
+            // std::cout << moveToString(move) << std::endl;
+            cornerPermCoordTwo next = state.move(move);
+            // std::cout << "En printmovetable" << std::endl;
             // next.printNextOrderDiagram();
             // next.printExplicitCornPermCoord();
             std::cout << next.getPureCoord();
-            if (m != 9) std::cout << " | ";
+            if (m != 17) std::cout << " | ";
         }
         std::cout << std::endl;
         state = state.nextExplicitCoord();
-        // std::cout << "terminando  " << std::endl;
-        // state.printExplicitEdgePermCoord();
+        // state.printExplicitCornPermCoord();
 
     }
 }
 
 
-void edgePermCoord::moveTableToFile() {
+void cornerPermCoordTwo::moveTableToFile() {
     std::error_code ec;
     if (!std::filesystem::exists(movesFoldername)) {
         if (!std::filesystem::create_directories(movesFoldername, ec)) {
@@ -248,18 +304,18 @@ void edgePermCoord::moveTableToFile() {
         }
     }
 
-    std::string filepath = movesFoldername + edgePermMoveTableFilename;
+    std::string filepath = movesFoldername + cornerPermTwoMoveTableFilename;
     std::ofstream out(filepath, std::ios::binary);
     if (!out) {
         std::cerr << "Error: no se pudo abrir el archivo para escritura: " << filepath << std::endl;
         return;
     }
 
-    edgePermCoord state;
+    cornerPermCoordTwo state;
     for (int i = 0; i < 40320; ++i) {
-        for (int m = 0; m < 10; ++m) {
-            GOneMove move = static_cast<GOneMove>(m);
-            edgePermCoord next = state.move(move);
+        for (int m = 0; m < 18; ++m) {
+            Move move = static_cast<Move>(m);
+            cornerPermCoordTwo next = state.move(move);
             uint16_t nextCoord = next.getPureCoord();
             out.write(reinterpret_cast<const char*>(&nextCoord), sizeof(uint16_t));
         }
@@ -267,5 +323,5 @@ void edgePermCoord::moveTableToFile() {
     }
 
     out.close();
-    std::cout << "Edge permutation move table done!" << std::endl;
+    std::cout << "Corner Permutation all moves (to solve 2x2) move table done!" << std::endl;
 }

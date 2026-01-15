@@ -99,7 +99,7 @@ cornerPermCoord cornerPermCoord::move(const GOneMove& move) const {
 }
 
 
-uint16_t cornerPermCoord::get_pure_coord() const {
+uint16_t cornerPermCoord::getPureCoord() const {
 
 
     uint16_t coord = 0;
@@ -120,7 +120,7 @@ uint16_t cornerPermCoord::get_pure_coord() const {
     return coord;
 }
 
-cornerPermCoord cornerPermCoord::from_pure_coord(uint16_t coord) {
+cornerPermCoord cornerPermCoord::fromPureCoord(uint16_t coord) {
     cornerPermCoord result;
     uint16_t temp = coord;
 
@@ -228,7 +228,7 @@ void cornerPermCoord::printMoveTable(){
     // state.printExplicitCornPermCoord();
     for (int i = 0; i < 40320; ++i){
     // for (int i = 0; i < 715; ++i){
-        std::cout << state.get_pure_coord() << " => ";
+        std::cout << state.getPureCoord() << " => ";
 
         for (int m = 0; m < 10; ++m) {
             GOneMove move = static_cast<GOneMove>(m);
@@ -237,7 +237,7 @@ void cornerPermCoord::printMoveTable(){
             // std::cout << "En printmovetable" << std::endl;
             // next.printNextOrderDiagram();
             // next.printExplicitCornPermCoord();
-            std::cout << next.get_pure_coord();
+            std::cout << next.getPureCoord();
             if (m != 9) std::cout << " | ";
         }
         std::cout << std::endl;
@@ -269,7 +269,7 @@ void cornerPermCoord::moveTableToFile() {
         for (int m = 0; m < 10; ++m) {
             GOneMove move = static_cast<GOneMove>(m);
             cornerPermCoord next = state.move(move);
-            uint16_t nextCoord = next.get_pure_coord();
+            uint16_t nextCoord = next.getPureCoord();
             out.write(reinterpret_cast<const char*>(&nextCoord), sizeof(uint16_t));
         }
         state = state.nextExplicitCoord();

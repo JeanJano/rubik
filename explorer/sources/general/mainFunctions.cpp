@@ -59,14 +59,15 @@ bool install (){
     cornerPermCoord::moveTableToFile();
     edgePermCoord::moveTableToFile();
     UDSTwoCoord::moveTableToFile();
+    cornerPermCoordTwo::moveTableToFile();
     faseOne::DoPruningTables();
     faseTwo::DoPruningTables();
+    twoByTwo::DoPruningTables();
     
     return true;
 }
 
 bool solve3x3 (const std::vector<Move>& scramble){
-
     cubeCubie cube = getScrambledState(scramble);
 
     solveFaseOne solver = solveFaseOne(cube);
@@ -82,7 +83,16 @@ bool solve3x3 (const std::vector<Move>& scramble){
 }
 
 bool solve2x2(const std::vector<Move>& scramble){
-    (void)scramble;
-    std::cout << "por hacer" << std::endl;
+    // (void)scramble;
+    cubeCubie cube = getScrambledState(scramble);
+
+    // cornerPermCoordTwo::printMoveTable();
+    // twoByTwo::printNonZeroPruningValues(cornerPermTwoMoveTableFilename,100,0);
+    solveTwoByTwo solver = solveTwoByTwo(cube);
+    // (void)solver;
+    std::vector<Move> sol = solver.solve();
+
+    std::cout << solveFaseOne::solutionToString(sol) << std::endl;
+
     return true;
 }

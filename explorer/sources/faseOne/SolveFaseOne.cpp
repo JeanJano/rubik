@@ -2,9 +2,9 @@
 #include "defs_explorer.hpp"
 
 solveFaseOne::solveFaseOne(const cubeCubie& cube){
-    this->state.co = cornerOrientCoord(cube).get_pure_coord();
-    this->state.eo = edgeOrientCoord(cube).get_pure_coord();
-    this->state.s = UDSliceCoord(cube).get_pure_coord();
+    this->state.co = cornerOrientCoord(cube).getPureCoord();
+    this->state.eo = edgeOrientCoord(cube).getPureCoord();
+    this->state.s = UDSliceCoord(cube).getPureCoord();
 
     if (!loadMoveTables())
         throw std::runtime_error("Error loading move tables");

@@ -132,7 +132,7 @@ cornerOrientCoord cornerOrientCoord::move(const Move& move) const {
     return newCoord;
 }
 
-uint16_t cornerOrientCoord::get_pure_coord() const {
+uint16_t cornerOrientCoord::getPureCoord() const {
     uint16_t coord = 0;
     //check the counter
     for (int i = 0; i < 7; ++i) {
@@ -161,12 +161,12 @@ cornerOrientCoord cornerOrientCoord::nextExplicitCoord(){
 void cornerOrientCoord::print_move_table(){
     cornerOrientCoord state;
     for (int i = 0; i < 2187; ++i){
-        std::cout << state.get_pure_coord() << " => ";
+        std::cout << state.getPureCoord() << " => ";
 
         for (int m = 0; m < 18; ++m) {
             Move move = static_cast<Move>(m);
             cornerOrientCoord next = state.move(move);
-            std::cout << next.get_pure_coord();
+            std::cout << next.getPureCoord();
             if (m != 17) std::cout << " | ";
         }
 
@@ -175,7 +175,7 @@ void cornerOrientCoord::print_move_table(){
     }
 }
 
-cornerOrientCoord cornerOrientCoord::from_pure_coord(uint16_t coord) {
+cornerOrientCoord cornerOrientCoord::fromPureCoord(uint16_t coord) {
     cornerOrientCoord result;
     int sum = 0;
     for (int i = N - 2; i >= 0; --i) {
@@ -208,7 +208,7 @@ void cornerOrientCoord::moveTableToFile() {
         for (int m = 0; m < 18; ++m) {
             Move move = static_cast<Move>(m);
             cornerOrientCoord next = state.move(move);
-            uint16_t nextCoord = next.get_pure_coord();
+            uint16_t nextCoord = next.getPureCoord();
             out.write(reinterpret_cast<const char*>(&nextCoord), sizeof(uint16_t));
         }
         state = state.nextExplicitCoord();

@@ -146,7 +146,7 @@ int binomial(int n, int k) {
     return res;
 }
 
-uint16_t UDSliceCoord::get_pure_coord() const {
+uint16_t UDSliceCoord::getPureCoord() const {
     int coord = 0;
     int k = -1;
 
@@ -202,12 +202,12 @@ UDSliceCoord UDSliceCoord::nextExplicitCoord(){
 void UDSliceCoord::print_move_table(){
     UDSliceCoord state;
     for (int i = 0; i < 495; ++i){
-        std::cout << state.get_pure_coord() << " => ";
+        std::cout << state.getPureCoord() << " => ";
 
         for (int m = 0; m < 18; ++m) {
             Move move = static_cast<Move>(m);
             UDSliceCoord next = state.move(move);
-            std::cout << next.get_pure_coord();
+            std::cout << next.getPureCoord();
             if (m != 17) std::cout << " | ";
         }
 
@@ -216,7 +216,7 @@ void UDSliceCoord::print_move_table(){
     }
 }
 
-UDSliceCoord UDSliceCoord::from_pure_coord(const uint16_t& coord) {
+UDSliceCoord UDSliceCoord::fromPureCoord(const uint16_t& coord) {
     if (coord > 494) {
         throw std::invalid_argument("coord must be between 0 y 494. received value: ");
     }
@@ -267,7 +267,7 @@ void UDSliceCoord::moveTableToFile() {
         for (int m = 0; m < 18; ++m) {
             Move move = static_cast<Move>(m);
             UDSliceCoord next = state.move(move);
-            uint16_t nextCoord = next.get_pure_coord();
+            uint16_t nextCoord = next.getPureCoord();
             out.write(reinterpret_cast<const char*>(&nextCoord), sizeof(uint16_t));
         }
         state = state.nextExplicitCoord();

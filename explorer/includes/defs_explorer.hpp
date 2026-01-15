@@ -22,6 +22,7 @@ inline const std::string cornerOriMoveTableFilename = "/cornerOriMoves.bin";
 inline const std::string edgeOriMoveTableFilename = "/edgeOriMoves.bin";
 inline const std::string UDSliceMoveTableFilename = "/UDSliceMoves.bin";
 inline const std::string cornerPermMoveTableFilename = "/cornerPerMoves.bin";
+inline const std::string cornerPermTwoMoveTableFilename = "/cornerPerTwoMoves.bin";
 inline const std::string edgePermMoveTableFilename = "/edgePerMoves.bin";
 inline const std::string UDSTwoTableFilename = "/UDSTwoMoves.bin";
 inline const std::string pruningFoldername = "pruning_tables";
@@ -29,6 +30,8 @@ inline const std::string pruningCOSFilename = "/PruningCOS.bin";
 inline const std::string pruningEOSFilename = "/PruningEOS.bin";
 inline const std::string pruningCPSFilename = "/PruningCPS.bin";
 inline const std::string pruningEPSFilename = "/PruningEPS.bin";
+inline const std::string pruningCOFilename = "/PruningCO.bin";
+inline const std::string pruningCPFilename = "/PruningCP.bin";
 
 // ------------------- Moves -------------------
 
@@ -173,8 +176,8 @@ struct cornerOrientCoord{
     void print_explicit_corn_ori_coord2() const;
     cornerOrientCoord move(const Move& move) const;
     static void print_move_table();
-    static cornerOrientCoord from_pure_coord(uint16_t coord);
-    uint16_t get_pure_coord() const;
+    static cornerOrientCoord fromPureCoord(uint16_t coord);
+    uint16_t getPureCoord() const;
     cornerOrientCoord nextExplicitCoord();
     static void moveTableToFile();
 };
@@ -189,8 +192,8 @@ struct edgeOrientCoord{
     void print_explicit_edge_ori_coord2() const;
     edgeOrientCoord move(const Move& move) const;
     static void print_move_table();
-    static edgeOrientCoord from_pure_coord(uint16_t coord);
-    uint16_t get_pure_coord() const;
+    static edgeOrientCoord fromPureCoord(uint16_t coord);
+    uint16_t getPureCoord() const;
     edgeOrientCoord nextExplicitCoord();
     static void moveTableToFile();
 };
@@ -206,8 +209,8 @@ struct UDSliceCoord{
     void print_explicit_udslice_ori_coord2() const;
     UDSliceCoord move(const Move& move) const;
     static void print_move_table();
-    static UDSliceCoord from_pure_coord(const uint16_t& coord);
-    uint16_t get_pure_coord() const;
+    static UDSliceCoord fromPureCoord(const uint16_t& coord);
+    uint16_t getPureCoord() const;
     UDSliceCoord nextExplicitCoord();
     UDSliceCoord nextExplicitCoord(int index, int count);
     static void moveTableToFile();
@@ -217,14 +220,7 @@ struct UDSliceCoord{
 struct faseOne{
     static constexpr int NE = 495 * 2048;
     static constexpr int NC = 495 * 2187;
-    // cornerOrientCoord corners;
-    // edgeOrientCoord edges;
-    // UDSliceCoord slice;
-    // std::tuple<int, int, int> COSstate;
-    // std::tuple<int, int, int> EOSstate;
 
-    // faseOne(const cornerOrientCoord& c, const edgeOrientCoord& e, const UDSliceCoord& s);
-    // void showIndex();
     static void DoPruningTables();
     static bool fillTable(const std::string& filename);
     static std::tuple<int, int, int> moveState(const std::string& filename, const std::tuple<int, int, int>& state, const Move& m);
@@ -280,8 +276,8 @@ struct cornerPermCoord{
     void printExplicitCornPermCoord2();
     cornerPermCoord move(const GOneMove& move) const;
     static void printMoveTable();
-    static cornerPermCoord from_pure_coord(uint16_t coord);
-    uint16_t get_pure_coord() const;
+    static cornerPermCoord fromPureCoord(uint16_t coord);
+    uint16_t getPureCoord() const;
     cornerPermCoord nextExplicitCoord();
     static void moveTableToFile();
     void defineOrderDiag();
@@ -304,8 +300,8 @@ struct edgePermCoord{
     void printExplicitEdgePermCoord2();
     edgePermCoord move(const GOneMove& move) const;
     static void printMoveTable();
-    static edgePermCoord from_pure_coord(uint16_t coord);
-    uint16_t get_pure_coord() const;
+    static edgePermCoord fromPureCoord(uint16_t coord);
+    uint16_t getPureCoord() const;
     edgePermCoord nextExplicitCoord();
     static void moveTableToFile();
     void defineOrderDiag();
@@ -328,8 +324,8 @@ struct UDSTwoCoord{
     void printExplicitUDSTPermCoord2();
     UDSTwoCoord move(const GOneMove& move) const;
     static void printMoveTable();
-    static UDSTwoCoord from_pure_coord(uint16_t coord);
-    uint16_t get_pure_coord() const;
+    static UDSTwoCoord fromPureCoord(uint16_t coord);
+    uint16_t getPureCoord() const;
     UDSTwoCoord nextExplicitCoord();
     static void moveTableToFile();
     void defineOrderDiag();
@@ -340,17 +336,9 @@ struct UDSTwoCoord{
     void printNextOrderDiagram() const;
 };
 
-
 struct faseTwo{
     static constexpr int N = 40320 * 24;
-    // cornerPermCoord corners;
-    // edgePermCoord edges;
-    // UDSTwoCoord slice;
-    // std::tuple<int, int, int> CPSstate;
-    // std::tuple<int, int, int> EPSstate;
 
-    // faseTwo(const cornerPermCoord& c, const edgePermCoord& e, const UDSTwoCoord& s);
-    // void showIndex();
     static void DoPruningTables();
     static bool fillTable(const std::string& filename);
     static std::tuple<int, int, int> moveState(const std::string& filename, const std::tuple<int, int, int>& state, const GOneMove& m);
@@ -397,6 +385,79 @@ struct solveFaseTwo {
 };
 
 
+
+struct cornerPermCoordTwo{
+    static constexpr int N = 8;
+    std::array<uint8_t, N> explicitCoor;
+    std::array<uint8_t, N - 1> OrderDiagram;
+    std::array<uint8_t, N - 1> nextOrderDiagram;
+
+    cornerPermCoordTwo();
+    cornerPermCoordTwo(const cubeCubie& cube);
+    void printExplicitCornPermCoord() const;
+    void printExplicitCornPermCoord2();
+    cornerPermCoordTwo move(const Move& move) const;
+    static void printMoveTable();
+    static cornerPermCoordTwo fromPureCoord(uint16_t coord);
+    uint16_t getPureCoord() const;
+    cornerPermCoordTwo nextExplicitCoord();
+    static void moveTableToFile();
+    void defineOrderDiag();
+    void defineNextOrderDiag();
+    cornerPermCoordTwo fromNextOrderDiag();
+    void oneStep(int index);
+    void printOrderDiagram() const;
+    void printNextOrderDiagram() const;
+};
+
+
+
+
+struct twoByTwo{
+    static constexpr int NO = 2187;
+    static constexpr int NP = 40320;
+
+    static void DoPruningTables();
+    static bool fillTable(const std::string& filename);
+    static std::tuple<int, int> moveState(const std::string& filename, const std::tuple<int, int>& state, const Move& m);
+    static bool CreatePruning(const std::string& filename, std::size_t fileSize);
+    static bool writePruning(const std::string& filename, uint64_t index, uint8_t value);
+    static uint8_t readPruning(const std::string& filename, uint64_t index);
+    static uint64_t stateToIndex(const std::tuple<int, int>& state);
+    static void printNonZeroPruningValues(const std::string& filename,  size_t upLimit, size_t downLimit);
+};
+
+struct solveTwoByTwoState {
+    int co;
+    int cp; 
+};
+
+struct solveTwoByTwo {
+    solveTwoByTwoState state;
+    uint16_t cornerOriMove[2187][18];
+    uint16_t cornerPermMove[40320][18];
+    uint8_t pruneCO[2187];
+    uint8_t pruneCP[40320];
+    static constexpr int FOUND = -1;
+    static constexpr int INF = 10000000;
+
+
+
+    solveTwoByTwo(const cubeCubie& cube);
+    bool loadMoveTables();
+    bool loadPruningTables();
+    void applyMove(solveTwoByTwoState& st, int m);
+    int heuristic(const solveTwoByTwoState& st);
+    int dfs(solveTwoByTwoState& st,
+                      int depth,
+                      int bound,
+                      int lastMove,
+                      std::vector<Move>& path);
+    std::vector<Move> solve();
+    static std::string solutionToString(const std::vector<Move>& path);
+};
+
+
 uint16_t get_coord(const cornerOrientCoord& coord);
 uint16_t get_coord(const edgeOrientCoord& coord);
 uint16_t get_coord(const UDSliceCoord& coord);
@@ -412,7 +473,7 @@ GOneMove getGOneMove(int moveIndex);
 GOneMove getGOneMove(GOneMove move);
 
 template <typename CoordType, typename MoveType>
-uint16_t fase_one_coord_from_file(CoordType coordInput, MoveType moveInput, const std::string& filename) {
+uint16_t faseOneCoordFromFile(CoordType coordInput, MoveType moveInput, const std::string& filename) {
     std::ifstream in(movesFoldername + filename, std::ios::binary);
     if (!in) {
         std::cerr << "Error: could not open move table file for reading." << std::endl;

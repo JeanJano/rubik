@@ -2,9 +2,9 @@
 #include "defs_explorer.hpp"
 
 solveFaseTwo::solveFaseTwo(const cubeCubie& cube){
-    this->state.cp = cornerPermCoord(cube).get_pure_coord();
-    this->state.ep = edgePermCoord(cube).get_pure_coord();
-    this->state.s = UDSTwoCoord(cube).get_pure_coord();
+    this->state.cp = cornerPermCoord(cube).getPureCoord();
+    this->state.ep = edgePermCoord(cube).getPureCoord();
+    this->state.s = UDSTwoCoord(cube).getPureCoord();
 
     if (!loadMoveTables())
         throw std::runtime_error("Error loading move tables");

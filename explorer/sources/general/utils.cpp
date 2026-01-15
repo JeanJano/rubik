@@ -243,27 +243,27 @@ std::string moveToString(GOneMove move) {
 }
 
 uint16_t get_coord(const cornerOrientCoord& coord) {
-    return coord.get_pure_coord();
+    return coord.getPureCoord();
 }
 
 uint16_t get_coord(const edgeOrientCoord& coord) {
-    return coord.get_pure_coord();
+    return coord.getPureCoord();
 }
 
 uint16_t get_coord(const UDSliceCoord& coord) {
-    return coord.get_pure_coord();
+    return coord.getPureCoord();
 }
 
 uint16_t get_coord(const cornerPermCoord& coord) {
-    return coord.get_pure_coord();
+    return coord.getPureCoord();
 }
 
 uint16_t get_coord(const edgePermCoord& coord) {
-    return coord.get_pure_coord();
+    return coord.getPureCoord();
 }
 
 uint16_t get_coord(const UDSTwoCoord& coord) {
-    return coord.get_pure_coord();
+    return coord.getPureCoord();
 }
 
 uint16_t get_coord(uint16_t coord) {
