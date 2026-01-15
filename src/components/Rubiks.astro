@@ -7,6 +7,7 @@
     import type { GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js';
     import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
     import RubiksModel from "../lib/RubiksModel.ts"
+    import type { CubeAction } from '../lib/CubeAction';
 
     const canvas = document.querySelector<HTMLCanvasElement>('.threejs');
     if (!canvas)
@@ -40,18 +41,26 @@
       cube = new RubiksModel(model);
     });
 
-    const mix = [
-        "D2",
-        "R2",
-        "R2'"
+    const mix: CubeAction[] = [
+        // {move: "D", clockwise: true},
+        // {move: "R", clockwise: true},
+        {move: "D", clockwise: false},
+        {move: "D", clockwise: false},
+        {move: "D", clockwise: false},
+        {move: "D", clockwise: false},
+        // {move: "R2", clockwise: false},
+        // {move: "R2", clockwise: false},
     ]
 
-    window.addEventListener("keydown", (event) => {
+    window.addEventListener("keydown", (event: KeyboardEvent) => {
         switch (event.key) {
             case 'z':
                 console.log(cube.getMix());
                 break;
-            case ' ':
+            case '\\':
+                cube.reversemove();
+                break;
+            case 'm':
                 cube.shuffle(mix);
                 break;
         }
@@ -83,7 +92,15 @@
 
     window.addEventListener("mix", () => {
         cube.randomMix();
-    })
+    });
+
+    window.addEventListener("reversemove", () => {
+        cube.reversemove();
+    });
+
+    window.addEventListener("reversecube", () => {
+        cube.reversecube();
+    });
 
     const animate = () => {
       requestAnimationFrame(animate);
@@ -97,15 +114,22 @@
     canvas.addEventListener("mousedown", (event) => {
         switch (event.button) {
             case 0:
-                console.log('click gauche')
-                cube.raycastMiddleCube(event, camera, true)
+                cube.raycastMiddleCube(event, camera, true);
                 break ;
             case 2:
-                cube.raycastMiddleCube(event, camera, false)
-                console.log('clic droit')
+                cube.raycastMiddleCube(event, camera, false);
                 break ;
         }
-    })
+    });
+
+    const input = document.getElementById('input') as HTMLInputElement;
+    if (!input)
+        throw Error("input id not found");
+
+    input.addEventListener('keydown', (e: KeyboardEvent) => {
+        if (e.key === "Enter")
+            cube.execInput(input.value);
+    });
 
     window.addEventListener('resize', () => {
       camera.aspect = window.innerWidth / window.innerHeight;
