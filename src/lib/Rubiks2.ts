@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import gsap from 'gsap';
 import type { CubeAction } from './CubeAction';
 
-export default class RubiksModel {
+export default class Rubiks2 {
 
     private _cube: THREE.Group;
     private _cubies: THREE.Object3D[];
@@ -249,7 +249,7 @@ export default class RubiksModel {
     }
 
     private _rotate(face: string, clockwise: boolean): void {
-        const layerValue = 0.3;
+        const layerValue = 0.15;
         let axis = new THREE.Vector3();
         let cubies: THREE.Object3D[] = [];
 

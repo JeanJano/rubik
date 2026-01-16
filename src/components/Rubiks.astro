@@ -2,12 +2,13 @@
 
 <script>
     import * as THREE from 'three';
-    import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-    import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
-    import type { GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js';
-    import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-    import RubiksModel from "../lib/RubiksModel.ts"
-    import type { CubeAction } from '../lib/CubeAction';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
+import type { GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import type { CubeAction } from '../lib/CubeAction';
+import Rubiks2 from '../lib/Rubiks2';
+import RubiksModel from '../lib/RubiksModel';
 
     const canvas = document.querySelector<HTMLCanvasElement>('.threejs');
     if (!canvas)
@@ -33,12 +34,31 @@
     dracoLoader.setDecoderPath('https://www.gstatic.com/draco/v1/decoders/');
     loader.setDRACOLoader(dracoLoader);
 
-    let model = null;
-    let cube: RubiksModel;
+    let cube: any;
+    let cube2: any;
+    let cube3: any;
     loader.load('/rubikscube.glb', (gltf: GLTF) => {
-      model = gltf.scene;
-      scene.add(model);
-      cube = new RubiksModel(model);
+      scene.add(gltf.scene);
+      cube3 = new RubiksModel(gltf.scene);
+      cube = cube3;
+    });
+
+    loader.load('/rubikscube2_2.glb', (gltf: GLTF) => {
+        // scene.add(gltf.scene);
+        cube2 = new Rubiks2(gltf.scene);
+    });
+
+    const switchButton = document.getElementById('switch');
+    if (!switchButton)
+        throw Error("switchButton not find");
+    switchButton.addEventListener('click', () => {
+        if (cube)
+            scene.remove(cube.getModel);
+        if (cube === cube3)
+            cube = cube2;
+        else if (cube === cube2)
+            cube = cube3;
+        scene.add(cube.getModel);
     });
 
     const mix: CubeAction[] = [
