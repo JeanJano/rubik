@@ -25,7 +25,10 @@ import Button from "./Button.astro"
                 <Button label="mix" name="Mix"/>
                 <Button label="resolve" name="Resolve"/>
             </div>
-            <Button label="switch" name="switch"/>
+            <div>
+                <Button label="switch" name="Switch"/>
+                <Button label="newCube" name="New cube"/>
+            </div>
         </div>
     </div>
 </div>
@@ -72,6 +75,17 @@ import Button from "./Button.astro"
     reversecube?.addEventListener("click", () => {
         const event = new CustomEvent("reversecube");
         window.dispatchEvent(event);
+    });
+
+    const resolve = document.getElementById('resolve');
+    resolve?.addEventListener("click", () => {
+        const event = new CustomEvent("resolve");
+        window.dispatchEvent(event);
+    });
+
+    const newCube = document.getElementById('newCube');
+    newCube?.addEventListener("click", () => {
+        window.location.reload();
     });
 
 </script>

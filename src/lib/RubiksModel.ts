@@ -65,7 +65,7 @@ export default class RubiksModel {
             const randomIndex = Math.floor(Math.random() * movesArray.length);
             let move = movesArray[randomIndex];
             const clockwise = Math.random() > 0.5;
-            if (Math.random() < 0.3) move += "2";
+            // if (Math.random() < 0.3) move += "2";
 
             this._queue.push({ move, clockwise });
         }
@@ -179,6 +179,16 @@ export default class RubiksModel {
         });
     }
 
+    public async fetchResolveCube(): Promise<void> {
+        if (this._mix.length === 0)
+            return;
+        const parseMix = this._mix.map(action => action.move).join("%20");
+        const res = await fetch(`http://127.0.0.1:8080/solve?seq=${parseMix}`);
+        const ret = await res.json();
+        const output = ret['output'];
+        this.execInput(output);
+    }
+
     private async _processQueue(isPushToMix: boolean = true): Promise<void> {
         if (this._isAnimated || this._queue.length === 0)
             return;
@@ -212,7 +222,7 @@ export default class RubiksModel {
             if (operation.clockwise)
                 this._mix[this._mix.length - 1].move += "2";
             else
-                this._mix[this._mix.length - 1].move = operation.move[0] + "2'";
+                this._mix[this._mix.length - 1].move = operation.move[0] + "2";
         } else {
             this._mix.push(operation);
         }

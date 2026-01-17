@@ -46,7 +46,6 @@ import gsap from 'gsap';
     });
 
     loader.load('/rubikscube2_2.glb', (gltf: GLTF) => {
-        // scene.add(gltf.scene);
         cube2 = new Rubiks2(gltf.scene);
     });
 
@@ -54,7 +53,6 @@ import gsap from 'gsap';
     if (!switchButton)
         throw Error("switchButton not find");
     switchButton.addEventListener('click', () => {
-        // const tl = gsap.timeline();
         if (!cube)
             return;
         cube.scaleAnimation(0).then(() => {
@@ -67,19 +65,6 @@ import gsap from 'gsap';
             scene.add(cube.getModel);
             cube.scaleAnimation(1);
         });
-        // gsap.to(cube.geetModel, { 
-        //     scale: 0, 
-        //     duration: 1, 
-        //     onComplete: () => {
-        //         cube.resetAction();
-        //         scene.remove(cube.getModel);
-        //         if (cube === cube3)
-        //             cube = cube2;
-        //         else if (cube === cube2)
-        //             cube = cube3;
-        //         scene.add(cube.getModel);
-        //     }}
-        // )
     });
 
     const mix: CubeAction[] = [
@@ -172,6 +157,10 @@ import gsap from 'gsap';
             cube.execInput(input.value);
             input.value = "";
         }
+    });
+
+    window.addEventListener("resolve", () => {
+        cube.fetchResolveCube();
     });
 
     window.addEventListener('resize', () => {
