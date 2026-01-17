@@ -18,6 +18,7 @@ export default class Rubiks2 {
         this._speed = 400;
         this._queue = [];
         this._isAnimated = false;
+        gsap.set(this._cube.scale, {x: 0, y: 0, z: 0});
     }
 
     public front(clockwise = true): void {
@@ -163,6 +164,21 @@ export default class Rubiks2 {
         this._processQueue();
     }
 
+    public async scaleAnimation(to: number): Promise<void> {
+        return new Promise((resolve) => {
+            gsap.to(this._cube.scale, {
+                x: to,
+                y: to,
+                z: to,
+                duration: 0.333,
+                ease: "power2.inOut",
+                onComplete: () => {
+                    resolve();
+                }
+            });
+        });
+    }
+
     private async _processQueue(isPushToMix: boolean = true): Promise<void> {
         if (this._isAnimated || this._queue.length === 0)
             return;
@@ -226,6 +242,13 @@ export default class Rubiks2 {
 
     private _displayAction(): void {
         const background = document.getElementsByClassName("background");
+        const moves = this._mix.map(action => action.move).join(" ");
+        background[0].innerHTML = moves;
+    }
+
+    public resetAction(): void {
+        const background = document.getElementsByClassName("background");
+        this._mix.length = 0;
         const moves = this._mix.map(action => action.move).join(" ");
         background[0].innerHTML = moves;
     }
