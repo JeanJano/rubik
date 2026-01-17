@@ -223,6 +223,19 @@ export default class RubiksModel {
                 this._mix[this._mix.length - 1].move += "2";
             else
                 this._mix[this._mix.length - 1].move = operation.move[0] + "2";
+        } else if (this._mix.length > 0
+            && (operation.move + "'" === this._mix[this._mix.length - 1].move 
+                || operation.move === this._mix[this._mix.length - 1].move + "'"
+            )
+            && operation.clockwise !== this._mix[this._mix.length - 1].clockwise
+        ) {
+            this._mix.pop();
+        } else if (this._mix.length > 0 
+            && this._mix[this._mix.length - 1].move.search("2")
+            && operation.move === this._mix[this._mix.length - 1].move[0]
+        ) {
+            this._mix[this._mix.length - 1].move = operation.move + "'";
+            this._mix[this._mix.length - 1].clockwise = false;
         } else {
             this._mix.push(operation);
         }
